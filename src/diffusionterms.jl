@@ -2,9 +2,13 @@
 # Written by AAE
 # TU Delft, Spring 2014
 # simulkade.com
-# Last edited: 27 December, 2014
 # ===============================
 
+# ================================================================
+# Changes:
+#    2014-12-30 added 2D radial and 3D cylindrical grids
+#    2015-01-10 extended to accept nonuniform grids
+# ================================================================
 
 # ========================= DIFFUSION TERM ================================
 function diffusionTerm(D::FaceValue)
@@ -31,27 +35,25 @@ end
 function diffusionTerm1D(D::FaceValue)
 # D is a face variable
 
-# extract data from the mesh structure
-G = D.domain.numbering
-Nx = D.domain.numberofcells[1]
-dx = D.domain.cellsize[1]
+# extract data from the mesh structure 
+Nx = D.domain.dims[1]
+G = [1:Nx+2]
+DX = D.domain.cellsize.x
+dx = 0.5*(DX[1:end-1]+DX[2:end])
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the diffusion coefficient data
-Dx = D.xvalue
-
 # reassign the east, west for code readability
-De = Dx[2:Nx+1]
-Dw = Dx[1:Nx]
+De = D.xvalue[2:Nx+1]./(dx[2:Nx+1].*DX[2:Nx+1])
+Dw = D.xvalue[1:Nx]./(dx[1:Nx].*DX[2:Nx+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(De/(dx*dx),Nx)
-AW = reshape(Dw/(dx*dx),Nx)
-APx = reshape(-(De+Dw)/(dx*dx),Nx)
+AE = reshape(De,Nx)
+AW = reshape(Dw,Nx)
+APx = -(AE+AW)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -68,11 +70,16 @@ end
 function diffusionTerm2D(D::FaceValue)
 # D is a face variable
 # extract data from the mesh structure
-G = D.domain.numbering
-Nx = D.domain.numberofcells[1]
-Ny = D.domain.numberofcells[2]
-dx = D.domain.cellsize[1]
-dy = D.domain.cellsize[2]
+Nx = D.domain.dims[1]
+Ny = D.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+
+DX = D.domain.cellsize.x
+DY = Array(Float64, 1, Ny+2)
+DY[:] = D.domain.cellsize.y
+dx = 0.5*(DX[1:end-1]+DX[2:end])
+dy = Array(Float64, 1, Ny+1)
+dy[:] = 0.5*(DY[1:end-1]+DY[2:end])
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2))
@@ -84,23 +91,19 @@ sy = zeros(Float64, 3*(Nx+2)*(Ny+2))
 mnx = Nx*Ny
 mny = Nx*Ny
 
-# extract the diffusion coefficient data
-Dx = D.xvalue
-Dy = D.yvalue
-
-# reassign the east, west for code readability
-De = Dx[2:Nx+1,:]
-Dw = Dx[1:Nx,:]
-Dn = Dy[:,2:Ny+1]
-Ds = Dy[:,1:Ny]
+# reassign the east, west for code readability (use broadcasting in Julia)
+De = D.xvalue[2:Nx+1,:]./(dx[2:Nx+1].*DX[2:Nx+1])
+Dw = D.xvalue[1:Nx,:]./(dx[1:Nx].*DX[2:Nx+1])
+Dn = D.yvalue[:,2:Ny+1]./(dy[1,2:Ny+1].*DY[1,2:Ny+1])
+Ds = D.yvalue[:,1:Ny]./(dy[1,1:Ny].*DY[1,2:Ny+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(De/(dx*dx),mnx)
-AW = reshape(Dw/(dx*dx),mnx)
-AN = reshape(Dn/(dy*dy),mny)
-AS = reshape(Ds/(dy*dy),mny)
-APx = reshape(-(De+Dw)/(dx*dx),mnx)
-APy = reshape(-(Dn+Ds)/(dy*dy),mny)
+AE = reshape(De,mnx)
+AW = reshape(Dw,mnx)
+AN = reshape(Dn,mny)
+AS = reshape(Ds,mny)
+APx = -(AE+AW)
+APy = -(AN+AS)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
@@ -125,15 +128,20 @@ end
 function diffusionTerm3D(D::FaceValue)
 # D is a face variable
 # extract data from the mesh structure
-G = D.domain.numbering
-Nx = D.domain.numberofcells[1]
-Ny = D.domain.numberofcells[2]
-Nz = D.domain.numberofcells[3]
-dx = D.domain.cellsize[1]
-dy = D.domain.cellsize[2]
-dz = D.domain.cellsize[3]
+Nx = D.domain.dims[1]
+Ny = D.domain.dims[2]
+Nz = D.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+DX = D.domain.cellsize.x
+DY = Array(Float64, 1, Ny+2)
+DY[:] = D.domain.cellsize.y
+DZ = Array(Float64, 1,1,Nz+2)
+DZ[:] = D.domain.cellsize.z
+dx = 0.5*(DX[1:end-1]+DX[2:end])
+dy = 0.5*(DY[1,1:end-1]+DY[1,2:end])
+dz = 0.5*(DZ[1,1,1:end-1]+DZ[1,1,2:end])
 
-# define the vectors to stores the sparse matrix data
+# define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
 jjx = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
 sx = zeros(Float64, 3*(Nx+2)*(Ny+2)*(Nz+2))
@@ -144,34 +152,28 @@ iiz = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
 jjz = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
 sz = zeros(Float64, 3*(Nx+2)*(Ny+2)*(Nz+2))
 mnx = Nx*Ny*Nz
-mny = Nx*Ny*Nz   
+mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-Dx = D.xvalue
-Dy = D.yvalue
-Dz = D.zvalue
-
 # reassign the east, west, north, and south velocity vectors for the 
-# code readability
-De = Dx[2:Nx+1,:,:]
-Dw = Dx[1:Nx,:,:]
-Dn = Dy[:,2:Ny+1,:]
-Ds = Dy[:,1:Ny,:]
-Df = Dz[:,:,2:Nz+1]
-Db = Dz[:,:,1:Nz]
+# code readability (use broadcasting)
+De = D.xvalue[2:Nx+1,:,:]./(dx[2:Nx+1].*DX[2:Nx+1])
+Dw = D.xvalue[1:Nx,:,:]./(dx[1:Nx].*DX[2:Nx+1])
+Dn = D.yvalue[:,2:Ny+1,:]./(dy[1,2:Ny+1].*DY[1,2:Ny+1])
+Ds = D.yvalue[:,1:Ny,:]./(dy[1,1:Ny].*DY[1,2:Ny+1])
+Df = D.zvalue[:,:,2:Nz+1]./(dz[1,1,2:Nz+1].*DZ[1,1,2:Nz+1])
+Db = D.zvalue[:,:,1:Nz]./(dz[1,1,1:Nz].*DZ[1,1,2:Nz+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(De/(dx*dx),mnx)
-AW = reshape(Dw/(dx*dx),mnx)
-AN = reshape(Dn/(dy*dy),mny)
-AS = reshape(Ds/(dy*dy),mny)
-AF = reshape(Df/(dz*dz),mnz)
-AB = reshape(Db/(dz*dz),mnz)
-APx = reshape(-(De+Dw)/(dx*dx),mnx)
-APy = reshape(-(Dn+Ds)/(dy*dy),mny)
-APz = reshape(-(Df+Db)/(dz*dz),mnz)
+AE = reshape(De,mnx)
+AW = reshape(Dw,mnx)
+AN = reshape(Dn,mny)
+AS = reshape(Ds,mny)
+AF = reshape(Df,mnz)
+AB = reshape(Db,mnz)
+APx = reshape(-(De+Dw),mnx)
+APy = reshape(-(Dn+Ds),mny)
+APz = reshape(-(Df+Db),mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
@@ -211,9 +213,10 @@ function diffusionTermCylindrical1D(D::FaceValue)
 # D is a face variable
 
 # extract data from the mesh structure
-G = D.domain.numbering
-Nx = D.domain.numberofcells[1]
-dx = D.domain.cellsize[1]
+Nx = D.domain.dims[1]
+G = [1:Nx+2]
+DX = D.domain.cellsize.x
+dx = 0.5*(DX[1:end-1]+DX[2:end])
 rp = D.domain.cellcenters.x
 rf = D.domain.facecenters.x
 
@@ -222,19 +225,14 @@ iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the diffusion coefficient data
-Dx = D.xvalue
-
 # reassign the east, west for code readability
-De = Dx[2:Nx+1]
-Dw = Dx[1:Nx]
-re = rf[2:Nx+1]
-rw = rf[1:Nx]
+De = rf[2:Nx+1].*D.xvalue[2:Nx+1]./(rp.*dx[2:Nx+1].*DX[2:Nx+1])
+Dw = rf[1:Nx].*D.xvalue[1:Nx]./(rp.*dx[1:Nx].*DX[2:Nx+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*De./(dx*dx*rp),Nx)
-AW = reshape(rw.*Dw./(dx*dx*rp),Nx)
-APx = reshape(-(re.*De+rw.*Dw)./(dx*dx*rp),Nx)
+AE = reshape(De,Nx)
+AW = reshape(Dw,Nx)
+APx = reshape(-(De+Dw),Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -253,13 +251,18 @@ end
 function diffusionTermRadial2D(D::FaceValue)
 # D is a face variable
 # extract data from the mesh structure
-G = D.domain.numbering
-Nr = D.domain.numberofcells[1]
-Ntheta = D.domain.numberofcells[2]
-dr = D.domain.cellsize[1]
-dtheta = D.domain.cellsize[2]
-rp = repmat(D.domain.cellcenters.x, 1, Ntheta)
-rf = repmat(D.domain.facecenters.x, 1, Ntheta)
+
+Nr = D.domain.dims[1]
+Ntheta = D.domain.dims[2]
+G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+DR = D.domain.cellsize.x
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = D.domain.cellsize.y
+dr = 0.5*(DR[1:end-1]+DR[2:end])
+dtheta = Array(Float64, 1, Ntheta+1)
+dtheta[:] = 0.5*(DTHETA[1:end-1]+DTHETA[2:end])
+rp = D.domain.cellcenters.x
+rf = D.domain.facecenters.x
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Ntheta+2))
@@ -271,25 +274,19 @@ sy = zeros(Float64, 3*(Nr+2)*(Ntheta+2))
 mnx = Nr*Ntheta
 mny = Nr*Ntheta
 
-# extract the diffusion coefficient data
-Dx = D.xvalue
-Dy = D.yvalue
-
 # reassign the east, west for code readability
-De = Dx[2:Nr+1,:]
-Dw = Dx[1:Nr,:]
-Dn = Dy[:,2:Ntheta+1]
-Ds = Dy[:,1:Ntheta]
-re = rf[2:Nr+1,:]         
-rw = rf[1:Nr,:]
+De = rf[2:Nr+1,:].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
+Dw = rf[1:Nr,:].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
+Dn = D.yvalue[:,2:Ntheta+1]./(rp.*rp.*dtheta[1,2:Ntheta+1].*DTHETA[1,2:Ntheta+1])
+Ds = D.yvalue[:,1:Ntheta]./(rp.*rp.*dtheta[1,1:Ntheta].*DTHETA[1,2:Ntheta+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*De./(dr*dr*rp),mnx)
-AW = reshape(rw.*Dw./(dr*dr*rp),mnx)
-AN = reshape(Dn./(dtheta*dtheta*rp.*rp),mny)
-AS = reshape(Ds./(dtheta*dtheta*rp.*rp),mny)
-APx = reshape(-(re.*De+rw.*Dw)./(dr*dr*rp),mnx)
-APy = reshape(-(Dn+Ds)./(dtheta*dtheta*rp.*rp),mny)
+AE = reshape(De,mnx)
+AW = reshape(Dw,mnx)
+AN = reshape(Dn,mny)
+AS = reshape(Ds,mny)
+APx = reshape(-(De+Dw),mnx)
+APy = reshape(-(Dn+Ds),mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
@@ -316,11 +313,15 @@ end
 function diffusionTermCylindrical2D(D::FaceValue)
 # D is a face variable
 # extract data from the mesh structure
-G = D.domain.numbering
-Nr = D.domain.numberofcells[1]
-Nz = D.domain.numberofcells[2]
-dr = D.domain.cellsize[1]
-dz = D.domain.cellsize[2]
+Nr = D.domain.dims[1]
+Nz = D.domain.dims[2]
+G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+DR = D.domain.cellsize.x
+DZ = Array(Float64, 1, Nz+2)
+DZ[:] = D.domain.cellsize.y
+dr = 0.5*(DR[1:end-1]+DR[2:end])
+dz = Array(Float64, 1, Nz+1)
+dz[:] = 0.5*(DZ[1:end-1]+DZ[2:end])
 rp = repmat(D.domain.cellcenters.x, 1, Nz)
 rf = repmat(D.domain.facecenters.x, 1, Nz)
 
@@ -339,20 +340,18 @@ Dx = D.xvalue
 Dy = D.yvalue
 
 # reassign the east, west for code readability
-De = Dx[2:Nr+1,:]
-Dw = Dx[1:Nr,:]
-Dn = Dy[:,2:Nz+1]
-Ds = Dy[:,1:Nz]
-re = rf[2:Nr+1,:]
-rw = rf[1:Nr,:]
+De = rf[2:Nr+1,:].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
+Dw = rf[1:Nr,:].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
+Dn = D.yvalue[:,2:Nz+1]./(dz[1,2:Nz+1].*DZ[1,2:Nz+1])
+Ds = D.yvalue[:,1:Nz]./(dz[1,1:Nz].*DZ[1,2:Nz+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*De./(dr*dr*rp),mnx)
-AW = reshape(rw.*Dw./(dr*dr*rp),mnx)
-AN = reshape(Dn/(dz*dz),mny)
-AS = reshape(Ds/(dz*dz),mny)
-APx = reshape(-(re.*De+rw.*Dw)./(dr*dr*rp),mnx)
-APy = reshape(-(Dn+Ds)/(dz*dz),mny)
+AE = reshape(De,mnx)
+AW = reshape(Dw,mnx)
+AN = reshape(Dn,mny)
+AS = reshape(Ds,mny)
+APx = reshape(-(De+Dw),mnx)
+APy = reshape(-(Dn+Ds),mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
@@ -378,15 +377,19 @@ end
 # ======================== 3D CYLINDRICAL DIFFUSION =========================
 function diffusionTermCylindrical3D(D::FaceValue)
 # extract data from the mesh structure
-G = D.domain.numbering
-Nr = D.domain.numberofcells[1]
-Ntheta = D.domain.numberofcells[2]
-Nz = D.domain.numberofcells[3]
-dr = D.domain.cellsize[1]
-dtheta = D.domain.cellsize[2]
-dz = D.domain.cellsize[3]
-#rp = repmat(D.domain.cellcenters.x, Ntheta, Nz)
-#rf = repmat(D.domain.facecenters.x, Ntheta, Nz)
+
+Nr = D.domain.dims[1]
+Ntheta = D.domain.dims[2]
+Nz = D.domain.dims[3]
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+DR = D.domain.cellsize.x
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = D.domain.cellsize.y
+DZ = Array(Float64, 1,1,Nz+2)
+DZ[:] = D.domain.cellsize.z
+dr = 0.5*(DR[1:end-1]+DR[2:end])
+dtheta = 0.5*(DTHETA[1,1:end-1]+DTHETA[1,2:end])
+dz = 0.5*(DZ[1,1,1:end-1]+DZ[1,1,2:end])
 rp = D.domain.cellcenters.x # use broadcasting
 rf = D.domain.facecenters.x
 
@@ -412,27 +415,23 @@ Dz = D.zvalue
 
 # reassign the east, west, north, and south velocity vectors for the 
 # code readability
-De = Dx[2:Nr+1,:,:]
-Dw = Dx[1:Nr,:,:]
-Dn = Dy[:,2:Ntheta+1,:]
-Ds = Dy[:,1:Ntheta,:]
-Df = Dz[:,:,2:Nz+1]
-Db = Dz[:,:,1:Nz]
-#re = rf[2:Nr+1,:,:]
-#rw = rf[1:Nr,:,:]
-re = rf[2:Nr+1] # use broadcasting
-rw = rf[1:Nr]
+De = rf[2:Nr+1].*D.xvalue[2:Nr+1,:,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
+Dw = rf[1:Nr].*D.xvalue[1:Nr,:,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
+Dn = D.yvalue[:,2:Ntheta+1,:]./(rp.*rp.*dtheta[1,2:Ntheta+1].*DTHETA[1,2:Ntheta+1])
+Ds = D.yvalue[:,1:Ntheta,:]./(rp.*rp.*dtheta[1,1:Ntheta].*DTHETA[1,2:Ntheta+1])
+Df = D.zvalue[:,:,2:Nz+1]./(dz[1,1,2:Nz+1].*DZ[1,1,2:Nz+1])
+Db = D.zvalue[:,:,1:Nz]./(dz[1,1,1:Nz].*DZ[1,1,2:Nz+1])
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*De./(dr*dr*rp),mnx)
-AW = reshape(rw.*Dw./(dr*dr*rp),mnx)
-AN = reshape(Dn./(dtheta*dtheta*rp.*rp),mny)
-AS = reshape(Ds./(dtheta*dtheta*rp.*rp),mny)
-AF = reshape(Df/(dz*dz),mnz)
-AB = reshape(Db/(dz*dz),mnz)
-APx = reshape(-(re.*De+rw.*Dw)./(dr*dr*rp),mnx)
-APy = reshape(-(Dn+Ds)./(dtheta*dtheta*rp.*rp),mny)
-APz = reshape(-(Df+Db)/(dz*dz),mnz)
+AE = reshape(De,mnx)
+AW = reshape(Dw,mnx)
+AN = reshape(Dn,mny)
+AS = reshape(Ds,mny)
+AF = reshape(Df,mnz)
+AB = reshape(Db,mnz)
+APx = reshape(-(De+Dw),mnx)
+APy = reshape(-(Dn+Ds),mny)
+APz = reshape(-(Df+Db),mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x

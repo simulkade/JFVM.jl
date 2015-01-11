@@ -16,7 +16,7 @@
 # ========================= Multiple dispatch =====================
 
 function transientTerm(phi_old::CellValue, dt::Real, alfa::Real)
-transientTerm(phi_old, dt, alfa.*ones(Float64,tuple(phi_old.domain.numberofcells...)))
+transientTerm(phi_old, dt, alfa.*ones(Float64,tuple(phi_old.domain.dims...)))
 end
 
 function transientTerm(phi_old::CellValue, dt::Real)
@@ -52,8 +52,8 @@ function transientTerm1D(phi_old::CellValue,
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
-G = phi_old.domain.numbering
-Nx = phi_old.domain.numberofcells[1]
+Nx = phi_old.domain.dims[1]
+G = [1:Nx+2]
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1],Nx) # main diagonal (only internal cells)
@@ -75,9 +75,9 @@ function transientTerm2D(phi_old::CellValue,
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
-G = phi_old.domain.numbering
-Nx = phi_old.domain.numberofcells[1]
-Ny = phi_old.domain.numberofcells[2]
+Nx = phi_old.domain.dims[1]
+Ny = phi_old.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1,2:Ny+1],Nx*Ny) # main diagonal (only internal cells)
@@ -99,10 +99,10 @@ function transientTerm3D(phi_old::CellValue,
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
-G = phi_old.domain.numbering
-Nx = phi_old.domain.numberofcells[1]
-Ny = phi_old.domain.numberofcells[2]
-Nz = phi_old.domain.numberofcells[3]
+Nx = phi_old.domain.dims[1]
+Ny = phi_old.domain.dims[2]
+Nz = phi_old.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz) # main diagonal (only internal cells)

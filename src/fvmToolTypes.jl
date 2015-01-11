@@ -4,6 +4,12 @@ type CellLocation
   z::Array{Float64,1}
 end
 
+type CellSize
+  x::Array{Float64,1}
+  y::Array{Float64,1}
+  z::Array{Float64,1}
+end
+
 type FaceLocation
   x::Array{Float64,1}
   y::Array{Float64,1}
@@ -12,9 +18,8 @@ end
 
 type MeshStructure
   dimension::Real
-  numbering::Array{Int64}
-  numberofcells::Array{Int64,1}
-  cellsize::Array{Float64}
+  dims::Array{Int64,1}
+  cellsize::CellSize
   cellcenters::CellLocation
   facecenters::FaceLocation
   corner::Array{Int64,1}

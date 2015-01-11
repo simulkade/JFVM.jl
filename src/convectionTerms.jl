@@ -2,13 +2,13 @@
 # Written by AAE
 # TU Delft, Spring 2014
 # simulkade.com
-# Last edited: 29 December, 2014
 # ===============================
 
-# ======================================================
-# 2014-12-29
-#    - Import all the convection terms from matlab code
-# ======================================================
+# ===============================================================
+# Changes 
+#    2014-12-29 Import all the convection terms from matlab code
+#    2015-01-10 extended to accept nonuniform grids
+# ===============================================================
 
 
 
@@ -78,26 +78,27 @@ function convectionTerm1D(u::FaceValue)
 # u is a face variable
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+#DX = u.domain.cellsize.x
+
+DXe = u.domain.cellsize.x[3:end]
+DXw = u.domain.cellsize.x[1:end-2]
+DXp = u.domain.cellsize.x[2:end-1]
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
-
 # reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
+ue = u.xvalue[2:Nx+1]./(DXp+DXe)
+uw = u.xvalue[1:Nx]./(DXp+DXw)
 
 # calculate the coefficients for the internal cells
-AE = reshape(ue/(2.0*dx),Nx)
-AW = reshape(-uw/(2.0*dx),Nx)
-APx = reshape((ue-uw)/(2.0*dx),Nx)
+AE = reshape(ue,Nx)
+AW = reshape(-uw,Nx)
+APx = reshape((ue.*DXe-uw.*DXw)./DXp,Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -117,9 +118,11 @@ function convectionTermCylindrical1D(u::FaceValue)
 # u is a face variable
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+DXe = u.domain.cellsize.x[3:end]
+DXw = u.domain.cellsize.x[1:end-2]
+DXp = u.domain.cellsize.x[2:end-1]
 rp = u.domain.cellcenters.x
 rf = u.domain.facecenters.x
 
@@ -128,19 +131,14 @@ iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
-
 # reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
-re = rf[2:Nx+1]     
-rw = rf[1:Nx]
+ue = rf[2:Nx+1].*u.xvalue[2:Nx+1]./(rp.*(DXp+DXe))
+uw = rf[1:Nx].*u.xvalue[1:Nx]./(rp.*(DXp+DXw))
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue./(2.0*dx*rp),Nx)
-AW = reshape(-rw.*uw./(2.0*dx*rp),Nx)
-APx = reshape((re.*ue-rw.*uw)./(2.0*dx.*rp),Nx)
+AE = reshape(ue,Nx)
+AW = reshape(-uw,Nx)
+APx = reshape((ue.*DXe-uw.*DXw)./DXp,Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -160,40 +158,33 @@ function convectionUpwindTerm1D(u::FaceValue)
 # u is a face variable
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+DXp = u.domain.cellsize.x[2:end-1]
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
-
-# reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
 
 # calculate the coefficients for the internal cells
-AE = reshape(ue_min/dx,Nx)
-AW = reshape(-uw_max/dx,Nx)
-APx = reshape((ue_max-uw_min)/dx,Nx)
+AE = reshape(ue_min./DXp,Nx)
+AW = reshape(-uw_max./DXp,Nx)
+APx = reshape((ue_max-uw_min)./DXp,Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-uw_max[1]/(2.0*dx)   
+APx[1] = APx[1]-uw_max[1]/(2.0*DXp[1])
 AW[1] = AW[1]/2.0
 # Right boundary:
 AE[end] = AE[end]/2.0 
-APx[end] = APx[end] + ue_min[end]/(2.0*dx)
+APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -207,14 +198,14 @@ M = sparse(iix[1:kx], jjx[1:kx], sx[1:kx], Nx+2, Nx+2)
 
 end
 
-# =============== 1D Convection Terms Cylindrical Upwind =================
+# =================== 1D Convection Terms Cylindrical Upwind =====================
 function convectionUpwindTermCylindrical1D(u::FaceValue)
 # u is a face variable
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+DXp = u.domain.cellsize.x[2:end-1]
 rp = u.domain.cellcenters.x
 rf = u.domain.facecenters.x
 
@@ -223,33 +214,28 @@ iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
-
 # reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
 re = rf[2:Nx+1]     
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue_min./(dx*rp),Nx)
-AW = reshape(-rw.*uw_max./(dx*rp),Nx)
-APx = reshape((re.*ue_max-rw.*uw_min)./(dx*rp),Nx)
+AE = reshape(re.*ue_min./(DXp.*rp),Nx)
+AW = reshape(-rw.*uw_max./(DXp.*rp),Nx)
+APx = reshape((re.*ue_max-rw.*uw_min)./(DXp.*rp),Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*dx*rp[1])   
+APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*rp[1])   
 AW[1] = AW[1]/2.0
 # Right boundary:
 AE[end] = AE[end]/2.0 
-APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*dx*rp[end])
+APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*rp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -274,9 +260,10 @@ eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+DXp = u.domain.cellsize.x[2:end-1]
+dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 RHS = zeros(Float64, Nx+2)
 psi_p = zeros(Float64, Nx+1)
 psi_m = zeros(Float64, Nx+1)
@@ -288,10 +275,8 @@ iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-dphi_p = phi.value[2:Nx+2]-phi.value[1:Nx+1]
+dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
 psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
@@ -302,33 +287,31 @@ psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
 re = rf[2:Nx+1]     
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
-RHS[2:Nx+1] = -(1.0./(dx*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
+RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
               rw.*(uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
               
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue_min./(dx*r),Nx)
-AW = reshape(-rw.*uw_max./(dx*r),Nx)
-APx = reshape((re.*ue_max-rw.*uw_min)./(dx*r),Nx)
+AE = reshape(re.*ue_min./(DXp.*r),Nx)
+AW = reshape(-rw.*uw_max./(DXp.*r),Nx)
+APx = reshape((re.*ue_max-rw.*uw_min)./(DXp.*r),Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*dx*r[1])   
+APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*r[1])   
 AW[1] = AW[1]/2.0
 # Right boundary:
 AE[end] = AE[end]/2.0 
-APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*dx*r[end])
+APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*r[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -354,9 +337,10 @@ eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-dx = u.domain.cellsize[1]
+Nx = u.domain.dims[1]
+G = [1:Nx+2]
+DXp = u.domain.cellsize.x[2:end-1]
+dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 RHS = zeros(Float64, Nx+2)
 psi_p = zeros(Float64, Nx+1)
 psi_m = zeros(Float64, Nx+1)
@@ -366,10 +350,8 @@ iix = zeros(Int64, 3*(Nx+2))
 jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
-# extract the velocity data
-ux = u.xvalue
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-dphi_p = phi.value[2:Nx+2]-phi.value[1:Nx+1]
+dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
 psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
@@ -379,32 +361,28 @@ rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
 psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
-# reassign the east, west for code readability
-ue = ux[2:Nx+1]
-uw = ux[1:Nx]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
-RHS[2:Nx+1] = -(1.0/dx)*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
+RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
               (uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
               
 # calculate the coefficients for the internal cells
-AE = reshape(ue_min/dx,Nx)
-AW = reshape(-uw_max/dx,Nx)
-APx = reshape((ue_max-uw_min)/dx,Nx)
+AE = reshape(ue_min./DXp,Nx)
+AW = reshape(-uw_max./DXp,Nx)
+APx = reshape((ue_max-uw_min)./DXp,Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-uw_max[1]/(2.0*dx)   
+APx[1] = APx[1]-uw_max[1]/(2.0*DXp[1])   
 AW[1] = AW[1]/2.0
 # Right boundary:
 AE[end] = AE[end]/2.0 
-APx[end] = APx[end] + ue_min[end]/(2.0*dx)
+APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
@@ -426,11 +404,17 @@ end
 function convectionTerm2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+DXe = u.domain.cellsize.x[3:end]
+DXw = u.domain.cellsize.x[1:end-2]
+DXp = u.domain.cellsize.x[2:end-1]
+DY = Array(Float64, 1, Ny+2)
+DY[:] = u.domain.cellsize.y
+DYn = DY[1,3:end]
+DYs = DY[1,1:end-2]
+DYp = DY[1,2:end-1]
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2))
@@ -442,23 +426,19 @@ sy = zeros(Float64, 3*(Nx+2)*(Ny+2))
 mnx = Nx*Ny
 mny = Nx*Ny
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
 # reassign the east, west for code readability
-ue = ux[2:Nx+1,:]
-uw = ux[1:Nx,:]
-vn = uy[:,2:Ny+1]
-vs = uy[:,1:Ny]
+ue = u.xvalue[2:Nx+1,:]./(DXp+DXe)
+uw = u.xvalue[1:Nx,:]./(DXp+DXw)
+vn = u.yvalue[:,2:Ny+1]./(DYp+DYn)
+vs = u.yvalue[:,1:Ny]./(DYp+DYs)
 
 # calculate the coefficients for the internal cells
-AE = reshape(ue/(2.0*dx),mnx)
-AW = reshape(-uw/(2.0*dx),mnx)
-AN = reshape(vn/(2.0*dy),mny)
-AS = reshape(-vs/(2.0*dy),mny)
-APx = reshape((ue-uw)/(2.0*dx),mnx)
-APy = reshape((vn-vs)/(2.0*dy),mny)
+AE = reshape(ue,mnx)
+AW = reshape(-uw,mnx)
+AN = reshape(vn,mny)
+AS = reshape(-vs,mny)
+APx = reshape((ue.*DXe-uw.*DXw)./DXp,mnx)
+APy = reshape((vn.*DYn-vs.*DYs)./DYp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
@@ -483,11 +463,12 @@ end
 function convectionUpwindTerm2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DYp = Array(Float64, 1, Ny)
+DYp[:] = u.domain.cellsize.y[2:end-1]
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2))
@@ -499,47 +480,37 @@ sy = zeros(Float64, 3*(Nx+2)*(Ny+2))
 mnx = Nx*Ny
 mny = Nx*Ny
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
-# reassign the east, west for code readability
-ue = ux[2:Nx+1,:]
-uw = ux[1:Nx,:]
-vn = uy[:,2:Ny+1]
-vs = uy[:,1:Ny]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min(u.xvalue[1:Nx,:],0.0)
+uw_max = max(u.xvalue[1:Nx,:],0.0)
+vn_min = min(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min(u.yvalue[:,1:Ny],0.0)
+vs_max = max(u.yvalue[:,1:Ny],0.0)
 
 # calculate the coefficients for the internal cells, not reshape
-AE = ue_min/dx
-AW = -uw_max/dx
-AN = vn_min/dy
-AS = -vs_max/dy
-APx = (ue_max-uw_min)/dx
-APy = (vn_max-vs_min)/dy
+AE = ue_min./DXp
+AW = -uw_max./DXp
+AN = vn_min./DYp
+AS = -vs_max./DYp
+APx = (ue_max-uw_min)./DXp
+APy = (vn_max-vs_min)./DYp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-uw_max[1,:]/(2.0*dx)
+APx[1,:] = APx[1,:]-uw_max[1,:]/(2.0*DXp[1])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+ue_min[end,:]/(2.0*dx)
+APx[end,:] = APx[end,:]+ue_min[end,:]/(2.0*DXp[end])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*dy)
+APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*DYp[1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*dy)
+APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*DYp[end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -578,11 +549,16 @@ eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DYp = Array(Float64, 1, Ny)
+DYp[:] = u.domain.cellsize.y[2:end-1]
+dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dy=Array(Float64, 1, Ny+1)
+dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+
 psiX_p = zeros(Nx+1,Ny)
 psiX_m = zeros(Nx+1,Ny)
 psiY_p = zeros(Nx,Ny+1)
@@ -598,19 +574,15 @@ sy = zeros(Float64, 3*(Nx+2)*(Ny+2))
 mnx = Nx*Ny
 mny = Nx*Ny
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 # x direction
-dphiX_p = phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1]
+dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nx+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
-dphiY_p = phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1]
+dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ny+1] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
@@ -628,43 +600,37 @@ psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
-# reassign the east, west for code readability
-ue = ux[2:Nx+1,:]
-uw = ux[1:Nx,:]
-vn = uy[:,2:Ny+1]
-vs = uy[:,1:Ny]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min(u.xvalue[1:Nx,:],0.0)
+uw_max = max(u.xvalue[1:Nx,:],0.0)
+vn_min = min(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min(u.yvalue[:,1:Ny],0.0)
+vs_max = max(u.yvalue[:,1:Ny],0.0)
 
 # calculate the coefficients for the internal cells, not reshape
-AE = ue_min/dx
-AW = -uw_max/dx
-AN = vn_min/dy
-AS = -vs_max/dy
-APx = (ue_max-uw_min)/dx
-APy = (vn_max-vs_min)/dy
+AE = ue_min./DXp
+AW = -uw_max./DXp
+AN = vn_min./DYp
+AS = -vs_max./DYp
+APx = (ue_max-uw_min)./DXp
+APy = (vn_max-vs_min)./DYp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-uw_max[1,:]/(2.0*dx)
+APx[1,:] = APx[1,:]-uw_max[1,:]/(2.0*DXp[1])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+ue_min[end,:]/(2.0*dx)
+APx[end,:] = APx[end,:]+ue_min[end,:]/(2.0*DXp[end])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*dy)
+APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*DYp[1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*dy)
+APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*DYp[end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -685,9 +651,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1/dx)*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
+div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
               (uw_max.*psiX_p[1:Nx,:]+uw_min.*psiX_m[1:Nx,:]))
-div_y = -(1/dy)*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
+div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
               (vs_max.*psiY_p[:,1:Ny]+vs_min.*psiY_m[:,1:Ny]))
 
 # define the RHS Vector
@@ -716,11 +682,17 @@ end
 function convectionTermCylindrical2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Nz = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dz = u.domain.cellsize[2]
+Nr = u.domain.dims[1]
+Nz = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+DXe = u.domain.cellsize.x[3:end]
+DXw = u.domain.cellsize.x[1:end-2]
+DXp = u.domain.cellsize.x[2:end-1]
+DZ = Array(Float64, 1, Nz+2)
+DZ[:] = u.domain.cellsize.y
+DYn = DZ[1,3:end]
+DYs = DZ[1,1:end-2]
+DYp = DZ[1,2:end-1]
 rp = repmat(u.domain.cellcenters.x, 1, Nz)
 rf = repmat(u.domain.facecenters.x, 1, Nz)
 
@@ -734,25 +706,21 @@ sy = zeros(Float64, 3*(Nr+2)*(Nz+2))
 mnx = Nr*Nz
 mny = Nr*Nz
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
 # reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Nz+1]
-vs = uy[:,1:Nz]
+ue = rf[2:Nr+1,:].*u.xvalue[2:Nr+1,:]./(rp.*(DXp+DXe))
+uw = rf[1:Nr,:].*u.xvalue[1:Nr,:]./(rp.*(DXp+DXw))
+vn = u.yvalue[:,2:Nz+1]./(DYp+DYn)
+vs = u.yvalue[:,1:Nz]./(DYp+DYs)
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue./(2.0*dr*rp),mnx)
-AW = reshape(-rw.*uw./(2.0*dr*rp),mnx)
-AN = reshape(vn/(2.0*dz),mny)
-AS = reshape(-vs/(2.0*dz),mny)
-APx = reshape((re.*ue-rw.*uw)./(2.0*dr*rp),mnx)
-APy = reshape((vn-vs)/(2.0*dz),mny)
+AE = reshape(ue,mnx)
+AW = reshape(-uw,mnx)
+AN = reshape(vn,mny)
+AS = reshape(-vs,mny)
+APx = reshape((ue.*DXe-uw.*DXw)./DXp,mnx)
+APy = reshape((vn.*DYn-vs.*DYs)./DYp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
@@ -779,11 +747,12 @@ end
 function convectionUpwindTermCylindrical2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Nz = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dz = u.domain.cellsize[2]
+Nr = u.domain.dims[1]
+Nz = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DZp = Array(Float64, 1, Nz)
+DZp[:] = u.domain.cellsize.y[2:end-1]
 rp = repmat(u.domain.cellcenters.x, 1, Nz)
 rf = repmat(u.domain.facecenters.x, 1, Nz)
 
@@ -797,49 +766,40 @@ sy = zeros(Float64, 3*(Nr+2)*(Nz+2))
 mnx = Nr*Nz
 mny = Nr*Nz
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
-# reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Nz+1]
-vs = uy[:,1:Nz]
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min(u.yvalue[:,1:Nz],0.0)
+vs_max = max(u.yvalue[:,1:Nz],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min/dz
-AS = -vs_max/dz
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)/dz
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./DZp
+AS = -vs_max./DZp
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*dr*rp[1,:])
+APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*DRp[1]*rp[1,:])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*dr*rp[end,:])
+APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*DRp[end]*rp[end,:])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*dz)
+APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*DZp[1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*dz)
+APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*DZp[end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -868,7 +828,7 @@ M = Mx + My
 (M, Mx, My)
 end
 
-# ================ 2D Convection Term Cylindrical TVD =======================
+# ==================== 2D Convection Term Cylindrical TVD ===========================
 function convectionTvdTermCylindrical2D(u::FaceValue, phi::CellValue, FL::Function)
 # u is a face variable
 # phi is a cell variable
@@ -878,11 +838,15 @@ eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Nz = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dz = u.domain.cellsize[2]
+Nr = u.domain.dims[1]
+Nz = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DZp = Array(Float64, 1, Nz)
+DZp[:] = u.domain.cellsize.y[2:end-1]
+dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dz=Array(Float64, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
 rp = repmat(u.domain.cellcenters.x, 1, Nz)
 rf = repmat(u.domain.facecenters.x, 1, Nz)
 psiX_p = zeros(Nr+1,Nz)
@@ -900,19 +864,15 @@ sy = zeros(Float64, 3*(Nr+2)*(Nz+2))
 mnx = Nr*Nz
 mny = Nr*Nz
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 # x direction
-dphiX_p = phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1]
+dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
-dphiY_p = phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1]
+dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Nz+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
@@ -930,45 +890,40 @@ psiY_m[:,1:Nz] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
 psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
 
-# reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Nz+1]
-vs = uy[:,1:Nz]
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min(u.yvalue[:,1:Nz],0.0)
+vs_max = max(u.yvalue[:,1:Nz],0.0)
 
-# calculate the coefficients for the internal cells, not reshape
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min/dz
-AS = -vs_max/dz
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)/dz
+# calculate the coefficients for the internal cells, do not reshape yet
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./DZp
+AS = -vs_max./DZp
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*dr*rp[1,:])
+APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*DRp[1]*rp[1,:])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*dr*rp[end,:])
+APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*DRp[end]*rp[end,:])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*dz)
+APy[:,1] = APy[:,1]-vs_max[:,1]/(2.0*DZp[1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*dz)
+APy[:,end] = APy[:,end]+vn_min[:,end]/(2.0*DZp[end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -989,9 +944,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1./(dr*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1/dz)*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
+div_y = -(1./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
               (vs_max.*psiY_p[:,1:Nz]+vs_min.*psiY_m[:,1:Nz]))
 
 # define the RHS Vector
@@ -1018,13 +973,19 @@ end
 function convectionTermRadial2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-rp = repmat(u.domain.cellcenters.x, 1, Ntheta)
-rf = repmat(u.domain.facecenters.x, 1, Ntheta)
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+DRe = u.domain.cellsize.x[3:end]
+DRw = u.domain.cellsize.x[1:end-2]
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = u.domain.cellsize.y
+DTHETAn = DTHETA[1,3:end]
+DTHETAs = DTHETA[1,1:end-2]
+DTHETAp = DTHETA[1,2:end-1]
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Ntheta+2))
@@ -1036,25 +997,22 @@ sy = zeros(Float64, 3*(Nr+2)*(Ntheta+2))
 mnx = Nr*Ntheta
 mny = Nr*Ntheta
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
-# reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Ntheta+1]
-vs = uy[:,1:Ntheta]
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
+# reassign the east, west for code readability
+ue = re.*u.xvalue[2:Nr+1,:]./(DRp+DRe)
+uw = rw.*u.xvalue[1:Nr,:]./(DRp+DRw)
+vn = u.yvalue[:,2:Ntheta+1]./(rp.*(DTHETAp+DTHETAn))
+vs = u.yvalue[:,1:Ntheta]./(rp.*(DTHETAp+DTHETAs))
+
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue./(2.0*dr*rp),mnx)
-AW = reshape(-rw.*uw./(2.0*dr*rp),mnx)
-AN = reshape(vn./(2.0*dtheta*rp),mny)
-AS = reshape(-vs./(2.0*dtheta*rp),mny)
-APx = reshape((re.*ue-rw.*uw)./(2.0*dr*rp),mnx)
-APy = reshape((vn-vs)./(2.0*dtheta*rp),mny)
+AE = reshape(ue,mnx)
+AW = reshape(-uw,mnx)
+AN = reshape(vn,mny)
+AS = reshape(-vs,mny)
+APx = reshape((ue.*DRe-uw.*DRw)./DRp,mnx)
+APy = reshape((vn.*DTHETAn-vs.*DTHETAs)./DTHETAp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
@@ -1081,13 +1039,14 @@ end
 function convectionUpwindTermRadial2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-rp = repmat(u.domain.cellcenters.x, 1, Ntheta)
-rf = repmat(u.domain.facecenters.x, 1, Ntheta)
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETAp = Array(Float64, 1, Ntheta)
+DTHETAp[:] = u.domain.cellsize.y[2:end-1]
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Ntheta+2))
@@ -1099,49 +1058,40 @@ sy = zeros(Float64, 3*(Nr+2)*(Ntheta+2))
 mnx = Nr*Ntheta
 mny = Nr*Ntheta
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
-# reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Ntheta+1]
-vs = uy[:,1:Ntheta]
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max(u.yvalue[:,1:Ntheta],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min./(dtheta*rp)
-AS = -vs_max./(dtheta*rp)
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)./(dtheta*rp)
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./(DTHETAp.*rp)
+AS = -vs_max./(DTHETAp.*rp)
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./(DTHETAp.*rp)
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*dr*rp[1,:])
+APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*DRp[1]*rp[1,:])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*dr*rp[end,:])
+APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*DRp[end]*rp[end,:])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]./(2.0*dtheta*rp[:,1])
+APy[:,1] = APy[:,1]-vs_max[:,1]./(2.0*DTHETAp[1]*rp[:,1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]./(2.0*dtheta*rp[:,end])
+APy[:,end] = APy[:,end]+vn_min[:,end]./(2.0*DTHETAp[end]*rp[:,end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -1180,13 +1130,17 @@ eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-rp = repmat(u.domain.cellcenters.x, 1, Ntheta)
-rf = repmat(u.domain.facecenters.x, 1, Ntheta)
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETAp = Array(Float64, 1, Ntheta)
+DTHETAp[:] = u.domain.cellsize.y[2:end-1]
+dr = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dtheta = Array(Float64, 1, 1+Ntheta)
+dtheta[:] = 0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
 psiX_p = zeros(Nr+1,Ntheta)
 psiX_m = zeros(Nr+1,Ntheta)
 psiY_p = zeros(Nr,Ntheta+1)
@@ -1202,19 +1156,15 @@ sy = zeros(Float64, 3*(Nr+2)*(Ntheta+2))
 mnx = Nr*Ntheta
 mny = Nr*Ntheta
 
-# extract the velocity data
-ux = u.xvalue
-uy = u.yvalue
-
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 # x direction
-dphiX_p = phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1]
+dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
-dphiY_p = phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1]
+dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ntheta+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
@@ -1232,45 +1182,40 @@ psiY_m[:,1:Ntheta] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
 
-# reassign the east, west for code readability
-ue = ux[2:Nr+1,:]
-uw = ux[1:Nr,:]
-vn = uy[:,2:Ntheta+1]
-vs = uy[:,1:Ntheta]
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0.0)
-ue_max = max(ue,0.0)
-uw_min = min(uw,0.0)
-uw_max = max(uw,0.0)
-vn_min = min(vn,0.0)
-vn_max = max(vn,0.0)
-vs_min = min(vs,0.0)
-vs_max = max(vs,0.0)
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max(u.yvalue[:,1:Ntheta],0.0)
 
-# calculate the coefficients for the internal cells, not reshape
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min./(dtheta*rp)
-AS = -vs_max./(dtheta*rp)
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)./(dtheta*rp)
+# calculate the coefficients for the internal cells, do not reshape yet
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./(DTHETAp.*rp)
+AS = -vs_max./(DTHETAp.*rp)
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./(DTHETAp.*rp)
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*dr*rp[1,:])
+APx[1,:] = APx[1,:]-rw[1,:].*uw_max[1,:]./(2.0*DRp[1]*rp[1,:])
 AW[1,:] = AW[1,:]/2.0
 # Right boundary:
 AE[end,:] = AE[end,:]/2.0
-APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*dr*rp[end,:])
+APx[end,:] = APx[end,:]+re[end,:].*ue_min[end,:]./(2.0*DRp[end]*rp[end,:])
 # Bottom boundary:
-APy[:,1] = APy[:,1]-vs_max[:,1]./(2.0*dtheta*rp[:,1])
+APy[:,1] = APy[:,1]-vs_max[:,1]./(2.0*DTHETAp[1]*rp[:,1])
 AS[:,1] = AS[:,1]/2.0
 # Top boundary:
 AN[:,end] = AN[:,end]/2.0
-APy[:,end] = APy[:,end]+vn_min[:,end]./(2.0*dtheta*rp[:,end])
+APy[:,end] = APy[:,end]+vn_min[:,end]./(2.0*DTHETAp[end]*rp[:,end])
 
 # now reshape
 AE = reshape(AE,mnx)
@@ -1291,9 +1236,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1./(dr*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./(dtheta*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
+div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
               (vs_max.*psiY_p[:,1:Ntheta]+vs_min.*psiY_m[:,1:Ntheta]))
 
 # define the RHS Vector
@@ -1320,13 +1265,23 @@ end
 function convectionTerm3D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+DXe = u.domain.cellsize.x[3:end]
+DXw = u.domain.cellsize.x[1:end-2]
+DXp = u.domain.cellsize.x[2:end-1]
+DY = Array(Float64, 1, Ny+2)
+DY[:] = u.domain.cellsize.y
+DYn = DY[1,3:end]
+DYs = DY[1,1:end-2]
+DYp = DY[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZf = DZ[1,1,3:end]
+DZb = DZ[1,1,1:end-2]
+DZp = DZ[1,1,2:end-1]
 
 # define the vectors to stores the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
@@ -1342,31 +1297,25 @@ mnx = Nx*Ny*Nz
 mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
 # reassign the east, west, north, and south velocity vectors for the 
 # code readability
-ue = ux[2:Nx+1,:,:]
-uw = ux[1:Nx,:,:]
-vn = uy[:,2:Ny+1,:]
-vs = uy[:,1:Ny,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
+ue = u.xvalue[2:Nx+1,:,:]./(DXp+DXe)
+uw = u.xvalue[1:Nx,:,:]./(DXp+DXw)
+vn = u.yvalue[:,2:Ny+1,:]./(DYp+DYn)
+vs = u.yvalue[:,1:Ny,:]./(DYp+DYs)
+wf = u.zvalue[:,:,2:Nz+1]./(DZp+DZf)
+wb = u.zvalue[:,:,1:Nz]./(DZp+DZb)
 
 # calculate the coefficients for the internal cells
-AE = reshape(ue/(2*dx),mnx)
-AW = reshape(-uw/(2*dx),mnx)
-AN = reshape(vn/(2*dy),mny)
-AS = reshape(-vs/(2*dy),mny)
-AF = reshape(wf/(2*dz),mnz)
-AB = reshape(-wb/(2*dz),mnz)
-APx = reshape((ue-uw)/(2*dx),mnx)
-APy = reshape((vn-vs)/(2*dy),mny)
-APz = reshape((wf-wb)/(2*dz),mnz)
+AE = reshape(ue,mnx)
+AW = reshape(-uw,mnx)
+AN = reshape(vn,mny)
+AS = reshape(-vs,mny)
+AF = reshape(wf,mnz)
+AB = reshape(-wb,mnz)
+APx = reshape((ue.*DXe-uw.*DXw)./DXp,mnx)
+APy = reshape((vn.*DYn-vs.*DYs)./DYp,mny)
+APz = reshape((wf.*DZf-wb.*DZb)./DZp,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
@@ -1399,13 +1348,17 @@ end
 function convectionUpwindTerm3D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DY = Array(Float64, 1, Ny+2)
+DY[:] = u.domain.cellsize.y
+DYp = DY[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZp = DZ[1,1,2:end-1]
 
 # define the vectors to stores the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
@@ -1421,65 +1374,50 @@ mnx = Nx*Ny*Nz
 mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
-# reassign the east, west, north, and south velocity vectors for the 
-# code readability
-ue = ux[2:Nx+1,:,:]
-uw = ux[1:Nx,:,:]
-vn = uy[:,2:Ny+1,:]
-vs = uy[:,1:Ny,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0)
-ue_max = max(ue,0)
-uw_min = min(uw,0)
-uw_max = max(uw,0)
-vn_min = min(vn,0)
-vn_max = max(vn,0)
-vs_min = min(vs,0)
-vs_max = max(vs,0)
-wf_min = min(wf,0)
-wf_max = max(wf,0)
-wb_min = min(wb,0)
-wb_max = max(wb,0)
+ue_min = min(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min(u.xvalue[1:Nx,:,:],0)
+uw_max = max(u.xvalue[1:Nx,:,:],0)
+vn_min = min(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min(u.yvalue[:,1:Ny,:],0)
+vs_max = max(u.yvalue[:,1:Ny,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
-AE = ue_min/dx
-AW = -uw_max/dx
-AN = vn_min/dy
-AS = -vs_max/dy
-AF = wf_min/dz
-AB = -wb_max/dz
-APx = (ue_max-uw_min)/dx
-APy = (vn_max-vs_min)/dy
-APz = (wf_max-wb_min)/dz
+AE = ue_min./DXp
+AW = -uw_max./DXp
+AN = vn_min./DYp
+AS = -vs_max./DYp
+AF = wf_min./DZp
+AB = -wb_max./DZp
+APx = (ue_max-uw_min)./DXp
+APy = (vn_max-vs_min)./DYp
+APz = (wf_max-wb_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:,:] = APx[1,:,:]-uw_max[1,:,:]/(2.0*dx)
+APx[1,:,:] = APx[1,:,:]-uw_max[1,:,:]/(2.0*DXp[1])
 AW[1,:,:] = AW[1,:,:]/2.0
 # Right boundary:
 AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+ue_min[end,:,:]/(2.0*dx)
+APx[end,:,:] = APx[end,:,:]+ue_min[end,:,:]/(2.0*DXp[end])
 # Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]/(2.0*dy)
+APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]/(2.0*DYp[1])
 AS[:,1,:] = AS[:,1,:]/2.0
 # Top boundary:
 AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]/(2.0*dy)
+APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]/(2.0*DYp[end])
 # Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*dz)
+APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
 AB[:,:,1] = AB[:,:,1]/2.0
 # Front boundary:
 AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*dz)
+APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
 
 AE = reshape(AE,mnx)
 AW = reshape(AW,mnx)
@@ -1526,13 +1464,22 @@ function convectionTvdTerm3D(u::FaceValue, phi::CellValue, FL::Function)
 eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 # extract data from the mesh structure
-G = u.domain.numbering
-Nx = u.domain.numberofcells[1]
-Ny = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dx = u.domain.cellsize[1]
-dy = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DY = Array(Float64, 1, Ny+2)
+DY[:] = u.domain.cellsize.y
+DYp = DY[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZp = DZ[1,1,2:end-1]
+dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dy=Array(Float64, 1, Ny+1)
+dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+dz=Array(Float64, 1, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.z[1:end-1]+u.domain.cellsize.z[2:end])
 psiX_p = zeros(Nx+1,Ny,Nz)
 psiX_m = zeros(Nx+1,Ny,Nz)
 psiY_p = zeros(Nx,Ny+1,Nz)
@@ -1554,25 +1501,19 @@ mnx = Nx*Ny*Nz
 mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 # x direction
-dphiX_p = phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1]
+dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nx+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiX_p[1,:,:] = 0  # left boundary
+psiX_p[1,:,:] = 0.0  # left boundary
 # y direction
-dphiY_p = phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1]
+dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ny+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
-dphiZ_p = phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1]
+dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
@@ -1591,59 +1532,50 @@ rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
-# reassign the east, west, north, and south velocity vectors for the 
-# code readability
-ue = ux[2:Nx+1,:,:]
-uw = ux[1:Nx,:,:]
-vn = uy[:,2:Ny+1,:]
-vs = uy[:,1:Ny,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
-
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0)
-ue_max = max(ue,0)
-uw_min = min(uw,0)
-uw_max = max(uw,0)
-vn_min = min(vn,0)
-vn_max = max(vn,0)
-vs_min = min(vs,0)
-vs_max = max(vs,0)
-wf_min = min(wf,0)
-wf_max = max(wf,0)
-wb_min = min(wb,0)
-wb_max = max(wb,0)
+ue_min = min(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min(u.xvalue[1:Nx,:,:],0)
+uw_max = max(u.xvalue[1:Nx,:,:],0)
+vn_min = min(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min(u.yvalue[:,1:Ny,:],0)
+vs_max = max(u.yvalue[:,1:Ny,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
-AE = ue_min/dx
-AW = -uw_max/dx
-AN = vn_min/dy
-AS = -vs_max/dy
-AF = wf_min/dz
-AB = -wb_max/dz
-APx = (ue_max-uw_min)/dx
-APy = (vn_max-vs_min)/dy
-APz = (wf_max-wb_min)/dz
+AE = ue_min./DXp
+AW = -uw_max./DXp
+AN = vn_min./DYp
+AS = -vs_max./DYp
+AF = wf_min./DZp
+AB = -wb_max./DZp
+APx = (ue_max-uw_min)./DXp
+APy = (vn_max-vs_min)./DYp
+APz = (wf_max-wb_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:,:] = APx[1,:,:]-uw_max[1,:,:]/(2.0*dx)
+APx[1,:,:] = APx[1,:,:]-uw_max[1,:,:]/(2.0*DXp[1])
 AW[1,:,:] = AW[1,:,:]/2.0
 # Right boundary:
 AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+ue_min[end,:,:]/(2.0*dx)
+APx[end,:,:] = APx[end,:,:]+ue_min[end,:,:]/(2.0*DXp[end])
 # Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]/(2.0*dy)
+APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]/(2.0*DYp[1])
 AS[:,1,:] = AS[:,1,:]/2.0
 # Top boundary:
 AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]/(2.0*dy)
+APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]/(2.0*DYp[end])
 # Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*dz)
+APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
 AB[:,:,1] = AB[:,:,1]/2.0
 # Front boundary:
 AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*dz)
+APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
 
 AE = reshape(AE,mnx)
 AW = reshape(AW,mnx)
@@ -1670,11 +1602,11 @@ sy[1:3*mny] = [AS; APy; AN]
 sz[1:3*mnz] = [AB; APz; AF]
 
 # calculate the TVD correction term
-div_x = -(1/dx)*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
+div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
               (uw_max.*psiX_p[1:Nx,:,:]+uw_min.*psiX_m[1:Nx,:,:]))
-div_y = -(1/dy)*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
+div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
               (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
-div_z = -(1/dz)*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
           
 # define the RHS Vector
@@ -1707,15 +1639,23 @@ end
 function convectionTermCylindrical3D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
-#rp = repmat(u.domain.cellcenters.x, 1, Ntheta, Nz)
-#rf = repmat(u.domain.facecenters.x, 1, Ntheta, Nz)
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+DRe = u.domain.cellsize.x[3:end]
+DRw = u.domain.cellsize.x[1:end-2]
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = u.domain.cellsize.y
+DTHETAn = DTHETA[1,3:end]
+DTHETAs = DTHETA[1,1:end-2]
+DTHETAp = DTHETA[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZf = DZ[1,1,3:end]
+DZb = DZ[1,1,1:end-2]
+DZp = DZ[1,1,2:end-1]
 rp = u.domain.cellcenters.x
 rf = u.domain.facecenters.x
 
@@ -1733,33 +1673,28 @@ mnx = Nr*Ntheta*Nz
 mny = Nr*Ntheta*Nz
 mnz = Nr*Ntheta*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
-# reassign the east, west, north, and south velocity vectors for the 
-# code readability
-ue = ux[2:Nr+1,:,:]
-uw = ux[1:Nr,:,:]
-vn = uy[:,2:Ntheta+1,:]
-vs = uy[:,1:Ntheta,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
 
+# reassign the east, west, north, and south velocity vectors for the 
+# code readability
+ue = rf[2:Nr+1].*u.xvalue[2:Nr+1,:,:]./(rp.*(DRp+DRe))
+uw = rf[1:Nr].*u.xvalue[1:Nr,:,:]./(rp.*(DRp+DRw))
+vn = u.yvalue[:,2:Ntheta+1,:]./(rp.*(DTHETAp+DTHETAn))
+vs = u.yvalue[:,1:Ntheta,:]./(rp.*(DTHETAp+DTHETAs))
+wf = u.zvalue[:,:,2:Nz+1]./(DZp+DZf)
+wb = u.zvalue[:,:,1:Nz]./(DZp+DZb)
+
 # calculate the coefficients for the internal cells
-AE = reshape(re.*ue./(2.0*dr*rp),mnx)
-AW = reshape(-rw.*uw./(2.0*dr*rp),mnx)
-AN = reshape(vn./(2.0*dtheta*rp),mny)
-AS = reshape(-vs./(2.0*dtheta*rp),mny)
-AF = reshape(wf/(2.0*dz),mnz)
-AB = reshape(-wb/(2.0*dz),mnz)
-APx = reshape((re.*ue-rw.*uw)./(2.0*dr*rp),mnx)
-APy = reshape((vn-vs)./(2.0*dtheta*rp),mny)
-APz = reshape((wf-wb)/(2.0*dz),mnz)
+AE = reshape(ue,mnx)
+AW = reshape(-uw,mnx)
+AN = reshape(vn,mny)
+AS = reshape(-vs,mny)
+AF = reshape(wf,mnz)
+AB = reshape(-wb,mnz)
+APx = reshape((DRe.*ue-DRw.*uw)./DRp,mnx)
+APy = reshape((DTHETAn.*vn-DTHETAs.*vs)./DTHETAp,mny)
+APz = reshape((DZf.*wf-DZb.*wb)./DZp,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
@@ -1792,13 +1727,23 @@ end
 function convectionUpwindTermCylindrical3D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+DRe = u.domain.cellsize.x[3:end]
+DRw = u.domain.cellsize.x[1:end-2]
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = u.domain.cellsize.y
+DTHETAn = DTHETA[1,3:end]
+DTHETAs = DTHETA[1,1:end-2]
+DTHETAp = DTHETA[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZf = DZ[1,1,3:end]
+DZb = DZ[1,1,1:end-2]
+DZp = DZ[1,1,2:end-1]
 rp = u.domain.cellcenters.x
 rf = u.domain.facecenters.x
 
@@ -1816,67 +1761,53 @@ mnx = Nr*Ntheta*Nz
 mny = Nr*Ntheta*Nz
 mnz = Nr*Ntheta*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
-# reassign the east, west, north, and south velocity vectors for the 
-# code readability
-ue = ux[2:Nr+1,:,:]
-uw = ux[1:Nr,:,:]
-vn = uy[:,2:Ntheta+1,:]
-vs = uy[:,1:Ntheta,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
-re = rf[2:Nr+1]
-rw = rf[1:Nr]
+re = rf[2:Nr+1,:]
+rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0)
-ue_max = max(ue,0)
-uw_min = min(uw,0)
-uw_max = max(uw,0)
-vn_min = min(vn,0)
-vn_max = max(vn,0)
-vs_min = min(vs,0)
-vs_max = max(vs,0)
-wf_min = min(wf,0)
-wf_max = max(wf,0)
-wb_min = min(wb,0)
-wb_max = max(wb,0)
+ue_min = min(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min(u.xvalue[1:Nr,:,:],0)
+uw_max = max(u.xvalue[1:Nr,:,:],0)
+vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min./(dtheta*rp)
-AS = -vs_max./(dtheta*rp)
-AF = wf_min/dz
-AB = -wb_max/dz
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)./(dtheta*rp)
-APz = (wf_max-wb_min)/dz
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./(DTHETAp.*rp)
+AS = -vs_max./(DTHETAp.*rp)
+AF = wf_min./DZp
+AB = -wb_max./DZp
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./(DTHETAp.*rp)
+APz = (wf_max-wb_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:,:] = APx[1,:,:]-rw[1,:,:].*uw_max[1,:,:]./(2.0*dr*rp[1,:,:])
+APx[1,:,:] = APx[1,:,:]-rw[1,:,:].*uw_max[1,:,:]./(2.0*DRp[1]*rp[1,:,:])
 AW[1,:,:] = AW[1,:,:]/2.0
 # Right boundary:
 AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+re[end,:,:].*ue_min[end,:,:]./(2.0*dr*rp[end,:,:])
+APx[end,:,:] = APx[end,:,:]+re[end,:,:].*ue_min[end,:,:]./(2.0*DRp[end]*rp[end,:,:])
 # Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]./(2.0*dtheta*rp[:,1,:])
+APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]./(2.0*DTHETAp[1]*rp[:,1,:])
 AS[:,1,:] = AS[:,1,:]/2.0
 # Top boundary:
 AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]./(2.0*dtheta*rp[:,end,:])
+APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]./(2.0*DTHETAp[end]*rp[:,end,:])
 # Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*dz)
+APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
 AB[:,:,1] = AB[:,:,1]/2.0
 # Front boundary:
 AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*dz)
+APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
 
 AE = reshape(AE,mnx)
 AW = reshape(AW,mnx)
@@ -1923,21 +1854,36 @@ function convectionTvdTermCylindrical3D(u::FaceValue, phi::CellValue, FL::Functi
 eps1 = 1.0e-20
 fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 # extract data from the mesh structure
-G = u.domain.numbering
-Nr = u.domain.numberofcells[1]
-Ntheta = u.domain.numberofcells[2]
-Nz = u.domain.numberofcells[3]
-dr = u.domain.cellsize[1]
-dtheta = u.domain.cellsize[2]
-dz = u.domain.cellsize[3]
-rp = u.domain.cellcenters.x
-rf = u.domain.facecenters.x
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+DRe = u.domain.cellsize.x[3:end]
+DRw = u.domain.cellsize.x[1:end-2]
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = u.domain.cellsize.y
+DTHETAn = DTHETA[1,3:end]
+DTHETAs = DTHETA[1,1:end-2]
+DTHETAp = DTHETA[1,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZf = DZ[1,1,3:end]
+DZb = DZ[1,1,1:end-2]
+DZp = DZ[1,1,2:end-1]
+dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dtheta = Array(Float64, 1, Ntheta+1)
+dtheta[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+dz = Array(Float64, 1, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.z[1:end-1]+u.domain.cellsize.z[2:end])
 psiX_p = zeros(Nr+1,Ntheta,Nz)
 psiX_m = zeros(Nr+1,Ntheta,Nz)
 psiY_p = zeros(Nr,Ntheta+1,Nz)
 psiY_m = zeros(Nr,Ntheta+1,Nz)
 psiZ_p = zeros(Nr,Ntheta,Nz+1)
 psiZ_m = zeros(Nr,Ntheta,Nz+1)
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
 
 # define the vectors to stores the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
@@ -1953,25 +1899,19 @@ mnx = Nr*Ntheta*Nz
 mny = Nr*Ntheta*Nz
 mnz = Nr*Ntheta*Nz
 
-# extract the velocity data 
-# note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
-ux = u.xvalue
-uy = u.yvalue
-uz = u.zvalue
-
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 # x direction
-dphiX_p = phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1]
+dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nr+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiX_p[1,:,:] = 0  # left boundary
 # y direction
-dphiY_p = phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1]
+dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ntheta+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
-dphiZ_p = phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1]
+dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
@@ -1990,61 +1930,53 @@ rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
-# reassign the east, west, north, and south velocity vectors for the 
-# code readability
-ue = ux[2:Nr+1,:,:]
-uw = ux[1:Nr,:,:]
-vn = uy[:,2:Ntheta+1,:]
-vs = uy[:,1:Ntheta,:]
-wf = uz[:,:,2:Nz+1]
-wb = uz[:,:,2:Nz+1]
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(ue,0)
-ue_max = max(ue,0)
-uw_min = min(uw,0)
-uw_max = max(uw,0)
-vn_min = min(vn,0)
-vn_max = max(vn,0)
-vs_min = min(vs,0)
-vs_max = max(vs,0)
-wf_min = min(wf,0)
-wf_max = max(wf,0)
-wb_min = min(wb,0)
-wb_max = max(wb,0)
+ue_min = min(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min(u.xvalue[1:Nr,:,:],0)
+uw_max = max(u.xvalue[1:Nr,:,:],0)
+vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
-AE = re.*ue_min./(dr*rp)
-AW = -rw.*uw_max./(dr*rp)
-AN = vn_min./(dtheta*rp)
-AS = -vs_max./(dtheta*rp)
-AF = wf_min/dz
-AB = -wb_max/dz
-APx = (re.*ue_max-rw.*uw_min)./(dr*rp)
-APy = (vn_max-vs_min)./(dtheta*rp)
-APz = (wf_max-wb_min)/dz
+AE = re.*ue_min./(DRp.*rp)
+AW = -rw.*uw_max./(DRp.*rp)
+AN = vn_min./(DTHETAp.*rp)
+AS = -vs_max./(DTHETAp.*rp)
+AF = wf_min./DZp
+AB = -wb_max./DZp
+APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
+APy = (vn_max-vs_min)./(DTHETAp.*rp)
+APz = (wf_max-wb_min)./DZp
 
 # Also correct for the boundary cells (not the ghost cells)
 # Left boundary:
-APx[1,:,:] = APx[1,:,:]-rw[1,:,:].*uw_max[1,:,:]./(2.0*dr*rp[1,:,:])
+APx[1,:,:] = APx[1,:,:]-rw[1,:,:].*uw_max[1,:,:]./(2.0*DRp[1]*rp[1,:,:])
 AW[1,:,:] = AW[1,:,:]/2.0
 # Right boundary:
 AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+re[end,:,:].*ue_min[end,:,:]./(2.0*dr*rp[end,:,:])
+APx[end,:,:] = APx[end,:,:]+re[end,:,:].*ue_min[end,:,:]./(2.0*DRp[end]*rp[end,:,:])
 # Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]./(2.0*dtheta*rp[:,1,:])
+APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]./(2.0*DTHETAp[1]*rp[:,1,:])
 AS[:,1,:] = AS[:,1,:]/2.0
 # Top boundary:
 AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]./(2.0*dtheta*rp[:,end,:])
+APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]./(2.0*DTHETAp[end]*rp[:,end,:])
 # Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*dz)
+APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
 AB[:,:,1] = AB[:,:,1]/2.0
 # Front boundary:
 AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*dz)
+APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
 
 AE = reshape(AE,mnx)
 AW = reshape(AW,mnx)
@@ -2071,11 +2003,11 @@ sy[1:3*mny] = [AS; APy; AN]
 sz[1:3*mnz] = [AB; APz; AF]
 
 # calculate the TVD correction term
-div_x = -(1./(dr*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:,:]+uw_min.*psiX_m[1:Nr,:,:]))
-div_y = -(1./(dtheta*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
+div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
               (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
-div_z = -(1/dz)*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
           
 # define the RHS Vector

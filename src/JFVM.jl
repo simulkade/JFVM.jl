@@ -1,6 +1,8 @@
 module JFVM
 
-using PyPlot
+using PyPlot, PyCall
+pygui_start(:wx)
+@pyimport mayavi.mlab as mayavis
 
 export MeshStructure, BoundaryCondition, CellValue, FaceValue,
        arithmeticMean, geometricMean, harmonicMean, upwindMean,
