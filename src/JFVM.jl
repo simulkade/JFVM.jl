@@ -1,13 +1,9 @@
 module JFVM
 
 using PyPlot, PyCall
-try
-  pygui_start(:wx)
-  @pyimport mayavi.mlab as mayavis
-catch e
-  println(e)
-  println("An error occured while trying to load mayavi.mlab. 3D visuaization is not ready.")
-end
+pygui_start(:wx)
+@pyimport mayavi.mlab as mayavis
+
 export MeshStructure, BoundaryCondition, CellValue, FaceValue,
        arithmeticMean, geometricMean, harmonicMean, upwindMean,
        tvdMean, createBC, boundaryConditionTerm, cellBoundary,
@@ -16,7 +12,7 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue,
        createFaceVariable, copyCell, fluxLimiter, createMesh1D,
        createMesh2D, createMesh3D, createMeshRadial2D, createMeshCylindrical2D,
        createMeshCylindrical3D, createMeshCylindrical1D, solveLinearPDE, visualizeCells,
-       linearSourceTerm, constantSourceTerm, transientTerm, solveMUMPSLinearPDE, mayavis
+       linearSourceTerm, constantSourceTerm, transientTerm, solveMUMPSLinearPDE
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")
