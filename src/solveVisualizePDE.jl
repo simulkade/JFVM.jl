@@ -133,6 +133,7 @@ elseif d==3.2
 
   mayavis.colorbar()
   mayavis.axes()
+  return mayavis.screenshot()
 
 end
 end  
