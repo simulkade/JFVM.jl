@@ -92,7 +92,8 @@ elseif d==3
 
   mayavis.colorbar()
   mayavis.axes()
-
+  return mayavis.screenshot()
+  
 elseif d==3.2
   Nx = phi.domain.dims[1]
   Ny = phi.domain.dims[2]
