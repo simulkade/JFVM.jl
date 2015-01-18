@@ -21,7 +21,7 @@ You need to have [matplotlib](http://matplotlib.org/) and [mayavi](http://code.e
 ```
 sudo apt-get install python-matplotlib mayavi2
 ```
-Then go to your `.julia` folder and type
+Then go to your `.julia/v0.4` or `.julia/v0.3` (depending on your Julia version) folder and type
 ```
 git clone https://github.com/simulkade/JFVM.git
 ```
