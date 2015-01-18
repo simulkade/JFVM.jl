@@ -44,7 +44,7 @@ linearSourceTerm(CellValue(m, betta0))
 end
 
 
-function linearSourceTerm(m::MeshStructure, betta0::Array{Real})
+function linearSourceTerm{T<:Real}(m::MeshStructure, betta0::Array{T})
 d = m.dimension
 G = m.numbering
 if (d ==1) || (d==1.5)
@@ -102,7 +102,7 @@ constantSourceTerm(CellValue(m, phi0))
 end
 
 
-function constantSourceTerm(m::MeshStructure, phi0::Array{Real})
+function constantSourceTerm{T<:Real}(m::MeshStructure, phi0::Array{T})
 d = m.dimension
 G = m.numbering
 if (d ==1) || (d==1.5)

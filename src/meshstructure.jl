@@ -12,7 +12,7 @@
 
 
 # ====================== 1D CARTESIAN MESH =======================
-function createMesh1D(Nx::Int64, Width::Real)
+function createMesh1D(Nx::Int, Width::Real)
 # builds a uniform 1D mesh:
 # Nx is the number of cells in x (horizontal) direction
 # Width is the domain length in x direction
@@ -35,7 +35,7 @@ MeshStructure(1,
 end
 
 
-function createMesh1D(facelocationX::Array{Float64,1})
+function createMesh1D{T<:Real}(facelocationX::Array{T,1})
 # builds a uniform 1D mesh:
 # facelocationX is the location of each cell face
 # mesh dimension
@@ -58,7 +58,7 @@ end
 
 
 # ================= 1D CYLINDRICAL MESH ==========================
-function createMeshCylindrical1D(Nr::Int64, Radius::Real)
+function createMeshCylindrical1D(Nr::Int, Radius::Real)
 # builds a uniform 1D cylindrical mesh:
 # Nx is the number of cells in r (radial) direction
 # Radius is the domain length in r direction
@@ -77,7 +77,7 @@ MeshStructure(1.5,
 		[1])
 end
 
-function createMeshCylindrical1D(facelocationR::Array{Float64,1})
+function createMeshCylindrical1D{T<:Real}(facelocationR::Array{T,1})
 # builds a uniform 1D cylindrical mesh:
 # Nx is the number of cells in r (radial) direction
 # Radius is the domain length in r direction
@@ -101,7 +101,7 @@ end
 
 
 # ========================= 2D CARTESIAN MESH ==========================
-function createMesh2D(Nx::Int64, Ny::Int64, Width::Real, Height::Real)
+function createMesh2D(Nx::Int, Ny::Int, Width::Real, Height::Real)
 # builds a uniform 2D mesh:
 # Nx is the number of cells in x (horizontal) direction
 # Width is the domain length in x direction
@@ -122,7 +122,7 @@ MeshStructure(2,
 	[1])
 end
 
-function createMesh2D(facelocationX::Array{Float64,1}, facelocationY::Array{Float64,1})
+function createMesh2D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T,1})
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
@@ -140,7 +140,7 @@ end
 
 
 # ============================== 2D RADIAL MESH =======================================
-function createMeshRadial2D(Nr::Int64, Ntheta::Int64, Radius::Real, Angle::Real)
+function createMeshRadial2D(Nr::Int, Ntheta::Int, Radius::Real, Angle::Real)
 # builds a uniform radial 2D mesh:
 # Nr is the number of cells in r (radial) direction
 # Radius is the domain length in r direction
@@ -166,7 +166,7 @@ MeshStructure(2.8,
 	[1])
 end
 
-function createMeshRadial2D(facelocationR::Array{Float64,1}, facelocationTheta::Array{Float64,1})
+function createMeshRadial2D{T<:Real}(facelocationR::Array{T,1}, facelocationTheta::Array{T,1})
 if facelocationTheta[end]>2.0*pi
 	facelocationTheta = facelocationTheta/facelocationTheta[end]*(2.0*pi)
 	println("The domain size adjusted to match a maximum of 2*pi.")
@@ -188,7 +188,7 @@ end
 
 
 # ===================== 2D CYLINDRICAL MESH ==========================
-function createMeshCylindrical2D(Nr::Int64, Nz::Int64, Radius::Real, Height::Real)
+function createMeshCylindrical2D(Nr::Int, Nz::Int, Radius::Real, Height::Real)
 # builds a uniform cylindrical 2D mesh:
 # Nr is the number of cells in r (radial) direction
 # Radius is the domain length in r direction
@@ -209,7 +209,7 @@ MeshStructure(2.5,
 	[1])
 end
 
-function createMeshCylindrical2D(facelocationR::Array{Float64,1}, facelocationY::Array{Float64,1})
+function createMeshCylindrical2D{T<:Real}(facelocationR::Array{T,1}, facelocationY::Array{T,1})
 Nx = length(facelocationR)-1
 Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
@@ -227,7 +227,7 @@ end
 
 
 # ================================= 3D CARTESIAN MESH ========================================
-function createMesh3D(Nx::Int64, Ny::Int64, Nz::Int64, Width::Real, Height::Real, Depth::Real)
+function createMesh3D(Nx::Int, Ny::Int, Nz::Int, Width::Real, Height::Real, Depth::Real)
 # builds a uniform 3D mesh:
 # Nx is the number of cells in x direction
 # Ny is the number of cells in y direction
@@ -253,7 +253,7 @@ MeshStructure(3,
 	G[2:Nx+1, [1, end], [1, end]][:]])
 end
 
-function createMesh3D(facelocationX::Array{Float64,1}, facelocationY::Array{Float64,1}, facelocationZ::Array{Float64,1})
+function createMesh3D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T,1}, facelocationZ::Array{T,1})
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
 Nz = length(facelocationZ)-1
@@ -276,7 +276,7 @@ end
 
 
 # ======================================= 3D CYLINDRICAL MESH ==============================================
-function createMeshCylindrical3D(Nr::Int64, Ntheta::Int64, Nz::Int64, Radius::Real, Angle::Real, Height::Real)
+function createMeshCylindrical3D(Nr::Int, Ntheta::Int, Nz::Int, Radius::Real, Angle::Real, Height::Real)
 # builds a uniform 3D mesh:
 # Nr is the number of cells in x direction
 # Ntheta is the number of cells in y direction
@@ -307,7 +307,7 @@ MeshStructure(3.2,
 	G[2:Nr+1, [1, end], [1, end]][:]])
 end
 
-function createMeshCylindrical3D(facelocationR::Array{Float64,1}, facelocationTheta::Array{Float64,1}, facelocationZ::Array{Float64,1})
+function createMeshCylindrical3D{T<:Real}(facelocationR::Array{T,1}, facelocationTheta::Array{T,1}, facelocationZ::Array{T,1})
 if facelocationTheta[end]>2*pi
 	facelocationTheta = facelocationTheta/facelocationTheta[end]*2.0*pi
 	println("The domain size adjusted to match a maximum of 2*pi.")

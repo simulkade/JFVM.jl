@@ -1,47 +1,47 @@
-type CellLocation
-  x::Array{Float64,1}
-  y::Array{Float64,1}
-  z::Array{Float64,1}
+type CellLocation{T<:Real}
+  x::Array{T,1}
+  y::Array{T,1}
+  z::Array{T,1}
 end
 
-type CellSize
-  x::Array{Float64,1}
-  y::Array{Float64,1}
-  z::Array{Float64,1}
+type CellSize{T<:Real}
+  x::Array{T,1}
+  y::Array{T,1}
+  z::Array{T,1}
 end
 
-type FaceLocation
-  x::Array{Float64,1}
-  y::Array{Float64,1}
-  z::Array{Float64,1}
+type FaceLocation{T<:Real}
+  x::Array{T,1}
+  y::Array{T,1}
+  z::Array{T,1}
 end
 
 type MeshStructure
   dimension::Real
-  dims::Array{Int64,1}
+  dims::Array{Int,1}
   cellsize::CellSize
   cellcenters::CellLocation
   facecenters::FaceLocation
-  corner::Array{Int64,1}
-  edge::Array{Int64,1}
+  corner::Array{Int,1}
+  edge::Array{Int,1}
 end
 
-type CellValue
+type CellValue{T<:Real}
   domain::MeshStructure
-  value::Array{Float64}
+  value::Array{T}
 end
 
-type FaceValue
+type FaceValue{T<:Real}
   domain::MeshStructure
-  xvalue::Array{Float64}
-  yvalue::Array{Float64}
-  zvalue::Array{Float64}
+  xvalue::Array{T}
+  yvalue::Array{T}
+  zvalue::Array{T}
 end
 
-type BorderValue
-  a::Array{Float64}
-  b::Array{Float64}
-  c::Array{Float64}
+type BorderValue{T<:Real}
+  a::Array{T}
+  b::Array{T}
+  c::Array{T}
   periodic::Bool
 end
 

@@ -35,7 +35,7 @@ end
 end
 
 
-function transientTerm(phi_old::CellValue, dt::Real, alfa::Array{Float64})
+function transientTerm{T<:Real}(phi_old::CellValue, dt::Real, alfa::Array{T})
 d = phi_old.domain.dimension
 if d==1 || d==1.5
   transientTerm1D(phi_old, dt, alfa)
@@ -47,8 +47,8 @@ end
 
 end
 
-function transientTerm1D(phi_old::CellValue,
-		    dt::Real, alfa::Array{Float64})
+function transientTerm1D{T<:Real}(phi_old::CellValue,
+		    dt::Real, alfa::Array{T})
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
@@ -70,8 +70,8 @@ RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1]/dt,Nx)
 
 end
 
-function transientTerm2D(phi_old::CellValue, 
-		    dt::Real, alfa::Array{Float64})
+function transientTerm2D{T<:Real}(phi_old::CellValue, 
+		    dt::Real, alfa::Array{T})
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
@@ -94,8 +94,8 @@ RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1]/dt,Nx*Ny)
 
 end
 
-function transientTerm3D(phi_old::CellValue, 
-		    dt::Real, alfa::Array{Float64})
+function transientTerm3D{T<:Real}(phi_old::CellValue, 
+		    dt::Real, alfa::Array{T})
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure

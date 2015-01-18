@@ -18,13 +18,14 @@ end
 
 
 # ============================================================
-function createCellVariable(m::MeshStructure, phi0::Array{Real})
+function createCellVariable{T<:Real}(m::MeshStructure, phi0::Array{T})
 # creates a cell variable and assigns value phi0 to it
 if prod(m.dims+2)==length(phi0)
   CellValue(m, phi0)
 elseif prod(m.dims)==length(phi0)
+  d=m.dimension
   phival = zeros(tuple(m.dims.+2...))
-  BC = createBC(m.domain) # Neumann boundaries
+  BC = createBC(m) # Neumann boundaries
   if d==1 || d==1.5
     phival[2:end-1] = phi0
   elseif d==2 d==2 || d==2.5 || d==2.8
@@ -50,7 +51,7 @@ end
 
 
 # ============================================================
-function createFaceVariable(m::MeshStructure, phi0::Array{Float64,1})
+function createFaceVariable{T<:Real}(m::MeshStructure, phi0::Array{T,1})
 # creates a face variable based on the mesh structure
 d=m.dimension
   if d==1 || d==1.5
