@@ -17,7 +17,9 @@ You can have the following boundary conditions or a combination of them on each 
 It is relatively easy to use the code to solve a system of coupled linear PDE's and not too difficult to solve nonlinear PDE's.
 
 ## Installation
-You need to have [matplotlib](http://matplotlib.org/) and [mayavi](http://code.enthought.com/projects/mayavi/) installed. In Ubuntu-based systems, try
+You need to have [matplotlib](http://matplotlib.org/) and [mayavi](http://code.enthought.com/projects/mayavi/) installed. 
+### Linux
+In Ubuntu-based systems, try
 ```
 sudo apt-get install python-matplotlib mayavi2
 ```
@@ -26,6 +28,14 @@ Then go to your `.julia/v0.4` or `.julia/v0.3` (depending on your Julia version)
 git clone https://github.com/simulkade/JFVM.git
 ```
 Please let me know if it does not work on your windows machines.
+### Windows
+There are a few issues with 3D visualization in windows right now. This is the workflow if you want to give it a try:
+  - Download and install [Anaconda](http://continuum.io/downloads)
+  - Run `anaconda command prompt` (as administrator) and install mayavi and wxpython:
+    * conda install mayavi
+    * conda install wxpython
+  - Install [github for windows](https://windows.github.com/)
+  - open `github shell`, go to `.julia/v0.4` or `.julia/v0.3` and type ```git clone https://github.com/simulkade/JFVM.git```
 
 ## Tutorial
 I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM/blob/master/examples/jfvm_tutorial.ipynb), which will be extended gradually.
@@ -62,3 +72,7 @@ end
 ```
 
 Now change the 4th line to `m=createMesh2D(Nx,2*Nx, Lx,2*Lx)` and see what happens.
+
+# IJulia notebooks
+  - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM/blob/master/examples/jfvm_diffusion_analytics.ipynb)
+  - New notebooks soon...
