@@ -36,7 +36,9 @@ There are a few issues with 3D visualization in windows right now. This is the w
     * `conda install wxpython`
   - Install [github for windows](https://windows.github.com/)
   - open `github shell`, go to `.julia/v0.4` or `.julia/v0.3` and type 
-  ```git clone https://github.com/simulkade/JFVM.git```
+  ```
+  git clone https://github.com/simulkade/JFVM.git
+  ```
 
 ## Tutorial
 I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM/blob/master/examples/jfvm_tutorial.ipynb), which will be extended gradually.
