@@ -25,7 +25,7 @@ sudo apt-get install python-matplotlib mayavi2
 ```
 Then go to your `.julia/v0.4` or `.julia/v0.3` (depending on your Julia version) folder and type
 ```
-git clone https://github.com/simulkade/JFVM.git
+git clone https://github.com/simulkade/JFVM.jl.git
 ```
 Please let me know if it does not work on your windows machines.
 ### Windows
@@ -41,7 +41,7 @@ There are a few issues with 3D visualization in windows right now. This is the w
   ```
 
 ## Tutorial
-I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM/blob/master/examples/jfvm_tutorial.ipynb), which will be extended gradually.
+I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_tutorial.ipynb), which will be extended gradually.
 
 ## In action
 Copy and paste the following code to solve a transient diffusion equation:
@@ -77,5 +77,5 @@ end
 Now change the 4th line to `m=createMesh2D(Nx,2*Nx, Lx,2*Lx)` and see what happens.
 
 # IJulia notebooks
-  - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM/blob/master/examples/jfvm_diffusion_analytics.ipynb)
+  - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_diffusion_analytics.ipynb)
   - New notebooks soon...
