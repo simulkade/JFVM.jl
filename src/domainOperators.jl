@@ -47,6 +47,13 @@ FaceValue(b.domain,
   a.-b.zvalue)
 end
 
+function -(a::FaceValue)
+FaceValue(a.domain, 
+  -a.xvalue, 
+  -a.yvalue,
+  -a.zvalue)
+end
+
 function -(a::FaceValue, b::Real)
 FaceValue(a.domain, 
   a.xvalue.-b, 
