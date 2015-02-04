@@ -58,3 +58,10 @@ else
 end
 
 end
+
+function faceEval(f::Function, x::FaceValue)
+FaceValue(x.domain,
+    f(x.xvalue),
+    f(x.yvalue),
+    f(x.zvalue))
+end
