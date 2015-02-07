@@ -165,7 +165,7 @@ function upwindMean(phi::CellValue, u::FaceValue)
 # calculates the average values of a cell variable. The output is a
 # face variable
 d=phi.domain.dimension
-phi_tmp = phi.value
+phi_tmp = Base.copy(phi.value)
 if d==1 || d==1.5
   ux=u.xvalue
   # assign the value of the left boundary to the left ghost cell
