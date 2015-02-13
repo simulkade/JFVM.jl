@@ -1,7 +1,8 @@
 module JFVM
 
 using PyPlot, PyCall
-pygui_start(:wx)
+# I prefer not to use the following command for the issues that it has on windows machines
+# pygui_start(:wx) 
 @pyimport mayavi.mlab as mayavis
 
 export MeshStructure, BoundaryCondition, CellValue, FaceValue,

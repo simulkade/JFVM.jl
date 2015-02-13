@@ -117,7 +117,9 @@ elseif d==3
 
   mayavis.colorbar()
   mayavis.axes()
-  return mayavis.screenshot()
+  mshot= mayavis.screenshot()
+  mayavis.show()
+  return mshot
   
 elseif d==3.2
   Nx = phi.domain.dims[1]
@@ -164,10 +166,10 @@ elseif d==3.2
     scalars=phi0[:,:,floor(Nz/2.0)+1], vmin=vmin, vmax=vmax, opacity=0.8)
   mayavis.mesh(X[:,:,Nz],Y[:,:,Nz],Z[:,:,Nz], 
     scalars=phi0[:,:,Nz+1], vmin=vmin, vmax=vmax, opacity=0.8)
-
   mayavis.colorbar()
   mayavis.axes()
-  return mayavis.screenshot()
-
+  mshot=mayavis.screenshot()
+  mayavis.show()
+  return mshot
 end
 end  
