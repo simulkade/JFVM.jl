@@ -27,18 +27,19 @@ Then go to your `.julia/v0.4` or `.julia/v0.3` (depending on your Julia version)
 ```
 git clone https://github.com/simulkade/JFVM.jl.git
 ```
-Please let me know if it does not work on your windows machines.
+
 ### Windows
 There are a few issues with 3D visualization in windows right now. This is the workflow if you want to give it a try:
   - Download and install [Anaconda](http://continuum.io/downloads)
   - Run `anaconda command prompt` (as administrator) and install `mayavi` and `wxpython`:
     * `conda install mayavi`
-    * `conda install wxpython`
+    * `conda install wxpython` (Not necessary if you clone the last version of JFVM)
   - Install [github for windows](https://windows.github.com/)
   - open `github shell`, go to `.julia/v0.4` or `.julia/v0.3` and type 
   ```
   git clone https://github.com/simulkade/JFVM.git
   ```
+Please let me know if it does not work on your windows machines.
 
 ## Tutorial
 I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_tutorial.ipynb), which will be extended gradually.
