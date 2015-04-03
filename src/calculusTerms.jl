@@ -92,6 +92,8 @@ RHSdiv = zeros(Nx+2)
 # assign the values of the RHS vector
 RHSdiv[row_index] = reshape(div_x,Nx)
 
+return RHSdiv
+
 end
 
 # =============== Divergence 2D Term ============================
