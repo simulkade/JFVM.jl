@@ -13,7 +13,7 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue,
        createFaceVariable, copyCell, fluxLimiter, createMesh1D,
        createMesh2D, createMesh3D, createMeshRadial2D, createMeshCylindrical2D,
        createMeshCylindrical3D, createMeshCylindrical1D, solveLinearPDE, visualizeCells,
-       linearSourceTerm, constantSourceTerm, transientTerm, solveMUMPSLinearPDE, faceEval
+       linearSourceTerm, constantSourceTerm, transientTerm, solveMUMPSLinearPDE, faceEval, cellEval
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")

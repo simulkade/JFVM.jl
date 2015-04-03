@@ -65,3 +65,8 @@ FaceValue(x.domain,
     f(x.yvalue),
     f(x.zvalue))
 end
+
+function cellEval(f::Function, x::CellValue)
+CellValue(x.domain,
+    f(x.value))
+end
