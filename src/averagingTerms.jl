@@ -95,8 +95,17 @@ function geometricMean(phi::CellValue)
 d=phi.domain.dimension
 if d==1 || d==1.5
   dx = phi.domain.cellsize.x
+  n= phi.domain.dims[1]  
+  phix=zeros(n+1)
+  for i=1:n+1
+      if phi.value[i]==0.0 || phi.value[i+1]==0.0
+          phix[i]=0.0
+      else
+          phix[i]=exp((dx[i]*log(phi.value[i])+dx[i+1]*log(phi.value[i+1]))/(dx[i+1]+dx[i]))
+      end
+  end    
   FaceValue(phi.domain,
-    exp((dx[1:end-1].*log(phi.value[1:end-1])+dx[2:end].*log(phi.value[2:end]))./(dx[2:end]+dx[1:end-1])),
+    phix,
     [1.0],
     [1.0])
 elseif d==2 || d==2.5 || d==2.8
@@ -131,8 +140,17 @@ function harmonicMean(phi::CellValue)
 d=phi.domain.dimension
 if d==1 || d==1.5
   dx = phi.domain.cellsize.x
+  n=phi.domain.dims[1]
+  phix=zeros(n+1)
+  for i=1:n+1
+      if phi.value[i]==0.0 || phi.value[i+1]==0.0
+          phix[i]=0.0
+      else
+          phix[i]=(dx[i+1]+dx[i])/(dx[i+1]/phi.value[i+1]+dx[i]/phi.value[i])
+      end
+  end  
   FaceValue(phi.domain,
-    phi.value[2:end].*phi.value[1:end-1].*(dx[2:end]+dx[1:end-1])./(dx[2:end].*phi.value[1:end-1]+dx[1:end-1].*phi.value[2:end]),
+    phix,
     [1.0],
     [1.0])
 elseif d==2 || d==2.5 || d==2.8
