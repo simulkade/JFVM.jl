@@ -6,7 +6,7 @@ using PyPlot, PyCall
 @pyimport mayavi.mlab as mayavis
 
 export MeshStructure, BoundaryCondition, CellValue, FaceValue,
-       arithmeticMean, geometricMean, harmonicMean, upwindMean,
+       arithmeticMean, geometricMean, harmonicMean, upwindMean, linearMean,
        tvdMean, createBC, boundaryConditionTerm, cellBoundary,
        divergenceTerm, gradientTerm, convectionUpwindTerm, 
        convectionTerm, convectionTvdTerm, diffusionTerm, createCellVariable,
