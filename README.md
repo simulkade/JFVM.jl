@@ -79,5 +79,8 @@ end
 Now change the 4th line to `m=createMesh2D(Nx,2*Nx, Lx,2*Lx)` and see what happens.
 
 # IJulia notebooks
+  - [Introduction](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm-a-finite-volume-tool-for-julia.ipynb)
+  - [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_tutorial.ipynb)
   - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_diffusion_analytics.ipynb)
+  - [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/solving-nonlinear-pdes-with-fvm.ipynb)
   - New notebooks soon...
