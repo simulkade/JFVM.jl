@@ -33,7 +33,7 @@ elseif prod(m.dims)==length(phi0)
   elseif d==3 || d==3.2
     phival[2:end-1,2:end-1,2:end-1] = phi0
   end
-  phi = CellValue(m, phi0)
+  phi = CellValue(m, phival)
   cellBoundary!(phi, BC)
 else
   error("jFVT: Matrix must be the same size as the domain.")
