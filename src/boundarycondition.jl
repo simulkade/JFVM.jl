@@ -112,27 +112,47 @@ if !BC.right.periodic && !BC.left.periodic # non-periodic boundary condition
     s[q] = -(BC.left.b[1]/2.0 - BC.left.a[1]/dx_1)
     BCRHS[G[i]] = -BC.left.c[1]
 elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
+    nb=8
+    ii = zeros(Int64,nb)
+    jj = zeros(Int64,nb)
+    s = zeros(Float64, nb)
     # Right boundary
     i = Nx+2
     q=q+1
-    ii[q] = G[i]
-    jj[q] = G[i]
+    ii[q] = G[Nx+2]
+    jj[q] = G[Nx+2]
     s[q] = 1.0
     q=q+1
-    ii[q] = G[i]
-    jj[q] = G[2]
+    ii[q] = G[Nx+2]
+    jj[q] = G[Nx+1]
     s[q] = -1.0
+    q=q+1
+    ii[q] = G[Nx+2]
+    jj[q] = G[1]
+    s[q] = dx_end/dx_1
+    q=q+1
+    ii[q] = G[Nx+2]
+    jj[q] = G[2]
+    s[q] = -dx_end/dx_1
     BCRHS[G[i]] = 0.0
 
     # Left boundary
     i = 1
     q=q+1
-    ii[q] = G[i]
-    jj[q] = G[i]
+    ii[q] = G[1]
+    jj[q] = G[1]
     s[q] = 1.0
     q=q+1
-    ii[q] = G[i]
+    ii[q] = G[1]
+    jj[q] = G[2]
+    s[q] = 1.0
+    q=q+1
+    ii[q] = G[1]
     jj[q] = G[Nx+1]
+    s[q] = -1.0;
+    q=q+1
+    ii[q] = G[1]
+    jj[q] = G[Nx+2]
     s[q] = -1.0;
     BCRHS[G[i]] = 0.0
 end
@@ -157,7 +177,7 @@ dy_1 = BC.domain.cellsize.y[1]
 dy_end = BC.domain.cellsize.y[end]
 
 # number of boundary nodes:
-nb = 4*(Nx+Ny+2)
+nb = 8*(Nx+Ny+2)
 
 # define the vectors to be used for the creation of the sparse matrix
 ii = zeros(Int64,nb)
@@ -213,8 +233,16 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[i,2]
+    jj[q] = G[i,j-1]
     s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,1]
+    s[q] = dy_end/dy_1
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,2]
+    s[q] = -dy_end/dy_1
     BCRHS[G[i,j]] = 0.0
   end
   # bottom boundary
@@ -226,7 +254,15 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
+    jj[q] = G[i,j+1]
+    s[q] = 1.0
+    q+=1
+    ii[q] = G[i,j]
     jj[q] = G[i,Ny+1]
+    s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,Ny+2]
     s[q] = -1.0
     BCRHS[G[i,j]] = 0.0
   end
@@ -269,8 +305,16 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[2,j]
+    jj[q] = G[i-1,j]
     s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[1,j]
+    s[q] = dx_end/dx_1
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[2,j]
+    s[q] = -dx_end/dx_1
     BCRHS[G[i,j]] = 0.0
   end
   # Left boundary
@@ -282,7 +326,15 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
+    jj[q] = G[i+1,j]
+    s[q] = 1.0
+    q+=1
+    ii[q] = G[i,j]
     jj[q] = G[Nx+1,j]
+    s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[Nx+2,j]
     s[q] = -1.0
     BCRHS[G[i,j]] = 0.0
   end
@@ -305,7 +357,7 @@ dtheta_1 = BC.domain.cellsize.y[1]
 dtheta_end = BC.domain.cellsize.y[end]
 rp = BC.domain.cellcenters.x
 # number of boundary nodes:
-nb = 4*(Nx+Ntheta+2)
+nb = 8*(Nx+Ntheta+2)
 
 # define the vectors to be used for the creation of the sparse matrix
 ii = zeros(Int64,nb)
@@ -361,8 +413,16 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[i,2]
+    jj[q] = G[i,j-1]
     s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,1]
+    s[q] = dtheta_end/dtheta_1
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,2]
+    s[q] = -dtheta_end/dtheta_1
     BCRHS[G[i,j]] = 0.0
   end
   # bottom boundary
@@ -374,7 +434,15 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[i,Ntheta+1]
+    jj[q] = G[i,j+1]
+    s[q] = 1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,Ny+1]
+    s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[i,Ny+2]
     s[q] = -1.0
     BCRHS[G[i,j]] = 0.0
   end
@@ -417,8 +485,16 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[2,j]
+    jj[q] = G[i-1,j]
     s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[1,j]
+    s[q] = dx_end/dx_1
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[2,j]
+    s[q] = -dx_end/dx_1
     BCRHS[G[i,j]] = 0.0
   end
   # Left boundary
@@ -430,7 +506,15 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
+    jj[q] = G[i+1,j]
+    s[q] = 1.0
+    q+=1
+    ii[q] = G[i,j]
     jj[q] = G[Nx+1,j]
+    s[q] = -1.0
+    q+=1
+    ii[q] = G[i,j]
+    jj[q] = G[Nx+2,j]
     s[q] = -1.0
     BCRHS[G[i,j]] = 0.0
   end
