@@ -35,7 +35,7 @@ end
 function diffusionTerm1D(D::FaceValue)
 # D is a face variable
 
-# extract data from the mesh structure 
+# extract data from the mesh structure
 Nx = D.domain.dims[1]
 G = [1:Nx+2]
 DX = D.domain.cellsize.x
@@ -155,7 +155,7 @@ mnx = Nx*Ny*Nz
 mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# reassign the east, west, north, and south velocity vectors for the 
+# reassign the east, west, north, and south velocity vectors for the
 # code readability (use broadcasting)
 De = D.xvalue[2:Nx+1,:,:]./(dx[2:Nx+1].*DX[2:Nx+1])
 Dw = D.xvalue[1:Nx,:,:]./(dx[1:Nx].*DX[2:Nx+1])
@@ -182,14 +182,14 @@ rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
 iiy[1:3*mny] = repmat(rowy_index,3);
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
 iiz[1:3*mnz] = repmat(rowz_index,3)
-jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); 
-		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); 
+jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx);
+		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx);
 		reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
-jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); 
-		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); 
+jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny);
+		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny);
 		reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
-jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); 
-		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); 
+jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz);
+		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz);
 		reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)];
 sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
@@ -275,8 +275,8 @@ mnx = Nr*Ntheta
 mny = Nr*Ntheta
 
 # reassign the east, west for code readability
-De = rf[2:Nr+1,:].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
-Dw = rf[1:Nr,:].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
+De = rf[2:Nr+1].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
+Dw = rf[1:Nr].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
 Dn = D.yvalue[:,2:Ntheta+1]./(rp.*rp.*dtheta[1,2:Ntheta+1].*DTHETA[1,2:Ntheta+1])
 Ds = D.yvalue[:,1:Ntheta]./(rp.*rp.*dtheta[1,1:Ntheta].*DTHETA[1,2:Ntheta+1])
 
@@ -407,13 +407,13 @@ mnx = Nr*Ntheta*Nz
 mny = Nr*Ntheta*Nz
 mnz = Nr*Ntheta*Nz
 
-# extract the velocity data 
+# extract the velocity data
 # note: size(ux) = [1:m+1, 1:n] and size(uy) = [1:m, 1:n+1]
 Dx = D.xvalue
 Dy = D.yvalue
 Dz = D.zvalue
 
-# reassign the east, west, north, and south velocity vectors for the 
+# reassign the east, west, north, and south velocity vectors for the
 # code readability
 De = rf[2:Nr+1].*D.xvalue[2:Nr+1,:,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
 Dw = rf[1:Nr].*D.xvalue[1:Nr,:,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
@@ -440,14 +440,14 @@ rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
 iiy[1:3*mny] = repmat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
 iiz[1:3*mnz] = repmat(rowz_index,3)
-jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); 
-		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); 
+jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx);
+		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx);
 		reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
-jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); 
-		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); 
+jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny);
+		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny);
 		reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
-jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); 
-		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); 
+jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz);
+		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz);
 		reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
 sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]

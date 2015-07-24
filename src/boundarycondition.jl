@@ -540,7 +540,7 @@ dz_1 = BC.domain.cellsize.z[1]
 dz_end = BC.domain.cellsize.z[end]
 
 # number of boundary nodes (exact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
-nb = 4*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
+nb = 8*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
 
 # define the vectors to be used for the creation of the sparse matrix
 ii = zeros(Int64, nb)
@@ -605,8 +605,16 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     s[q] = 1
     q = q[end]+[1:Nx*Nz]
     ii[q] = G[i,j,k]
-    jj[q] = G[i,2,k]
+    jj[q] = G[i,j-1,k]
     s[q] = -1
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,1,k]
+    s[q] = dy_end/dy_1
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,2,k]
+    s[q] = -dy_end/dy_1
     BCRHS[G[i,j,k]] = 0.0
 
     # Bottom boundary
@@ -619,7 +627,15 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     s[q] = 1.0
     q = q[end]+[1:Nx*Nz]
     ii[q] = G[i,j,k]
+    jj[q] = G[i,j+1,k]
+    s[q] = 1.0
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
     jj[q] = G[i,Ny+1,k]
+    s[q] = -1.0
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,Ny+2,k]
     s[q] = -1.0
     BCRHS[G[i,j,k]] = 0.0
 end
@@ -664,8 +680,16 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     s[q] = 1.0
     q = q[end]+[1:Ny*Nz]
     ii[q] = G[i,j,k]
-    jj[q] = G[2,j,k]
+    jj[q] = G[i-1,j,k]
     s[q] = -1.0
+    q = q[end]+[1:Ny*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[1,j,k]
+    s[q] = dx_end/dx_1
+    q = q[end]+[1:Ny*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[2,j,k]
+    s[q] = -dx_end/dx_1
     BCRHS[G[i,j,k]] = 0.0
 
     # Left boundary
@@ -678,7 +702,15 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     s[q] = 1.0
     q = q[end]+[1:Ny*Nz]
     ii[q] = G[i,j,k]
+    jj[q] = G[i+1,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Ny*Nz]
+    ii[q] = G[i,j,k]
     jj[q] = G[Nx+1,j,k]
+    s[q] = -1.0
+    q = q[end]+[1:Ny*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[Nx+2,j,k]
     s[q] = -1.0
     BCRHS[G[i,j,k]] = 0.0
 end
@@ -722,7 +754,15 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     s[q] = 1.0
     q = q[end]+[1:Nx*Ny]
     ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k+1]
+    s[q] = 1.0
+    q = q[end]+[1:Nx*Ny]
+    ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+1]
+    s[q] = -1.0
+    q = q[end]+[1:Nx*Ny]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,Nz+2]
     s[q] = -1.0
     BCRHS[G[i,j,k]] = 0.0
 
@@ -736,8 +776,16 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     s[q] = 1.0
     q = q[end]+[1:Nx*Ny]
     ii[q] = G[i,j,k]
-    jj[q] = G[i,j,2]
+    jj[q] = G[i,j,k-1]
     s[q] = -1.0
+    q = q[end]+[1:Nx*Ny]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,1]
+    s[q] = dz_end/dz_1
+    q = q[end]+[1:Nx*Ny]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,2]
+    s[q] = -dz_end/dz_1
     BCRHS[G[i,j,k]] = 0.0
 end
 
@@ -765,7 +813,7 @@ rp = BC.domain.cellcenters.x
 #rp = repmat(BC.domain.cellcenters.x', 1, Nz)
 
 # number of boundary nodes (exact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
-nb = 4*((Nx+1)*(Ntheta+1)+(Nx+1)*(Nz+1)+(Ntheta+1)*(Nz+1))
+nb = 8*((Nx+1)*(Ntheta+1)+(Nx+1)*(Nz+1)+(Ntheta+1)*(Nz+1))
 
 # define the vectors to be used for the creation of the sparse matrix
 ii = zeros(Int64, nb)
@@ -830,6 +878,14 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     s[q] = 1
     q = q[end]+[1:Nx*Nz]
     ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,2,k]
+    s[q] = -1
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
     jj[q] = G[i,2,k]
     s[q] = -1
     BCRHS[G[i,j,k]] = 0.0
@@ -842,6 +898,14 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1.0
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Nx*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,Ntheta+1,k]
+    s[q] = -1.0
     q = q[end]+[1:Nx*Nz]
     ii[q] = G[i,j,k]
     jj[q] = G[i,Ntheta+1,k]
@@ -889,6 +953,14 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     s[q] = 1.0
     q = q[end]+[1:Ntheta*Nz]
     ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Ntheta*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[2,j,k]
+    s[q] = -1.0
+    q = q[end]+[1:Ntheta*Nz]
+    ii[q] = G[i,j,k]
     jj[q] = G[2,j,k]
     s[q] = -1.0
     BCRHS[G[i,j,k]] = 0.0
@@ -901,6 +973,14 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1.0
+    q = q[end]+[1:Ntheta*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Ntheta*Nz]
+    ii[q] = G[i,j,k]
+    jj[q] = G[Nx+1,j,k]
+    s[q] = -1.0
     q = q[end]+[1:Ntheta*Nz]
     ii[q] = G[i,j,k]
     jj[q] = G[Nx+1,j,k]
@@ -947,6 +1027,14 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     s[q] = 1.0
     q = q[end]+[1:Nx*Ntheta]
     ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Nx*Ntheta]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,Nz+1]
+    s[q] = -1.0
+    q = q[end]+[1:Nx*Ntheta]
+    ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+1]
     s[q] = -1.0
     BCRHS[G[i,j,k]] = 0.0
@@ -959,6 +1047,14 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1.0
+    q = q[end]+[1:Nx*Ntheta]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,k]
+    s[q] = 1.0
+    q = q[end]+[1:Nx*Ntheta]
+    ii[q] = G[i,j,k]
+    jj[q] = G[i,j,2]
+    s[q] = -1.0
     q = q[end]+[1:Nx*Ntheta]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,2]
