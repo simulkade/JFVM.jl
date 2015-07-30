@@ -36,12 +36,12 @@ end
 
 # =============== Divergence 1D Term ============================
 function divergenceTerm1D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
 Nx = F.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DX = F.domain.cellsize.x[2:end-1]
 
 # define the vector of cell index
@@ -63,12 +63,12 @@ end
 
 # =============== Divergence Cylindrical 1D Term ============================
 function divergenceTermCylindrical1D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
 Nx = F.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DX = F.domain.cellsize.x[2:end-1]
 rp = F.domain.cellcenters.x
 rf = F.domain.facecenters.x
@@ -76,7 +76,7 @@ rf = F.domain.facecenters.x
 # define the vector of cell index
 row_index = reshape(G[2:Nx+1],Nx) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nx+1]
 Fw = F.xvalue[1:Nx]
@@ -98,7 +98,7 @@ end
 
 # =============== Divergence 2D Term ============================
 function divergenceTerm2D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
@@ -112,7 +112,7 @@ DY[:] = F.domain.cellsize.y[2:end-1]
 # define the vector of cell index
 row_index = reshape(G[2:Nx+1,2:Ny+1],Nx*Ny) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nx+1,:]
 Fw = F.xvalue[1:Nx,:]
@@ -141,7 +141,7 @@ end
 
 # =============== Divergence 2D Cylindrical Term ============================
 function divergenceTermCylindrical2D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
@@ -157,7 +157,7 @@ rf = F.domain.facecenters.x
 # define the vector of cell index
 row_index = reshape(G[2:Nr+1,2:Nz+1],Nr*Nz) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nr+1,:]
 Fw = F.xvalue[1:Nr,:]
@@ -188,7 +188,7 @@ end
 
 # =============== Divergence 2D Radial Term ============================
 function divergenceTermRadial2D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
@@ -204,7 +204,7 @@ rf = F.domain.facecenters.x
 # define the vector of cell index
 row_index = reshape(G[2:Nr+1,2:Ntheta+1],Nr*Ntheta) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nr+1,:]
 Fw = F.xvalue[1:Nr,:]
@@ -233,7 +233,7 @@ end
 
 # =============== Divergence 3D Term ============================
 function divergenceTerm3D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
@@ -250,7 +250,7 @@ dz[:] = F.domain.cellsize.z[2:end-1]
 # define the vector of cell index
 row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nx+1,:,:]
 Fw = F.xvalue[1:Nx,:,:]
@@ -284,7 +284,7 @@ end
 
 # =============== Divergence 3D Cylindrical Term ============================
 function divergenceTermCylindrical3D(F::FaceValue)
-# This function calculates the divergence of a field 
+# This function calculates the divergence of a field
 # using its face
 
 # extract data from the mesh structure
@@ -302,7 +302,7 @@ rp = F.domain.cellcenters.x
 # define the vector of cell index
 row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz) # main diagonal
 
-# reassign the east, west, north, and south flux vectors for the 
+# reassign the east, west, north, and south flux vectors for the
 # code readability
 Fe = F.xvalue[2:Nx+1,:,:]
 Fw = F.xvalue[1:Nx,:,:]
@@ -387,7 +387,7 @@ elseif d==3.2
   FaceValue(phi.domain,
     (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
     (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./(dy.*rp),
-    (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)    
-    
+    (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
+
 end
 end
