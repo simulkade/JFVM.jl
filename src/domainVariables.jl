@@ -72,6 +72,27 @@ d=m.dimension
   end
 end
 
+function createFaceVariable(m::MeshStructure, phi0::Real)
+# creates a face variable based on the mesh structure
+d=m.dimension
+  if d==1 || d==1.5
+    FaceValue(m,
+	      ones(m.dims[1]+1)*phi0,
+	      [1.0],
+	      [1.0])
+  elseif d==2 || d==2.5 || d==2.8
+    FaceValue(m,
+	      ones(m.dims[1]+1, m.dims[2])*phi0,
+	      ones(m.dims[1], m.dims[2]+1)*phi0,
+	      [1.0])
+  elseif d==3 || d==3.2
+    FaceValue(m,
+	      ones(m.dims[1]+1, m.dims[2], m.dims[3])*phi0,
+	      ones(m.dims[1], m.dims[2]+1, m.dims[3])*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3]+1)*phi0)
+  end
+end
+
 
 # ================== copy function for cell variables ===================
 function copyCell(phi::CellValue)
