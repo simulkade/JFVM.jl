@@ -14,7 +14,8 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue,
        createMesh2D, createMesh3D, createMeshRadial2D, createMeshCylindrical2D,
        createMeshCylindrical3D, createMeshCylindrical1D, solveLinearPDE,
        visualizeCells, linearSourceTerm, constantSourceTerm, transientTerm,
-       solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde
+       solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
+       plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")
