@@ -31,6 +31,13 @@ type CellValue{T<:Real}
   value::Array{T}
 end
 
+type CellVector{T<:Real}
+  domain::MeshStructure
+  xvalue::Array{T}
+  yvalue::Array{T}
+  zvalue::Array{T}
+end
+
 type FaceValue{T<:Real}
   domain::MeshStructure
   xvalue::Array{T}

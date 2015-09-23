@@ -154,3 +154,95 @@ function /(a::CellValue, b::Real)
 CellValue(a.domain,
   a.value./b)
 end
+
+# Cell Vector operators
+function +(a::CellVector, b::CellVector)
+CellVector(a.domain,
+  a.xvalue+b.xvalue,
+  a.yvalue+b.yvalue,
+  a.zvalue+b.zvalue)
+end
+
+function -(a::CellVector, b::CellVector)
+CellVector(a.domain,
+  a.xvalue-b.xvalue,
+  a.yvalue-b.yvalue,
+  a.zvalue-b.zvalue)
+end
+
+function .*(a::CellVector, b::CellVector)
+CellVector(a.domain,
+  a.xvalue.*b.xvalue,
+  a.yvalue.*b.yvalue,
+  a.zvalue.*b.zvalue)
+end
+
+function ./(a::CellVector, b::CellVector)
+CellVector(a.domain,
+  a.xvalue./b.xvalue,
+  a.yvalue./b.yvalue,
+  a.zvalue./b.zvalue)
+end
+
+function +(a::Real, b::CellVector)
+CellVector(b.domain,
+  a.+b.xvalue,
+  a.+b.yvalue,
+  a.+b.zvalue)
+end
+
+function +(a::CellVector, b::Real)
+CellVector(a.domain,
+  b.+a.xvalue,
+  b.+a.yvalue,
+  b.+a.zvalue)
+end
+
+function -(a::Real, b::CellVector)
+CellVector(b.domain,
+  a.-b.xvalue,
+  a.-b.yvalue,
+  a.-b.zvalue)
+end
+
+function -(a::CellVector)
+CellVector(a.domain,
+  -a.xvalue,
+  -a.yvalue,
+  -a.zvalue)
+end
+
+function -(a::CellVector, b::Real)
+CellVector(a.domain,
+  a.xvalue.-b,
+  a.yvalue.-b,
+  a.zvalue.-b)
+end
+
+function *(a::Real, b::CellVector)
+CellVector(b.domain,
+  a.*b.xvalue,
+  a.*b.yvalue,
+  a.*b.zvalue)
+end
+
+function *(a::CellVector, b::Real)
+CellVector(a.domain,
+  b.*a.xvalue,
+  b.*a.yvalue,
+  b.*a.zvalue)
+end
+
+function /(a::Real, b::CellVector)
+CellVector(b.domain,
+  a./b.xvalue,
+  a./b.yvalue,
+  a./b.zvalue)
+end
+
+function /(a::CellVector, b::Real)
+CellVector(a.domain,
+  a.xvalue./b,
+  a.yvalue./b,
+  a.zvalue./b)
+end

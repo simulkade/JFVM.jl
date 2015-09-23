@@ -94,6 +94,49 @@ d=m.dimension
 end
 
 
+# ============================================================
+function createCellVector{T<:Real}(m::MeshStructure, phi0::Array{T,1})
+# creates a cell vector based on the mesh structure
+d=m.dimension
+  if d==1 || d==1.5
+    CellVector(m,
+	      ones(m.dims[1])*phi0[1],
+	      [1.0],
+	      [1.0])
+  elseif d==2 || d==2.5 || d==2.8
+    CellVector(m,
+	      ones(m.dims[1], m.dims[2])*phi0[1],
+	      ones(m.dims[1], m.dims[2])*phi0[2],
+	      [1.0])
+  elseif d==3 || d==3.2
+    CellVector(m,
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[1],
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[2],
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[3])
+  end
+end
+
+function createCellVector(m::MeshStructure, phi0::Real)
+# creates a cell vector based on the mesh structure
+d=m.dimension
+  if d==1 || d==1.5
+    CellVector(m,
+	      ones(m.dims[1])*phi0,
+	      [1.0],
+	      [1.0])
+  elseif d==2 || d==2.5 || d==2.8
+    CellVector(m,
+	      ones(m.dims[1], m.dims[2])*phi0,
+	      ones(m.dims[1], m.dims[2])*phi0,
+	      [1.0])
+  elseif d==3 || d==3.2
+    CellVector(m,
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0)
+  end
+end
+
 # ================== copy function for cell variables ===================
 function copyCell(phi::CellValue)
 CellValue(phi.domain, Base.copy(phi.value))

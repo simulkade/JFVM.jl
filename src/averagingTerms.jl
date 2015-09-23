@@ -1,19 +1,7 @@
 # ===============================
-# Written by AAE
-# TU Delft, Spring 2014
+# Written by AAE, TU Delft
 # simulkade.com
-# Last edited: 27 December, 2014
 # ===============================
-
-# =========================================================
-# Last changes:
-# 27 December, 2014
-#     - Radial and 3D cylindrical support
-#     - improved averaging for cells witout a ghost value
-#     - finished up the tvd averaging scheme
-# =========================================================
-
-
 
 # ================== Linear averaging scheme ==================
 function linearMean(phi::CellValue)
@@ -95,7 +83,7 @@ function geometricMean(phi::CellValue)
 d=phi.domain.dimension
 if d==1 || d==1.5
   dx = phi.domain.cellsize.x
-  n= phi.domain.dims[1]  
+  n= phi.domain.dims[1]
   phix=zeros(n+1)
   for i=1:n+1
       if phi.value[i]==0.0 || phi.value[i+1]==0.0
@@ -103,7 +91,7 @@ if d==1 || d==1.5
       else
           phix[i]=exp((dx[i]*log(phi.value[i])+dx[i+1]*log(phi.value[i+1]))/(dx[i+1]+dx[i]))
       end
-  end    
+  end
   FaceValue(phi.domain,
     phix,
     [1.0],
@@ -148,7 +136,7 @@ if d==1 || d==1.5
       else
           phix[i]=(dx[i+1]+dx[i])/(dx[i+1]/phi.value[i+1]+dx[i]/phi.value[i])
       end
-  end  
+  end
   FaceValue(phi.domain,
     phix,
     [1.0],
@@ -294,11 +282,11 @@ elseif d==2 || d==2.5 || d==2.8
   phiX_m = zeros(Float64, Nx+1,Ny)
   phiY_p = zeros(Float64, Nx,Ny+1)
   phiY_m = zeros(Float64, Nx,Ny+1)
-  
+
   # extract the velocity data
   ux = u.xvalue
   uy = u.yvalue
-  
+
   # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
   # x direction
   dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
@@ -324,14 +312,14 @@ elseif d==2 || d==2.5 || d==2.8
   phiY_m[:,1:Ny] = phi.value[2:Nx+1, 2:Ny+1]+0.5*FL(rY_m).*
       (phi.value[2:Nx+1, 1:Ny]-phi.value[2:Nx+1, 2:Ny+1])
   phiY_m[:, Ny+1] = (phi.value[2:Nx+1, end]+phi.value[2:Nx+1, end-1])/2.0  # top boundary
-      
+
   FaceValue(phi.domain,
       (ux.>0.0).*phiX_p+(ux.<0.0).*phiX_m+
          0.5*(ux.==0.0).*(phi.value[1:Nx+1,2:Ny+1]+phi.value[2:Nx+2,2:Ny+1]),
       (uy.>0.0).*phiY_p+(uy.<0.0).*phiY_m+
          0.5*(uy.==0.0).*(phi.value[2:Nx+1,1:Ny+1]+phi.value[2:Nx+1,2:Ny+2]),
       [1.0])
-      
+
 elseif d==3 || d==3.2
   # extract data from the mesh structure
   Nx = u.domain.dims[1]
@@ -346,7 +334,7 @@ elseif d==3 || d==3.2
   ux = u.xvalue
   uy = u.yvalue
   uz = u.zvalue
-  
+
   # define the tvd face vectors
   phiX_p = zeros(Float64, Nx+1,Ny,Nz)
   phiX_m = zeros(Float64, Nx+1,Ny,Nz)
@@ -391,7 +379,7 @@ elseif d==3 || d==3.2
   phiZ_m[:,:,1:Nz] = phi.value[2:Nx+1,2:Ny+1,2:Nz+1]+0.5*FL(rZ_m).*
       (phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
   phiZ_m[:,:,Nz+1] = (phi.value[2:Nx+1,2:Ny+1,end]+phi.value[2:Nx+1,2:Ny+1,end-1])/2.0  # front boundary
-  
+
   FaceValue(phi.domain,
       (ux.>0.0).*phiX_p+(ux.<0.0).*phiX_m+
          0.5*(ux.==0.0).*(phi.value[1:Nx+1,2:Ny+1,2:Nz+1]+phi.value[2:Nx+2,2:Ny+1,2:Nz+1]),
