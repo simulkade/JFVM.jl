@@ -2,13 +2,7 @@
 # Written by AAE
 # TU Delft, Winter 2014
 # simulkade.com
-# Last edited: 29 December, 2014
 # ===============================
-
-# =========================================================================
-# Changes
-# 2014-12-31: - Added 2D radial surface plot
-# =========================================================================
 
 # =============================== SOLVERS ===================================
 function solveLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
@@ -192,9 +186,10 @@ elseif d==2 || d==2.5
   quiver(repmat(x, 1, length(y)), repmat(y', length(x), 1), phi.xvalue, phi.yvalue)
 elseif d==2.8
   x = phi.domain.cellcenters.x
-  y = phi.domain.cellcenters.y
+  y = phi.domain.cellcenters.y'
   subplot(111, polar="true")
-  quiver(repmat(x, 1, length(y)), repmat(y', length(x), 1), phi.xvalue, phi.yvalue)
+  quiver(repmat(y, length(x), 1), repmat(x, 1, length(y)),
+  phi.xvalue.*cos(y)-phi.yvalue.*sin(y), phi.xvalue.*sin(y)+phi.yvalue.*cos(y))
 elseif d==3
   Nx = phi.domain.dims[1]
   Ny = phi.domain.dims[2]
@@ -263,7 +258,8 @@ elseif d==3.2
   #vmax = maximum(phi0)
   # 6 surfaces
   # surfaces 1,2 (x=x[1], x=x[end])
-  mayavis.quiver3d(X,Y,Z, phi.xvalue, phi.yvalue, phi.zvalue)
+  mayavis.quiver3d(X,Y,Z, phi.xvalue.*cos(TH)-phi.yvalue.*sin(TH),
+  phi.xvalue.*sin(TH)+phi.yvalue.*cos(TH), phi.zvalue)
   mayavis.colorbar()
   mayavis.axes()
   mshot=mayavis.screenshot()
