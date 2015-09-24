@@ -7,15 +7,16 @@ using PyPlot, PyCall
 
 export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        arithmeticMean, geometricMean, harmonicMean, upwindMean, linearMean,
-       tvdMean, createBC, boundaryConditionTerm, cellBoundary,
-       divergenceTerm, gradientTerm, convectionUpwindTerm,
+       tvdMean, createBC, boundaryConditionTerm, cellBoundary, solvePDE,
+       divergenceTerm, gradientTerm, convectionUpwindTerm, createCellVector,
        convectionTerm, convectionTvdTerm, diffusionTerm, createCellVariable,
        createFaceVariable, copyCell, fluxLimiter, createMesh1D,
        createMesh2D, createMesh3D, createMeshRadial2D, createMeshCylindrical2D,
        createMeshCylindrical3D, createMeshCylindrical1D, solveLinearPDE,
        visualizeCells, linearSourceTerm, constantSourceTerm, transientTerm,
        solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
-       plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar
+       plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
+       visualizeCellVectors
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")
