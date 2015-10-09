@@ -23,13 +23,13 @@ function createMesh1D(Nx::Int, Width::Real)
 dx = Width/Nx
 
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 MeshStructure(1,
 		[Nx],
 		CellSize(dx*ones(Nx+2), [0.0], [0.0]),
-		CellLocation([1:Nx]*dx.-dx/2,[0.0],[0.0]), 
-		FaceLocation([0:Nx]*dx,[0.0],[0.0]),
+		CellLocation([1:Nx;]*dx.-dx/2,[0.0],[0.0]),
+		FaceLocation([0:Nx;]*dx,[0.0],[0.0]),
 		[1],
 		[1])
 end
@@ -42,14 +42,14 @@ function createMesh1D{T<:Real}(facelocationX::Array{T,1})
 # cell size is dx
 Nx = length(facelocationX)-1
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 MeshStructure(1,
 		[Nx],
-		CellSize([facelocationX[2]-facelocationX[1], 
+		CellSize([facelocationX[2]-facelocationX[1],
 		facelocationX[2:end]-facelocationX[1:end-1],
 		facelocationX[end]-facelocationX[end-1]], [0.0], [0.0]),
-		CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]),[0.0],[0.0]), 
+		CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]),[0.0],[0.0]),
 		FaceLocation(facelocationX,[0.0],[0.0]),
 		[1],
 		[1])
@@ -66,13 +66,13 @@ function createMeshCylindrical1D(Nr::Int, Radius::Real)
 # cell size is dr
 dr = Radius/Nr
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
-MeshStructure(1.5, 
+MeshStructure(1.5,
 		[Nr],
 		CellSize(dr*ones(Nr+2), [0.0], [0.0]),
-		CellLocation([1:Nr]*dr.-dr/2.0,[0.0],[0.0]), 
-		FaceLocation([0:Nr]*dr,[0.0],[0.0]),
+		CellLocation([1:Nr;]*dr.-dr/2.0,[0.0],[0.0]),
+		FaceLocation([0:Nr;]*dr,[0.0],[0.0]),
 		[1],
 		[1])
 end
@@ -85,14 +85,14 @@ function createMeshCylindrical1D{T<:Real}(facelocationR::Array{T,1})
 # cell size is dr
 Nr = length(facelocationR)-1
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
-MeshStructure(1.5, 
+MeshStructure(1.5,
 		[Nr],
-		CellSize([facelocationR[2]-facelocationR[1], 
+		CellSize([facelocationR[2]-facelocationR[1],
 		facelocationR[2:end]-facelocationR[1:end-1],
 		facelocationR[end]-facelocationR[end-1]], [0.0], [0.0]),
-		CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]),[0.0],[0.0]), 
+		CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]),[0.0],[0.0]),
 		FaceLocation(facelocationR,[0.0],[0.0]),
 		[1],
 		[1])
@@ -107,17 +107,17 @@ function createMesh2D(Nx::Int, Ny::Int, Width::Real, Height::Real)
 # Width is the domain length in x direction
 
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 # cell size is dx
 dx = Width/Nx
 dy = Height/Ny
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
-MeshStructure(2, 
-	[Nx, Ny], 
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
+MeshStructure(2,
+	[Nx, Ny],
 	CellSize(dx*ones(Nx+2), dy*ones(Ny+2), [0.0]),
-	CellLocation([1:Nx]*dx.-dx/2.0,[1:Ny]*dy.-dy/2.0,[0.0]), 
-	FaceLocation([0:Nx]*dx,[0:Ny]*dy,[0.0]),
+	CellLocation([1:Nx;]*dx.-dx/2.0,[1:Ny;]*dy.-dy/2.0,[0.0]),
+	FaceLocation([0:Nx;]*dx,[0:Ny;]*dy,[0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
 end
@@ -125,13 +125,13 @@ end
 function createMesh2D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T,1})
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
-MeshStructure(2, 
-	[Nx, Ny], 
-	CellSize([facelocationX[2]-facelocationX[1], facelocationX[2:end]-facelocationX[1:end-1], facelocationX[end]-facelocationX[end-1]], 
-	[facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]], 
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
+MeshStructure(2,
+	[Nx, Ny],
+	CellSize([facelocationX[2]-facelocationX[1], facelocationX[2:end]-facelocationX[1:end-1], facelocationX[end]-facelocationX[end-1]],
+	[facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]), 
+	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]),
 	FaceLocation(facelocationX, facelocationY, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -147,7 +147,7 @@ function createMeshRadial2D(Nr::Int, Ntheta::Int, Radius::Real, Angle::Real)
 # Ntheta is the number of cells in angular direction (not really a direction)
 # Angle is the angular domain size
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 # cell size is dx, dy
 if Angle>2*pi
@@ -156,12 +156,12 @@ if Angle>2*pi
 end
 dr = Radius/Nr
 dtheta = Angle/Ntheta
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
-MeshStructure(2.8, 
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
+MeshStructure(2.8,
 	[Nr, Ntheta],
 	CellSize(dr*ones(Nr+2), dtheta*ones(Ntheta+2), [0.0]),
-	CellLocation([1:Nr]*dr.-dr/2.0,[1:Ntheta]*dtheta.-dtheta/2.0,[0.0]), 
-	FaceLocation([0:Nr]*dr,[0:Ntheta]*dtheta,[0.0]),
+	CellLocation([1:Nr;]*dr.-dr/2.0,[1:Ntheta;]*dtheta.-dtheta/2.0,[0.0]),
+	FaceLocation([0:Nr;]*dr,[0:Ntheta;]*dtheta,[0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
 end
@@ -173,13 +173,13 @@ if facelocationTheta[end]>2.0*pi
 end
 Nx = length(facelocationR)-1
 Ny = length(facelocationTheta)-1
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
-MeshStructure(2.8, 
-	[Nx, Ny], 
-	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]], 
-	[facelocationTheta[2]-facelocationTheta[1], facelocationTheta[2:end]-facelocationTheta[1:end-1], facelocationTheta[end]-facelocationTheta[end-1]], 
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
+MeshStructure(2.8,
+	[Nx, Ny],
+	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]],
+	[facelocationTheta[2]-facelocationTheta[1], facelocationTheta[2:end]-facelocationTheta[1:end-1], facelocationTheta[end]-facelocationTheta[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]), [0.0]), 
+	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]), [0.0]),
 	FaceLocation(facelocationR, facelocationTheta, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -194,17 +194,17 @@ function createMeshCylindrical2D(Nr::Int, Nz::Int, Radius::Real, Height::Real)
 # Radius is the domain length in r direction
 
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 # cell size is dr, dz
 dr = Radius/Nr
 dz = Height/Nz
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
-MeshStructure(2.5, 
-	[Nr, Nz], 
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
+MeshStructure(2.5,
+	[Nr, Nz],
 	CellSize(dr*ones(Nr+2), dz*ones(Nz+2), [0.0]),
-	CellLocation([1:Nr]*dr.-dr/2.0,[1:Nz]*dz.-dz/2.0,[0.0]), 
-	FaceLocation([0:Nr]*dr,[0:Nz]*dz,[0.0]),
+	CellLocation([1:Nr;]*dr.-dr/2.0,[1:Nz;]*dz.-dz/2.0,[0.0]),
+	FaceLocation([0:Nr;]*dr,[0:Nz;]*dz,[0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
 end
@@ -212,13 +212,13 @@ end
 function createMeshCylindrical2D{T<:Real}(facelocationR::Array{T,1}, facelocationY::Array{T,1})
 Nx = length(facelocationR)-1
 Ny = length(facelocationY)-1
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
-MeshStructure(2.5, 
-	[Nx, Ny], 
-	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]], 
-	[facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]], 
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
+MeshStructure(2.5,
+	[Nx, Ny],
+	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]],
+	[facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]), 
+	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]),
 	FaceLocation(facelocationR, facelocationY, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -233,20 +233,20 @@ function createMesh3D(Nx::Int, Ny::Int, Nz::Int, Width::Real, Height::Real, Dept
 # Ny is the number of cells in y direction
 # Nz is the number of cells in z direction
 # Width is the domain length in x direction
-# Height is the domain length in y direction	
+# Height is the domain length in y direction
 # Depth is the domain length in z direction
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 dx = Width/Nx
 dy = Height/Ny
 dz = Depth/Nz
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
-MeshStructure(3,  
-	[Nx, Ny, Nz], 
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
+MeshStructure(3,
+	[Nx, Ny, Nz],
 	CellSize(dx*ones(Nx+2), dy*ones(Ny+2), dz*ones(Nz+2)),
-	CellLocation([1:Nx]*dx.-dx/2.0, [1:Ny]*dy.-dy/2.0, [1:Nz]*dz.-dz/2.0), 
-	FaceLocation([0:Nx]*dx, [0:Ny]*dy, [0:Nz]*dz),
+	CellLocation([1:Nx;]*dx.-dx/2.0, [1:Ny;]*dy.-dy/2.0, [1:Nz;]*dz.-dz/2.0),
+	FaceLocation([0:Nx;]*dx, [0:Ny;]*dy, [0:Nz;]*dz),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];
 	G[[1, end], 2:Ny+1, [1, end]][:];
@@ -257,15 +257,15 @@ function createMesh3D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
 Nz = length(facelocationZ)-1
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
-MeshStructure(3,  
-	[Nx, Ny, Nz], 
-	CellSize([facelocationX[2]-facelocationX[1], facelocationX[2:end]-facelocationX[1:end-1], facelocationX[end]-facelocationX[end-1]], 
-	  [facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]], 
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
+MeshStructure(3,
+	[Nx, Ny, Nz],
+	CellSize([facelocationX[2]-facelocationX[1], facelocationX[2:end]-facelocationX[1:end-1], facelocationX[end]-facelocationX[end-1]],
+	  [facelocationY[2]-facelocationY[1], facelocationY[2:end]-facelocationY[1:end-1], facelocationY[end]-facelocationY[end-1]],
 	  [facelocationZ[2]-facelocationZ[1], facelocationZ[2:end]-facelocationZ[1:end-1], facelocationZ[end]-facelocationZ[end-1]]),
-	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]), 
-	  0.5*(facelocationY[2:end]+facelocationY[1:end-1]), 
-	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])), 
+	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]),
+	  0.5*(facelocationY[2:end]+facelocationY[1:end-1]),
+	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])),
 	FaceLocation(facelocationX, facelocationY, facelocationZ),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];
@@ -282,11 +282,11 @@ function createMeshCylindrical3D(Nr::Int, Ntheta::Int, Nz::Int, Radius::Real, An
 # Ntheta is the number of cells in y direction
 # Nz is the number of cells in z direction
 # Radius is the domain length in x direction
-# Angle is the domain length in y direction	
-# Depth is the domain length in z direction	
+# Angle is the domain length in y direction
+# Depth is the domain length in z direction
 
 # numbering system of cells, like the single index numbering of Matlab
-# +2 is added to account for the ghost cells that are added at 
+# +2 is added to account for the ghost cells that are added at
 # the boundaries
 if Angle>2*pi
 	Angle = 2*pi
@@ -295,12 +295,12 @@ end
 dr = Radius/Nr
 dtheta = Angle/Ntheta
 dz = Height/Nz
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
-MeshStructure(3.2, 
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
+MeshStructure(3.2,
 	[Nr, Ntheta, Nz],
 	CellSize(dr*ones(Nr+2), dtheta*ones(Ntheta+2), dz*ones(Nz+2)),
-	CellLocation([1:Nr]*dr.-dr/2.0, [1:Ntheta]*dtheta.-dtheta/2.0, [1:Nz]*dz.-dz/2.0), 
-	FaceLocation([0:Nr]*dr, [0:Ntheta]*dtheta, [0:Nz]*dz),
+	CellLocation([1:Nr;]*dr.-dr/2.0, [1:Ntheta;]*dtheta.-dtheta/2.0, [1:Nz;]*dz.-dz/2.0),
+	FaceLocation([0:Nr;]*dr, [0:Ntheta;]*dtheta, [0:Nz;]*dz),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];
 	G[[1, end], 2:Ntheta+1, [1, end]][:];
@@ -315,15 +315,15 @@ end
 Nx = length(facelocationR)-1
 Ny = length(facelocationTheta)-1
 Nz = length(facelocationZ)-1
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
-MeshStructure(3.2,  
-	[Nx, Ny, Nz], 
-	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]], 
-	  [facelocationTheta[2]-facelocationTheta[1], facelocationTheta[2:end]-facelocationTheta[1:end-1], facelocationTheta[end]-facelocationTheta[end-1]], 
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
+MeshStructure(3.2,
+	[Nx, Ny, Nz],
+	CellSize([facelocationR[2]-facelocationR[1], facelocationR[2:end]-facelocationR[1:end-1], facelocationR[end]-facelocationR[end-1]],
+	  [facelocationTheta[2]-facelocationTheta[1], facelocationTheta[2:end]-facelocationTheta[1:end-1], facelocationTheta[end]-facelocationTheta[end-1]],
 	  [facelocationZ[2]-facelocationZ[1], facelocationZ[2:end]-facelocationZ[1:end-1], facelocationZ[end]-facelocationZ[end-1]]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 
-	  0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]), 
-	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])), 
+	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]),
+	  0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]),
+	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])),
 	FaceLocation(facelocationR, facelocationTheta, facelocationZ),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];

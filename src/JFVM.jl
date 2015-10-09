@@ -5,6 +5,7 @@ using PyPlot, PyCall
 # pygui_start(:wx)
 @pyimport mayavi.mlab as mayavis
 
+import Base: +, -, *, /, .*, ./
 export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        arithmeticMean, geometricMean, harmonicMean, upwindMean, linearMean,
        tvdMean, createBC, boundaryConditionTerm, cellBoundary, solvePDE,

@@ -93,7 +93,7 @@ elseif d==3
   mayavis.pipeline[:image_plane_widget](s, plane_orientation="x_axes", slice_index=0, vmin=vmin, vmax=vmax)
   mayavis.pipeline[:image_plane_widget](s, plane_orientation="y_axes", slice_index=0, vmin=vmin, vmax=vmax)
   mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=0, vmin=vmin, vmax=vmax)
-  mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=floor(Nz/2.0), vmin=vmin, vmax=vmax)
+  mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=floor(Integer,Nz/2.0), vmin=vmin, vmax=vmax)
   mayavis.outline()
 
 #   # 6 surfaces
@@ -151,20 +151,20 @@ elseif d==3.2
   vmax = maximum(phi0)
   # 6 surfaces
   # surfaces 1,2 (x=x[1], x=x[end])
-  mayavis.mesh(squeeze(X[floor(Nx/2.0),:,:],1),squeeze(Y[floor(Nx/2.0),:,:],1),squeeze(Z[floor(Nx/2.0),:,:],1),
-    scalars=squeeze(phi0[floor(Nx/2.0)+1,:,:],1), vmin=vmin, vmax=vmax, opacity=0.8)
+  mayavis.mesh(squeeze(X[floor(Integer,Nx/2.0),:,:],1),squeeze(Y[floor(Integer,Nx/2.0),:,:],1),squeeze(Z[floor(Integer,Nx/2.0),:,:],1),
+    scalars=squeeze(phi0[floor(Integer,Nx/2.0)+1,:,:],1), vmin=vmin, vmax=vmax, opacity=0.8)
   mayavis.mesh(squeeze(X[Nx,:,:],1),squeeze(Y[Nx,:,:],1),squeeze(Z[Nx,:,:],1),
     scalars=squeeze(phi0[Nx+2,:,:],1), vmin=vmin, vmax=vmax, opacity=0.8)
 
   # surfaces 3,4 (y=y[1], y=y[end]
-  mayavis.mesh(squeeze(X[:,floor(Ny/2.0),:],2),squeeze(Y[:,floor(Ny/2.0),:],2),squeeze(Z[:,floor(Ny/2.0),:],2),
-    scalars=squeeze(phi0[:,floor(Ny/2.0)+1,:],2), vmin=vmin, vmax=vmax, opacity=0.8)
+  mayavis.mesh(squeeze(X[:,floor(Integer,Ny/2.0),:],2),squeeze(Y[:,floor(Integer,Ny/2.0),:],2),squeeze(Z[:,floor(Integer,Ny/2.0),:],2),
+    scalars=squeeze(phi0[:,floor(Integer,Ny/2.0)+1,:],2), vmin=vmin, vmax=vmax, opacity=0.8)
   mayavis.mesh(squeeze(X[:,Ny,:],2),squeeze(Y[:,Ny,:],2),squeeze(Z[:,Ny,:],2),
     scalars=squeeze(phi0[:,Ny+2,:],2), vmin=vmin, vmax=vmax, opacity=0.8)
 
   # surfaces 5,6 (z=z[1], z=z[end]
-  mayavis.mesh(X[:,:,floor(Nz/2.0)],Y[:,:,floor(Nz/2.0)],Z[:,:,floor(Nz/2.0)],
-    scalars=phi0[:,:,floor(Nz/2.0)+1], vmin=vmin, vmax=vmax, opacity=0.8)
+  mayavis.mesh(X[:,:,floor(Integer,Nz/2.0)],Y[:,:,floor(Integer,Nz/2.0)],Z[:,:,floor(Integer,Nz/2.0)],
+    scalars=phi0[:,:,floor(Integer,Nz/2.0)+1], vmin=vmin, vmax=vmax, opacity=0.8)
   mayavis.mesh(X[:,:,Nz],Y[:,:,Nz],Z[:,:,Nz],
     scalars=phi0[:,:,Nz+1], vmin=vmin, vmax=vmax, opacity=0.8)
   mayavis.colorbar()
