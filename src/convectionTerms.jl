@@ -5,7 +5,7 @@
 # ===============================
 
 # ===============================================================
-# Changes 
+# Changes
 #    2014-12-29 Import all the convection terms from matlab code
 #    2015-01-10 extended to accept nonuniform grids
 # ===============================================================
@@ -79,7 +79,7 @@ function convectionTerm1D(u::FaceValue)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 #DX = u.domain.cellsize.x
 
 DXe = u.domain.cellsize.x[3:end]
@@ -119,7 +119,7 @@ function convectionTermCylindrical1D(u::FaceValue)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DXe = u.domain.cellsize.x[3:end]
 DXw = u.domain.cellsize.x[1:end-2]
 DXp = u.domain.cellsize.x[2:end-1]
@@ -159,7 +159,7 @@ function convectionUpwindTerm1D(u::FaceValue)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DXp = u.domain.cellsize.x[2:end-1]
 
 # define the vectors to store the sparse matrix data
@@ -183,7 +183,7 @@ APx = reshape((ue_max-uw_min)./DXp,Nx)
 APx[1] = APx[1]-uw_max[1]/(2.0*DXp[1])
 AW[1] = AW[1]/2.0
 # Right boundary:
-AE[end] = AE[end]/2.0 
+AE[end] = AE[end]/2.0
 APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
@@ -204,7 +204,7 @@ function convectionUpwindTermCylindrical1D(u::FaceValue)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DXp = u.domain.cellsize.x[2:end-1]
 rp = u.domain.cellcenters.x
 rf = u.domain.facecenters.x
@@ -215,7 +215,7 @@ jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
 # reassign the east, west for code readability
-re = rf[2:Nx+1]     
+re = rf[2:Nx+1]
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
@@ -231,10 +231,10 @@ APx = reshape((re.*ue_max-rw.*uw_min)./(DXp.*rp),Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*rp[1])   
+APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*rp[1])
 AW[1] = AW[1]/2.0
 # Right boundary:
-AE[end] = AE[end]/2.0 
+AE[end] = AE[end]/2.0
 APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*rp[end])
 
 # build the sparse matrix based on the numbering system
@@ -261,7 +261,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DXp = u.domain.cellsize.x[2:end-1]
 dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 RHS = zeros(Float64, Nx+2)
@@ -287,7 +287,7 @@ psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # reassign the east, west for code readability
-re = rf[2:Nx+1]     
+re = rf[2:Nx+1]
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
@@ -299,7 +299,7 @@ uw_max = max(u.xvalue[1:Nx],0.0)
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
               rw.*(uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
-              
+
 # calculate the coefficients for the internal cells
 AE = reshape(re.*ue_min./(DXp.*r),Nx)
 AW = reshape(-rw.*uw_max./(DXp.*r),Nx)
@@ -307,10 +307,10 @@ APx = reshape((re.*ue_max-rw.*uw_min)./(DXp.*r),Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*r[1])   
+APx[1] = APx[1]-rw[1]*uw_max[1]/(2.0*DXp[1]*r[1])
 AW[1] = AW[1]/2.0
 # Right boundary:
-AE[end] = AE[end]/2.0 
+AE[end] = AE[end]/2.0
 APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*r[end])
 
 # build the sparse matrix based on the numbering system
@@ -338,7 +338,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DXp = u.domain.cellsize.x[2:end-1]
 dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 RHS = zeros(Float64, Nx+2)
@@ -370,7 +370,7 @@ uw_max = max(u.xvalue[1:Nx],0.0)
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
               (uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
-              
+
 # calculate the coefficients for the internal cells
 AE = reshape(ue_min./DXp,Nx)
 AW = reshape(-uw_max./DXp,Nx)
@@ -378,10 +378,10 @@ APx = reshape((ue_max-uw_min)./DXp,Nx)
 
 # correct for the cells next to the boundary
 # Left boundary:
-APx[1] = APx[1]-uw_max[1]/(2.0*DXp[1])   
+APx[1] = APx[1]-uw_max[1]/(2.0*DXp[1])
 AW[1] = AW[1]/2.0
 # Right boundary:
-AE[end] = AE[end]/2.0 
+AE[end] = AE[end]/2.0
 APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
@@ -406,7 +406,7 @@ function convectionTerm2D(u::FaceValue)
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 DXe = u.domain.cellsize.x[3:end]
 DXw = u.domain.cellsize.x[1:end-2]
 DXp = u.domain.cellsize.x[2:end-1]
@@ -465,7 +465,7 @@ function convectionUpwindTerm2D(u::FaceValue)
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 DXp = u.domain.cellsize.x[2:end-1]
 DYp = Array(Float64, 1, Ny)
 DYp[:] = u.domain.cellsize.y[2:end-1]
@@ -551,7 +551,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 DXp = u.domain.cellsize.x[2:end-1]
 DYp = Array(Float64, 1, Ny)
 DYp[:] = u.domain.cellsize.y[2:end-1]
@@ -684,7 +684,7 @@ function convectionTermCylindrical2D(u::FaceValue)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Nz = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DXe = u.domain.cellsize.x[3:end]
 DXw = u.domain.cellsize.x[1:end-2]
 DXp = u.domain.cellsize.x[2:end-1]
@@ -749,7 +749,7 @@ function convectionUpwindTermCylindrical2D(u::FaceValue)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Nz = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DZp = Array(Float64, 1, Nz)
 DZp[:] = u.domain.cellsize.y[2:end-1]
@@ -840,7 +840,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Nz = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DZp = Array(Float64, 1, Nz)
 DZp[:] = u.domain.cellsize.y[2:end-1]
@@ -975,7 +975,7 @@ function convectionTermRadial2D(u::FaceValue)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 DRe = u.domain.cellsize.x[3:end]
 DRw = u.domain.cellsize.x[1:end-2]
 DRp = u.domain.cellsize.x[2:end-1]
@@ -1041,7 +1041,7 @@ function convectionUpwindTermRadial2D(u::FaceValue)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DTHETAp = Array(Float64, 1, Ntheta)
 DTHETAp[:] = u.domain.cellsize.y[2:end-1]
@@ -1132,7 +1132,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DTHETAp = Array(Float64, 1, Ntheta)
 DTHETAp[:] = u.domain.cellsize.y[2:end-1]
@@ -1268,7 +1268,7 @@ function convectionTerm3D(u::FaceValue)
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 DXe = u.domain.cellsize.x[3:end]
 DXw = u.domain.cellsize.x[1:end-2]
 DXp = u.domain.cellsize.x[2:end-1]
@@ -1297,7 +1297,7 @@ mnx = Nx*Ny*Nz
 mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
-# reassign the east, west, north, and south velocity vectors for the 
+# reassign the east, west, north, and south velocity vectors for the
 # code readability
 ue = u.xvalue[2:Nx+1,:,:]./(DXp+DXe)
 uw = u.xvalue[1:Nx,:,:]./(DXp+DXw)
@@ -1351,7 +1351,7 @@ function convectionUpwindTerm3D(u::FaceValue)
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 DXp = u.domain.cellsize.x[2:end-1]
 DY = Array(Float64, 1, Ny+2)
 DY[:] = u.domain.cellsize.y
@@ -1467,7 +1467,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 DXp = u.domain.cellsize.x[2:end-1]
 DY = Array(Float64, 1, Ny+2)
 DY[:] = u.domain.cellsize.y
@@ -1608,7 +1608,7 @@ div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
               (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
 div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
-          
+
 # define the RHS Vector
 RHS = zeros((Nx+2)*(Ny+2)*(Nz+2))
 RHSx = zeros((Nx+2)*(Ny+2)*(Nz+2))
@@ -1642,7 +1642,7 @@ function convectionTermCylindrical3D(u::FaceValue)
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
 DRe = u.domain.cellsize.x[3:end]
 DRw = u.domain.cellsize.x[1:end-2]
 DRp = u.domain.cellsize.x[2:end-1]
@@ -1676,7 +1676,7 @@ mnz = Nr*Ntheta*Nz
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
 
-# reassign the east, west, north, and south velocity vectors for the 
+# reassign the east, west, north, and south velocity vectors for the
 # code readability
 ue = rf[2:Nr+1].*u.xvalue[2:Nr+1,:,:]./(rp.*(DRp+DRe))
 uw = rf[1:Nr].*u.xvalue[1:Nr,:,:]./(rp.*(DRp+DRw))
@@ -1730,7 +1730,7 @@ function convectionUpwindTermCylindrical3D(u::FaceValue)
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
 DRe = u.domain.cellsize.x[3:end]
 DRw = u.domain.cellsize.x[1:end-2]
 DRp = u.domain.cellsize.x[2:end-1]
@@ -1857,7 +1857,7 @@ fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_i
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
 Nz = u.domain.dims[3]
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
 DRe = u.domain.cellsize.x[3:end]
 DRw = u.domain.cellsize.x[1:end-2]
 DRp = u.domain.cellsize.x[2:end-1]
@@ -2009,7 +2009,7 @@ div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2
               (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
 div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
-          
+
 # define the RHS Vector
 RHS = zeros((Nr+2)*(Ntheta+2)*(Nz+2))
 RHSx = zeros((Nr+2)*(Ntheta+2)*(Nz+2))

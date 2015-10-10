@@ -2,18 +2,7 @@
 # Written by AAE
 # TU Delft, Spring 2014
 # simulkade.com
-# Last edited: 29 December, 2014
 # ===============================
-
-# ================================================================
-# Changes:
-# 2014-12-29: added 2D radial and 3D cylindrical grids
-# 2014-12-30: Some changes in the definition of cell value, which
-#             affects the transient functions.
-#             Added multiple dispatch to make it more flexible
-# ================================================================
-
-# ========================= Multiple dispatch =====================
 
 function transientTerm(phi_old::CellValue, dt::Real, alfa::Real)
 transientTerm(phi_old, dt, alfa.*ones(Float64,tuple(phi_old.domain.dims...)))
@@ -53,7 +42,7 @@ function transientTerm1D{T<:Real}(phi_old::CellValue,
 
 # extract data from the mesh structure
 Nx = phi_old.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1],Nx) # main diagonal (only internal cells)
@@ -70,14 +59,14 @@ RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1]/dt,Nx)
 
 end
 
-function transientTerm2D{T<:Real}(phi_old::CellValue, 
+function transientTerm2D{T<:Real}(phi_old::CellValue,
 		    dt::Real, alfa::Array{T})
 # returns the matrix and RHS for a d(phi)/dt term
 
 # extract data from the mesh structure
 Nx = phi_old.domain.dims[1]
 Ny = phi_old.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1,2:Ny+1],Nx*Ny) # main diagonal (only internal cells)
@@ -94,7 +83,7 @@ RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1]/dt,Nx*Ny)
 
 end
 
-function transientTerm3D{T<:Real}(phi_old::CellValue, 
+function transientTerm3D{T<:Real}(phi_old::CellValue,
 		    dt::Real, alfa::Array{T})
 # returns the matrix and RHS for a d(phi)/dt term
 
@@ -102,7 +91,7 @@ function transientTerm3D{T<:Real}(phi_old::CellValue,
 Nx = phi_old.domain.dims[1]
 Ny = phi_old.domain.dims[2]
 Nz = phi_old.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 
 # rearrange the matrix of k and build the sparse matrix for internal cells
 row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz) # main diagonal (only internal cells)

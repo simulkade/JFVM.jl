@@ -17,7 +17,7 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        visualizeCells, linearSourceTerm, constantSourceTerm, transientTerm,
        solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
        plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
-       visualizeCellVectors
+       visualizeCellVectors, JFVM_test
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")
@@ -32,5 +32,6 @@ include("calculusTerms.jl")
 include("sourceTerms.jl")
 include("solveVisualizePDE.jl")
 include("JFVMtools.jl")
+include("jfvm_test.jl")
 
 end # module

@@ -104,7 +104,7 @@ function divergenceTerm2D(F::FaceValue)
 # extract data from the mesh structure
 Nx = F.domain.dims[1]
 Ny = F.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 DX = F.domain.cellsize.x[2:end-1]
 DY = Array(Float64, 1, Ny)
 DY[:] = F.domain.cellsize.y[2:end-1]
@@ -147,7 +147,7 @@ function divergenceTermCylindrical2D(F::FaceValue)
 # extract data from the mesh structure
 Nr = F.domain.dims[1]
 Nz = F.domain.dims[2]
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 dr = F.domain.cellsize.x[2:end-1]
 dz= Array(Float64, 1, Nz)
 dz[:] = F.domain.cellsize.y[2:end-1]
@@ -194,7 +194,7 @@ function divergenceTermRadial2D(F::FaceValue)
 # extract data from the mesh structure
 Nr = F.domain.dims[1]
 Ntheta = F.domain.dims[2]
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 dr = F.domain.cellsize.x[2:end-1]
 dtheta= Array(Float64, 1, Ntheta)
 dtheta[:]= F.domain.cellsize.y[2:end-1]
@@ -240,7 +240,7 @@ function divergenceTerm3D(F::FaceValue)
 Nx = F.domain.dims[1]
 Ny = F.domain.dims[2]
 Nz = F.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx = F.domain.cellsize.x[2:end-1]
 dy = Array(Float64, 1, Ny)
 dy[:] = F.domain.cellsize.y[2:end-1]
@@ -291,7 +291,7 @@ function divergenceTermCylindrical3D(F::FaceValue)
 Nx = F.domain.dims[1]
 Ny = F.domain.dims[2]
 Nz = F.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx = F.domain.cellsize.x[2:end-1]
 dy = Array(Float64, 1, Ny)
 dy[:] = F.domain.cellsize.y[2:end-1]

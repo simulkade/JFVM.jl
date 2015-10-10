@@ -37,7 +37,7 @@ function diffusionTerm1D(D::FaceValue)
 
 # extract data from the mesh structure
 Nx = D.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DX = D.domain.cellsize.x
 dx = 0.5*(DX[1:end-1]+DX[2:end])
 
@@ -72,7 +72,7 @@ function diffusionTerm2D(D::FaceValue)
 # extract data from the mesh structure
 Nx = D.domain.dims[1]
 Ny = D.domain.dims[2]
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 
 DX = D.domain.cellsize.x
 DY = Array(Float64, 1, Ny+2)
@@ -131,7 +131,7 @@ function diffusionTerm3D(D::FaceValue)
 Nx = D.domain.dims[1]
 Ny = D.domain.dims[2]
 Nz = D.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 DX = D.domain.cellsize.x
 DY = Array(Float64, 1, Ny+2)
 DY[:] = D.domain.cellsize.y
@@ -214,7 +214,7 @@ function diffusionTermCylindrical1D(D::FaceValue)
 
 # extract data from the mesh structure
 Nx = D.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 DX = D.domain.cellsize.x
 dx = 0.5*(DX[1:end-1]+DX[2:end])
 rp = D.domain.cellcenters.x
@@ -254,7 +254,7 @@ function diffusionTermRadial2D(D::FaceValue)
 
 Nr = D.domain.dims[1]
 Ntheta = D.domain.dims[2]
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 DR = D.domain.cellsize.x
 DTHETA = Array(Float64, 1, Ntheta+2)
 DTHETA[:] = D.domain.cellsize.y
@@ -315,7 +315,7 @@ function diffusionTermCylindrical2D(D::FaceValue)
 # extract data from the mesh structure
 Nr = D.domain.dims[1]
 Nz = D.domain.dims[2]
-G=reshape([1:(Nr+2)*(Nz+2)], Nr+2, Nz+2)
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DR = D.domain.cellsize.x
 DZ = Array(Float64, 1, Nz+2)
 DZ[:] = D.domain.cellsize.y
@@ -381,7 +381,7 @@ function diffusionTermCylindrical3D(D::FaceValue)
 Nr = D.domain.dims[1]
 Ntheta = D.domain.dims[2]
 Nz = D.domain.dims[3]
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
 DR = D.domain.cellsize.x
 DTHETA = Array(Float64, 1, Ntheta+2)
 DTHETA[:] = D.domain.cellsize.y

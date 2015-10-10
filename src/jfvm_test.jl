@@ -1,3 +1,4 @@
+function JFVM_test()
 # JFVM test script
 # This script is supposed to call all the functions of the JFVM package
 ## Part I: creating an array of different mesh types:
@@ -153,3 +154,5 @@ for i=1:N_mesh
 end
 println("Averaging functions run smoothly!")
 ## Part IX: test the classes and operators
+
+end # end function

@@ -70,7 +70,7 @@ function boundaryCondition1D(BC::BoundaryCondition)
 # creates the matrix of coefficients and RHS for
 # a boundary condition structure
 Nx = BC.domain.dims[1]
-G = [1:Nx+2]
+G = [1:Nx+2;]
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 # number of boundary nodes:
@@ -170,7 +170,7 @@ function boundaryCondition2D(BC::BoundaryCondition)
 # creates the matrix of coefficients and RHS for
 # a boundary condition structure
 Nx, Ny = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dy_1 = BC.domain.cellsize.y[1]
@@ -350,7 +350,7 @@ function boundaryConditionRadial2D(BC::BoundaryCondition)
 # creates the matrix of coefficients and RHS for
 # a boundary condition structure
 Nx, Ntheta = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ntheta+2)], Nx+2, Ntheta+2)
+G=reshape([1:(Nx+2)*(Ntheta+2);], Nx+2, Ntheta+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dtheta_1 = BC.domain.cellsize.y[1]
@@ -531,7 +531,7 @@ function boundaryCondition3D(BC::BoundaryCondition)
 # creates the matrix of coefficients and RHS for
 # a boundary condition structure
 Nx, Ny, Nz = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dy_1 = BC.domain.cellsize.y[1]
@@ -801,7 +801,7 @@ function boundaryConditionCylindrical3D(BC::BoundaryCondition)
 # creates the matrix of coefficients and RHS for
 # a boundary condition structure
 Nx, Ntheta, Nz = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ntheta+2)*(Nz+2)], Nx+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ntheta+2)*(Nz+2);], Nx+2, Ntheta+2, Nz+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dtheta_1 = BC.domain.cellsize.y[1]
@@ -1114,7 +1114,7 @@ end
 function cellBoundary2D!(phi::CellValue, BC::BoundaryCondition)
 # extract data from the mesh structure
 Nx, Ny = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ny+2)], Nx+2, Ny+2)
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dy_1 = BC.domain.cellsize.y[1]
@@ -1181,7 +1181,7 @@ end
 function cellBoundary3D!(phi::CellValue, BC::BoundaryCondition)
 # extract data from the mesh structure
 Nx, Ny, Nz = tuple(BC.domain.dims...)
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2)], Nx+2, Ny+2, Nz+2)
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx_1 = BC.domain.cellsize.x[1]
 dx_end = BC.domain.cellsize.x[end]
 dy_1 = BC.domain.cellsize.y[1]
@@ -1280,7 +1280,7 @@ end
 function cellBoundaryRadial2D!(phi::CellValue, BC::BoundaryCondition)
 # extract data from the mesh structure
 Nr, Ntheta = tuple(BC.domain.dims...)
-G=reshape([1:(Nr+2)*(Ntheta+2)], Nr+2, Ntheta+2)
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 dr_1 = BC.domain.cellsize.x[1]
 dr_end = BC.domain.cellsize.x[end]
 dtheta_1 = BC.domain.cellsize.y[1]
@@ -1349,7 +1349,7 @@ end
 function cellBoundaryCylindrical3D!(phi::CellValue, BC::BoundaryCondition)
 # extract data from the mesh structure
 Nr, Ntheta, Nz = tuple(BC.domain.dims...)
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2)], Nr+2, Ntheta+2, Nz+2)
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
 dr_1 = BC.domain.cellsize.x[1]
 dr_end = BC.domain.cellsize.x[end]
 dtheta_1 = BC.domain.cellsize.y[1]
