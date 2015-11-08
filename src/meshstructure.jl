@@ -5,6 +5,25 @@
 # ===============================
 
 # ====================== 1D CARTESIAN MESH =======================
+"""
+m = createMesh1D(Nx::Int, Width::Real)
+It creates a uniform mesh on a 1D Cartesian domain.
+
+Inputs:
+
+   + Nx: number of cells in the domain (integer)
+	 + Width: width or length of the domain (Real)
+
+Outputs:
+
+   + m: a mesh structure
+
+Usage:
+
+Nx=10
+Lx=1.0
+m=createMesh1D(Nx, Lx)
+"""
 function createMesh1D(Nx::Int, Width::Real)
 # builds a uniform 1D mesh:
 # Nx is the number of cells in x (horizontal) direction
@@ -27,7 +46,24 @@ MeshStructure(1,
 		[1])
 end
 
+"""
+m = createMesh1D(facelocationX::Array{Real,1})
+It creates a non/uniform mesh on a 1D Cartesian domain.
 
+Inputs:
+
+   + facelocationX: location of the the cell boundaries on
+	 the x-axis.
+
+Outputs:
+
+   + m: a mesh structure
+
+Usage:
+
+	x= [0.0, 1.0, 1.4, 2.5, 4.1, 6.0, 10.0]
+	m=createMesh1D(x)
+"""
 function createMesh1D{T<:Real}(facelocationX::Array{T,1})
 # builds a uniform 1D mesh:
 # facelocationX is the location of each cell face
@@ -51,6 +87,25 @@ end
 
 
 # ================= 1D CYLINDRICAL MESH ==========================
+"""
+m = createMeshCylindrical1D(Nr::Int, Radius::Real)
+It creates a uniform mesh on a 1D Radial domain.
+
+Inputs:
+
+   + Nr: number of cells in the domain (integer)
+	 + Radius: Radius of the domain (Real)
+
+Outputs:
+
+   + m: a mesh structure
+
+Usage:
+
+Nr=10
+R=1.0
+m=createMesh1D(Nr, R)
+"""
 function createMeshCylindrical1D(Nr::Int, Radius::Real)
 # builds a uniform 1D cylindrical mesh:
 # Nx is the number of cells in r (radial) direction
@@ -70,6 +125,24 @@ MeshStructure(1.5,
 		[1])
 end
 
+"""
+m = createMeshCylindrical1D(facelocationR::Array{Real,1})
+It creates a non/uniform mesh on a 1D radial domain.
+
+Inputs:
+
+   + facelocationX: location of the the cell boundaries on
+	 the r-axis.
+
+Outputs:
+
+   + m: a mesh structure
+
+Usage:
+
+	r= [0.1, 1.0, 1.4, 2.5, 4.1, 6.0, 10.0]
+	m=createMeshCylindrical1D(r)
+"""
 function createMeshCylindrical1D{T<:Real}(facelocationR::Array{T,1})
 # builds a uniform 1D cylindrical mesh:
 # Nx is the number of cells in r (radial) direction
@@ -94,6 +167,29 @@ end
 
 
 # ========================= 2D CARTESIAN MESH ==========================
+"""
+m = createMesh2D(Nx::Int, Ny::Int, Width::Real, Height::Real)
+It creates a uniform mesh on a 2D Cartesian domain.
+
+Inputs:
+
+   + Nx: number of cells in the x-direction (integer)
+   + Ny: number of cells in the y-direction (integer)
+	 + Width: length of the domain in the x-direction (Real)
+   + Height: length of the domain in the y-direction (Real)
+
+Outputs:
+
+   + m: a mesh structure
+
+Usage:
+
+Nx=10
+Ny=15
+Lx=1.0
+Ly=2.5
+m=createMesh2D(Nx, Ny, Lx, Ly)
+"""
 function createMesh2D(Nx::Int, Ny::Int, Width::Real, Height::Real)
 # builds a uniform 2D mesh:
 # Nx is the number of cells in x (horizontal) direction
