@@ -4,8 +4,8 @@ os:
   - osx
 julia:
   - release
-  - nightly
   - 0.3
+#  - nightly
 notifications:
   email: true
 #before_install:
