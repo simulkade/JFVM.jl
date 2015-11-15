@@ -9,6 +9,7 @@ julia:
 notifications:
   email: true
 before_install:
+  - sudo apt-get update -qq
   - sudo apt-get install mayavi2
 #uncomment the following lines to override the default test script
 script:
