@@ -8,10 +8,13 @@ julia:
   - 0.3
 notifications:
   email: true
+before_install:
+  - sudo apt-get install mayavi2
 #uncomment the following lines to override the default test script
-#script:
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("JFVM"); Pkg.test("JFVM"; coverage=true)'
+script:
+  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'ENV["PYTHON"] = ""; Pkg.clone("PyPlot"); Pkg.build("PyPlot")'
+  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("JFVM"); Pkg.test("JFVM"; coverage=true)'
 #julia -e 'Pkg.clone(pwd())'
 #julia -e 'Pkg.build("$name")'
 #if [ -f test/runtests.jl ]; then
