@@ -8,9 +8,9 @@ julia:
   - 0.3
 notifications:
   email: true
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install mayavi2
+#before_install:
+#  - sudo apt-get update -qq
+#  - sudo apt-get install mayavi2
 #uncomment the following lines to override the default test script
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
