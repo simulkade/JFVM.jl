@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/simulkade/JFVM.jl.svg?branch=master)](https://travis-ci.org/simulkade/JFVM.jl)
 
 ## A simple finite volume tool written in Julia
-This code is a Matlabesque implementation of my Matlab finite volume tool. The code is not in its most beautiful form, but it works if you believe my words. Please remember that the code is written by a chemical/petroleum engineer. Petroleum engineers are known for being simple-minded folks and chemical engineers have only one rule: "any answer is better than no answer". You can expect to solve easily discretize a linear transient convection-diffusion PDE into the matrix of coefficients and RHS vectors. Domain shape is limited to rectangles, circles (or a section of a circle), cylinders, and soon spheres. The mesh can be uniform or nonuniform:
+This code is a Matlabesque implementation of my Matlab finite volume tool. The code is not in its most beautiful form, but it works if you believe my words. Please remember that the code is written by a chemical/petroleum engineer. Petroleum engineers are known for being simple-minded folks and chemical engineers have only one rule: "any answer is better than no answer". You can expect to easily discretize a linear transient convection-diffusion PDE into the matrix of coefficients and RHS vectors. Domain shape is limited to rectangles, circles (or a section of a circle), cylinders, and soon spheres. The mesh can be uniform or nonuniform:
   - Cartesian (1D, 2D, 3D)
   - Cylindrical (1D, 2D, 3D)
   - Radial (2D r and \theta)
@@ -23,9 +23,10 @@ In Ubuntu-based systems, try
 ```
 sudo apt-get install python-matplotlib mayavi2
 ```
-Then go to your `.julia/v0.4` or `.julia/v0.3` (depending on your Julia version) folder and type
+Then install `JFVM` by the following commands. The second line pulls the latest (and recommended) version of `JFVM`:
 ```
-git clone https://github.com/simulkade/JFVM.jl.git
+Pkg.add("JFVM")
+Pkg.checkout("JFVM")
 ```
 
 ### Windows
@@ -33,11 +34,12 @@ There are a few issues with 3D visualization in windows right now. This is the w
   - Download and install [Anaconda](http://continuum.io/downloads)
   - Run `anaconda command prompt` (as administrator) and install `mayavi` and `wxpython`:
     * `conda install mayavi`
-    * `conda install wxpython` (Not necessary if you clone the last version of JFVM)
+    * `conda install wxpython` (Not necessary if you clone the latest version of JFVM)
   - Install [github for windows](https://windows.github.com/)
-  - open `github shell`, go to `.julia/v0.4` or `.julia/v0.3` and type 
+  - open `Julia` and type 
   ```
-  git clone https://github.com/simulkade/JFVM.git
+  Pkg.add("JFVM")
+  Pkg.checkout("JFVM")
   ```
 
 Please let me know if it does not work on your windows machines.
@@ -83,4 +85,5 @@ Now change the 4th line to `m=createMesh2D(Nx,2*Nx, Lx,2*Lx)` and see what happe
   - [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_tutorial.ipynb)
   - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_diffusion_analytics.ipynb)
   - [Nonlinear PDE](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/solving-nonlinear-pdes-with-fvm.ipynb)
+  - [Foam flow in porous media](https://github.com/simulkade/FoamFingering/blob/master/foam_flow_stars_numeric.ipynb)
   - New notebooks soon...
