@@ -1,15 +1,15 @@
 module JFVM
 
-using PyCall
+#using PyCall
 # I prefer not to use the following command for the issues that it has on windows machines
 # pygui_start(:wx)
 mayavis=0
-try
-  @pyimport mayavi.mlab as m
-  mayavis=m
-catch
-  warn("Mayavi is not installed or could not be imported.")
-end
+# try
+#   @pyimport mayavi.mlab as m
+#   mayavis=m
+# catch
+#   warn("Mayavi is not installed or could not be imported.")
+# end
 using PyPlot
 
 import Base: +, -, *, /, .*, ./
