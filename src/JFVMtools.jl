@@ -201,3 +201,28 @@ function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
   perm = exp(mu+real(f))
 end
 # <============================== 3D ==============================
+
+"""
+function cellvol = cellVolume(m::MeshStructure)
+returns the volume of each cell in the form of a cell variable
+"""
+function cellVolume(m::MeshStructure)
+  dim = m.dimension
+  BC = createBC(m)
+  if dim==1
+          c=m.cellsize.x[2:end-1]
+  elseif dim==1.5
+          c=2.0*pi()*m.cellsize.x[2:end-1].*m.cellcenters.x
+  elseif dim==2
+          c=m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+  elseif dim== 2.5 # cylindrical
+          c=2.0*pi*m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+  elseif dim==2.8 # radial
+          c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+  elseif dim==3
+          error("Not available yet")
+  elseif dim==3.2
+          error("Not available yet")
+  end
+  cellvol= createCellVariable(m, c, BC)
+end
