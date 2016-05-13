@@ -226,3 +226,21 @@ function cellVolume(m::MeshStructure)
   end
   cellvol= createCellVariable(m, c, BC)
 end
+
+"""
+this function reshapes a vetorized cell variable to its domain shape
+matrix based on the mesh structure data; it is assumed that the phi
+includes the ghost cell data as well.
+"""
+function reshapeCell(m, phi)
+  reshape(full(x), tuple(m.dims+2...))
+end
+
+"""
+this function reshapes a vetorized cell variable to its domain shape
+matrix based on the mesh structure data; it is assumed that the phi
+does NOT include the ghost cell data.
+"""
+function reshapeInternalCell(m, phi)
+  reshape(full(x), tuple(m.dims...))
+end
