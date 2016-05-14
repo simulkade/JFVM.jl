@@ -30,7 +30,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
   BC::BoundaryCondition)
   d = phi_old.domain.dimension
   N = phi_old.domain.dims
-  phi_val=reshape(phi_old.value[:])+dt*RHS, tuple(N+2...))
+  phi_val=reshape(phi_old.value[:]+dt*RHS, tuple(N+2...))
   if (d==1) || (d==1.5)
   	phi_val= phi_val[2:N[1]+1]
   elseif (d==2) || (d==2.5) || (d==2.8)
@@ -45,7 +45,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
   BC::BoundaryCondition, alfa::CellValue)
   d = phi_old.domain.dimension
   N = phi_old.domain.dims
-  phi_val=reshape(phi_old.value[:])+dt*RHS./alfa.value[:], tuple(N+2...))
+  phi_val=reshape(phi_old.value[:]+dt*RHS./alfa.value[:], tuple(N+2...))
   if (d==1) || (d==1.5)
   	phi_val= phi_val[2:N[1]+1]
   elseif (d==2) || (d==2.5) || (d==2.8)
