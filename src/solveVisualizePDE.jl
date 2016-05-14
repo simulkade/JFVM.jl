@@ -7,14 +7,14 @@
 # =============================== SOLVERS ===================================
 function solveLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
 N=m.dims
-x=lufact(M)\RHS # until the problem is solved with Julia "\" solver
+x=M\RHS # until the problem is solved with Julia "\" solver
 phi = CellValue(m, reshape(full(x), tuple(N+2...)))
 phi
 end
 
 function solvePDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
 N=m.dims
-x=lufact(M)\RHS # until the problem is solved with Julia "\" solver
+x=M\RHS # until the problem is solved with Julia "\" solver
 phi = CellValue(m, reshape(full(x), tuple(N+2...)))
 phi
 end
@@ -26,7 +26,35 @@ phi = CellValue(m, reshape(full(x), tuple(N+2...)))
 phi
 end
 
+function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
+  BC::BoundaryCondition)
+  d = phi_old.domain.dimension
+  N = phi_old.domain.dims
+  phi_val=reshape(phi_old.value[:])+dt*RHS, tuple(N+2...))
+  if (d==1) || (d==1.5)
+  	phi_val= phi_val[2:N[1]+1]
+  elseif (d==2) || (d==2.5) || (d==2.8)
+  	phi_val= phi_val[2:N[1]+1, 2:N[2]+1]
+  elseif (d==3) || (d==3.2)
+    phi_val= phi_val[2:N[1]+1, 2:N[2]+1, 2:N[3]+1]
+  end
+  return createCellVariable(phi_old.domain, phi_val, BC)
+end
 
+function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
+  BC::BoundaryCondition, alfa::CellValue)
+  d = phi_old.domain.dimension
+  N = phi_old.domain.dims
+  phi_val=reshape(phi_old.value[:])+dt*RHS./alfa.value[:], tuple(N+2...))
+  if (d==1) || (d==1.5)
+  	phi_val= phi_val[2:N[1]+1]
+  elseif (d==2) || (d==2.5) || (d==2.8)
+  	phi_val= phi_val[2:N[1]+1, 2:N[2]+1]
+  elseif (d==3) || (d==3.2)
+    phi_val= phi_val[2:N[1]+1, 2:N[2]+1, 2:N[3]+1]
+  end
+  return createCellVariable(phi_old.domain, phi_val, BC)
+end
 
 # =========================== Visualization =================================
 function visualizeCells(phi::CellValue)

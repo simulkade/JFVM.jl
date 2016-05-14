@@ -2,10 +2,7 @@
 # Written by AAE
 # TU Delft, Winter 2014
 # simulkade.com
-# Last edited: 29 December, 2014
 # ===============================
-
-
 
 function fluxLimiter(flName::ASCIIString)
 # This function returns a function handle to a flux limiter of user's
@@ -243,4 +240,21 @@ does NOT include the ghost cell data.
 """
 function reshapeInternalCell(m, phi)
   reshape(full(x), tuple(m.dims...))
+end
+
+"""
+returns the internal cells of a cell variable as an array of the same shape
+"""
+function internalCells(phi::CellValue)
+  d = phi.domain.dimension
+  N = phi.domain.dims
+
+  if (d==1) || (d==1.5)
+  	cellvar= phi.value[2:N[1]+1]
+  elseif (d==2) || (d==2.5) || (d==2.8)
+  	cellvar= phi.value[2:N[1]+1, 2:N[2]+1]
+  elseif (d==3) || (d==3.2)
+      cellvar= phi.value[2:N[1]+1, 2:N[2]+1, 2:N[3]+1]
+  end
+  return cellvar
 end

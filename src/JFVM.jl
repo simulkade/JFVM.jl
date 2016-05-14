@@ -24,8 +24,8 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        visualizeCells, linearSourceTerm, constantSourceTerm, transientTerm,
        solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
        plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
-       visualizeCellVectors, JFVM_test,
-       cellVolume
+       visualizeCellVectors, JFVM_test, solveExplicitPDE, reshapeCell,
+       cellVolume, reshapeInternalCell, internalCells
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")
