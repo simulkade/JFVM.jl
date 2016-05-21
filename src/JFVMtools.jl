@@ -323,5 +323,5 @@ end
 Integrate variable phi over the domain it is defined
 """
 function domainInt(phi::CellValue)
-  return sum(InternalCells(phi).*InternalCells(cellVolume(phi.domain)))
+  return sum(internalCells(phi).*internalCells(cellVolume(phi.domain)))
 end
