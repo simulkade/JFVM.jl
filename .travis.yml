@@ -4,7 +4,7 @@ os:
   - osx
 julia:
   - release
-  - 0.3
+#  - 0.3
 #  - nightly
 notifications:
   email: true
