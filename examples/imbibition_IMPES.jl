@@ -12,11 +12,11 @@ Ny = 50 # number of cells in y direction
 W = 0.02 # [m] length of the domain in x direction
 H = 0.07 # [m] length of the domain in y direction
 # m = createMesh1D(Nx, W)
-m = createMeshCylindrical2D(Nx, Ny, W, H) # creates a 2D mesh
+m = createMesh2D(Nx, Ny, W, H) # creates a 2D mesh
 ## define the physical parametrs
 # all the Corey-type relperm parametrs are defined for the oil-wet and water-wet
 # cases
-k0 = 0.005e-12 # [m^2] average reservoir permeability
+k0 = 0.01e-12 # [m^2] average reservoir permeability
 phi0 = 0.45 # average porosity
 mu_oil = 2e-3 # [Pa.s] oil viscosity
 mu_water = 1e-3 # [Pa.s] water viscosity
@@ -117,7 +117,7 @@ rec_fact=zeros(1)
 t_day=zeros(1)
 t = 0.0
 dt0=dt
-dsw_alwd= 0.01
+dsw_alwd= 0.001
 dp_alwd= 100.0 # Pa
 while (t<t_end)
 # for i=1:5
@@ -149,7 +149,7 @@ while (t<t_end)
         uw=-labdaw.*pgrad
         Mbcsw, RHSbcsw = boundaryConditionTerm(BCs)
         RHS_sw=-divergenceTerm(uw)
-        sw_new=solveExplicitPDE(sw_old, dt/phi0, RHS_sw, BCs)
+        sw_new=solveExplicitPDE(sw_old, dt, RHS_sw, BCs, phi)
 
         error_p = maximum(abs((internalCells(p_new)-internalCells(p))./internalCells(p_new)))
         error_sw = maximum(abs(internalCells(sw_new)-internalCells(sw)))
@@ -177,11 +177,11 @@ while (t<t_end)
     rec_fact=push!(rec_fact, (oil_init-domainInt(1-sw))/oil_init)
     t_day=push!(t_day, t)
     # print(t)
-    # GR.imshow(sw.value[2:end-1,2:end-1])
-    #visualizeCells(1-sw)
-    GR.plot(t_day/3600/24, rec_fact)
-    #xlabel('time [day]')
-    #ylabel('recovery factor')
-    #title([num2str(t/3600/24) ' day']) drawnow
+    GR.imshow(sw.value[2:end-1,2:end-1])
+    # visualizeCells(1-sw)
+    # GR.plot(t_day/3600/24, rec_fact)
+    # xlabel('time [day]')
+    # ylabel('recovery factor')
+    # title([num2str(t/3600/24) ' day']) drawnow
 end
 end # imb_impes
