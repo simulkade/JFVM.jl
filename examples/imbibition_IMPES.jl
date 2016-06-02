@@ -113,8 +113,8 @@ uw = -gradientTerm(p_old) # an estimation of the water velocity
 ## start the main loop
 # generate intial pressure profile (necessary to initialize the fully
 # implicit solver)
-rec_fact=0.0
-t_day=0.0
+rec_fact=zeros(1)
+t_day=zeros(1)
 t = 0.0
 dt0=dt
 dsw_alwd= 0.01
@@ -140,23 +140,29 @@ while (t<t_end)
         # compute [Jacobian] matrices
         Mdiffp1 = diffusionTerm(-labda)
         RHSpc1=divergenceTerm(labdao.*pcgrad)
-        Mbcp, RHSbcp = boundaryCondition(BCp)
+        Mbcp, RHSbcp = boundaryConditionTerm(BCp)
         RHS1 = RHSpc1+RHSbcp # with capillary
         p_new=solvePDE(m, Mdiffp1+Mbcp, RHS1)
 
         # solve for Sw
         pgrad = gradientTerm(p_new)
         uw=-labdaw.*pgrad
-        Mbcsw, RHSbcsw = boundaryCondition(BCs)
+        Mbcsw, RHSbcsw = boundaryConditionTerm(BCs)
         RHS_sw=-divergenceTerm(uw)
-        sw_new=solveExplicitPDE(sw_old, dt, RHS_sw, BCs, phi)
+        sw_new=solveExplicitPDE(sw_old, dt/phi0, RHS_sw, BCs)
 
-        error_p = max(abs((p_new.value[:]-p.value[:])./p_new.value[:]))
-        error_sw = max(abs(sw_new.value[:]-sw.value[:]))
+        error_p = maximum(abs((internalCells(p_new)-internalCells(p))./internalCells(p_new)))
+        error_sw = maximum(abs(internalCells(sw_new)-internalCells(sw)))
         dt_new=dt*min(dp_alwd/error_p, dsw_alwd/error_sw)
+        # print("sw_error = $error_sw \n")
+        # print("new time step = $dt \n")
+        # print(internalCells(sw_new))
+        # print(internalCells(sw_old))
+        # sleep(1.0)
         # assign new values of p and sw
         if error_sw>dsw_alwd
             dt=dt*(dsw_alwd/error_sw)
+            # print("new time step = $dt \n")
         else
             t=t+dt
             p = copyCell(p_new)
@@ -170,8 +176,10 @@ while (t<t_end)
 
     rec_fact=push!(rec_fact, (oil_init-domainInt(1-sw))/oil_init)
     t_day=push!(t_day, t)
+    # print(t)
+    # GR.imshow(sw.value[2:end-1,2:end-1])
     #visualizeCells(1-sw)
-    #plot(t_day/3600/24, rec_fact)
+    GR.plot(t_day/3600/24, rec_fact)
     #xlabel('time [day]')
     #ylabel('recovery factor')
     #title([num2str(t/3600/24) ' day']) drawnow
