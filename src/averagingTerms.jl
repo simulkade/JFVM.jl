@@ -21,7 +21,7 @@ elseif d==2 || d==2.5 || d==2.8
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     (dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[1,2:end].*phi.value[2:end-1,1:end-1]+dy[1,1:end-1].*phi.value[2:end-1,2:end])./(dy[1,2:end]+dy[1,1:end-1]),
+    (dy[:,2:end].*phi.value[2:end-1,1:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end])./(dy[:,2:end]+dy[:,1:end-1]),
     [1.0])
 elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
@@ -33,8 +33,8 @@ elseif d==3 || d==3.2
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[1,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[1,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[1,1:end-1]+dy[1,2:end]),
-    (dz[1,1,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[1,1,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[1,1,1:end-1]+dz[1,1,2:end]))
+    (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
+    (dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end]))
 end
 end
 
@@ -58,7 +58,7 @@ elseif d==2 || d==2.5 || d==2.8
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     (dx[1:end-1].*phi.value[1:end-1,2:end-1]+dx[2:end].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[1,1:end-1].*phi.value[2:end-1,1:end-1]+dy[1,2:end].*phi.value[2:end-1,2:end])./(dy[1,2:end]+dy[1,1:end-1]),
+    (dy[:,1:end-1].*phi.value[2:end-1,1:end-1]+dy[:,2:end].*phi.value[2:end-1,2:end])./(dy[:,2:end]+dy[:,1:end-1]),
     [1.0])
 elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
@@ -70,8 +70,8 @@ elseif d==3 || d==3.2
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     (dx[1:end-1].*phi.value[1:end-1,2:end-1,2:end-1]+dx[2:end].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[1,1:end-1].*phi.value[2:end-1,1:end-1,2:end-1]+dy[1,2:end].*phi.value[2:end-1,2:end,2:end-1])./(dy[1,1:end-1]+dy[1,2:end]),
-    (dz[1,1,1:end-1].*phi.value[2:end-1,2:end-1,1:end-1]+dz[1,1,2:end].*phi.value[2:end-1,2:end-1,2:end])./(dz[1,1,1:end-1]+dz[1,1,2:end]))
+    (dy[:,1:end-1].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,2:end].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
+    (dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,2:end].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end]))
 end
 end
 
@@ -103,7 +103,7 @@ elseif d==2 || d==2.5 || d==2.8
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1]))./(dx[2:end]+dx[1:end-1])),
-    exp((dy[1,1:end-1].*log(phi.value[2:end-1,1:end-1])+dy[1,2:end].*log(phi.value[2:end-1,2:end]))./(dy[1,2:end]+dy[1,1:end-1])),
+    exp((dy[:,1:end-1].*log(phi.value[2:end-1,1:end-1])+dy[:,2:end].*log(phi.value[2:end-1,2:end]))./(dy[:,2:end]+dy[:,1:end-1])),
     [1.0])
 elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
@@ -115,8 +115,8 @@ elseif d==3 || d==3.2
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1,2:end-1]))./(dx[2:end]+dx[1:end-1])),
-    exp((dy[1,1:end-1].*log(phi.value[2:end-1,1:end-1,2:end-1])+dy[1,2:end].*log(phi.value[2:end-1,2:end,2:end-1]))./(dy[1,1:end-1]+dy[1,2:end])),
-    exp((dz[1,1,1:end-1].*log(phi.value[2:end-1,2:end-1,1:end-1])+dz[1,1,2:end].*log(phi.value[2:end-1,2:end-1,2:end]))./(dz[1,1,1:end-1]+dz[1,1,2:end])))
+    exp((dy[:,1:end-1].*log(phi.value[2:end-1,1:end-1,2:end-1])+dy[:,2:end].*log(phi.value[2:end-1,2:end,2:end-1]))./(dy[:,1:end-1]+dy[:,2:end])),
+    exp((dz[:,:,1:end-1].*log(phi.value[2:end-1,2:end-1,1:end-1])+dz[:,:,2:end].*log(phi.value[2:end-1,2:end-1,2:end]))./(dz[:,:,1:end-1]+dz[:,:,2:end])))
 end
 end
 
@@ -148,7 +148,7 @@ elseif d==2 || d==2.5 || d==2.8
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     phi.value[2:end,2:end-1].*phi.value[1:end-1,2:end-1].*(dx[2:end]+dx[1:end-1])./(dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1]),
-    phi.value[2:end-1,2:end].*phi.value[2:end-1,1:end-1].*(dy[1,2:end]+dy[1,1:end-1])./(dy[1,2:end].*phi.value[2:end-1,1:end-1]+dy[1,1:end-1].*phi.value[2:end-1,2:end]),
+    phi.value[2:end-1,2:end].*phi.value[2:end-1,1:end-1].*(dy[:,2:end]+dy[:,1:end-1])./(dy[:,2:end].*phi.value[2:end-1,1:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end]),
     [1.0])
 elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
@@ -160,8 +160,8 @@ elseif d==3 || d==3.2
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     phi.value[2:end,2:end-1,2:end-1].*phi.value[1:end-1,2:end-1,2:end-1].*(dx[2:end]+dx[1:end-1])./(dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1]),
-    phi.value[2:end-1,2:end,2:end-1].*phi.value[2:end-1,1:end-1,2:end-1].*(dy[1,1:end-1]+dy[1,2:end])./(dy[1,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[1,1:end-1].*phi.value[2:end-1,2:end,2:end-1]),
-    phi.value[2:end-1,2:end-1,2:end].*phi.value[2:end-1,2:end-1,1:end-1].*(dz[1,1,1:end-1]+dz[1,1,2:end])./(dz[1,1,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[1,1,1:end-1].*phi.value[2:end-1,2:end-1,2:end]))
+    phi.value[2:end-1,2:end,2:end-1].*phi.value[2:end-1,1:end-1,2:end-1].*(dy[:,1:end-1]+dy[:,2:end])./(dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1]),
+    phi.value[2:end-1,2:end-1,2:end].*phi.value[2:end-1,2:end-1,1:end-1].*(dz[:,:,1:end-1]+dz[:,:,2:end])./(dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end]))
 end
 end
 

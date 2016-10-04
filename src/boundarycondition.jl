@@ -1199,13 +1199,13 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=Ny+2
     i = 2:Nx+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.top.c-(phi.value[i,end-1,k]).*(-BC.top.a/dy_end+BC.top.b/2.0))./(BC.top.a/dy_end+BC.top.b/2.0)
+    phiBC[i,j,k]= (BC.top.c-(phi.value[i,end-1:end-1,k]).*(-BC.top.a/dy_end+BC.top.b/2.0))./(BC.top.a/dy_end+BC.top.b/2.0)
 
     # Bottom boundary
     j=1
     i = 2:Nx+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.bottom.c-(phi.value[i,2,k]).*(BC.bottom.a/dy_1+BC.bottom.b/2.0))./(-BC.bottom.a/dy_1+BC.bottom.b/2.0)
+    phiBC[i,j,k]= (BC.bottom.c-(phi.value[i,2:2,k]).*(BC.bottom.a/dy_1+BC.bottom.b/2.0))./(-BC.bottom.a/dy_1+BC.bottom.b/2.0)
 else
     # top boundary
     j=Ny+2
@@ -1225,13 +1225,13 @@ if !BC.left.periodic && !BC.right.periodic
     i = Nx+2
     j = 2:Ny+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.right.c-(phi.value[end-1,j,k]).*(-BC.right.a/dx_end+BC.right.b/2.0))./(BC.right.a/dx_end+BC.right.b/2.0)
+    phiBC[i,j,k]= (BC.right.c-(phi.value[end-1:end-1,j,k]).*(-BC.right.a/dx_end+BC.right.b/2.0))./(BC.right.a/dx_end+BC.right.b/2.0)
 
     # Left boundary
     i = 1;
     j = 2:Ny+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.left.c-(phi.value[2,j,k]).*(BC.left.a/dx_1+BC.left.b/2.0))./(-BC.left.a/dx_1+BC.left.b/2.0)
+    phiBC[i,j,k]= (BC.left.c-(phi.value[2:2,j,k]).*(BC.left.a/dx_1+BC.left.b/2.0))./(-BC.left.a/dx_1+BC.left.b/2.0)
 else
     # Right boundary
     i = Nx+2
@@ -1251,13 +1251,13 @@ if !BC.bottom.periodic && !BC.top.periodic
     i = 2:Nx+1
     j = 2:Ny+1
     k = Nz+2
-    phiBC[i,j,k]= (BC.front.c-(phi.value[i,j,end-1]).*(-BC.front.a/dz_end+BC.front.b/2.0))./(BC.front.a/dz_end+BC.front.b/2.0)
+    phiBC[i,j,k]= (BC.front.c-(phi.value[i,j,end-1:end-1]).*(-BC.front.a/dz_end+BC.front.b/2.0))./(BC.front.a/dz_end+BC.front.b/2.0)
 
     # back boundary
     i = 2:Nx+1
     j = 2:Ny+1
     k = 1
-    phiBC[i,j,k]= (BC.back.c-(phi.value[i,j,2]).*(BC.back.a/dz_1+BC.back.b/2.0))./(-BC.back.a/dz_1+BC.back.b/2.0)
+    phiBC[i,j,k]= (BC.back.c-(phi.value[i,j,2:2]).*(BC.back.a/dz_1+BC.back.b/2.0))./(-BC.back.a/dz_1+BC.back.b/2.0)
 else
     # front boundary
     i = 2:Nx+1
@@ -1370,13 +1370,13 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=Ntheta+2
     i = 2:Nr+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.top.c-(phi.value[i,end-1,k]).*(-BC.top.a./(dtheta_end*rp)+BC.top.b/2.0))./(BC.top.a./(dtheta_end*rp)+BC.top.b/2.0)
+    phiBC[i,j,k]= (BC.top.c-(phi.value[i,end-1:end-1,k]).*(-BC.top.a./(dtheta_end*rp)+BC.top.b/2.0))./(BC.top.a./(dtheta_end*rp)+BC.top.b/2.0)
 
     # Bottom boundary
     j=1
     i = 2:Nr+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.bottom.c-(phi.value[i,2,k]).*(BC.bottom.a./(dtheta_1*rp)+BC.bottom.b/2.0))./(-BC.bottom.a./(dtheta_1*rp)+BC.bottom.b/2.0)
+    phiBC[i,j,k]= (BC.bottom.c-(phi.value[i,2:2,k]).*(BC.bottom.a./(dtheta_1*rp)+BC.bottom.b/2.0))./(-BC.bottom.a./(dtheta_1*rp)+BC.bottom.b/2.0)
 else
     # top boundary
     j=Ntheta+2
@@ -1396,13 +1396,13 @@ if !BC.left.periodic && !BC.right.periodic
     i = Nr+2
     j = 2:Ntheta+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.right.c-(phi.value[end-1,j,k]).*(-BC.right.a/dr_end+BC.right.b/2.0))./(BC.right.a/dr_end+BC.right.b/2.0)
+    phiBC[i,j,k]= (BC.right.c-(phi.value[end-1:end-1,j,k]).*(-BC.right.a/dr_end+BC.right.b/2.0))./(BC.right.a/dr_end+BC.right.b/2.0)
 
     # Left boundary
     i = 1;
     j = 2:Ntheta+1
     k = 2:Nz+1
-    phiBC[i,j,k]= (BC.left.c-(phi.value[2,j,k]).*(BC.left.a/dr_1+BC.left.b/2.0))./(-BC.left.a/dr_1+BC.left.b/2.0)
+    phiBC[i,j,k]= (BC.left.c-(phi.value[2:2,j,k]).*(BC.left.a/dr_1+BC.left.b/2.0))./(-BC.left.a/dr_1+BC.left.b/2.0)
 else
     # Right boundary
     i = Nr+2
@@ -1422,13 +1422,13 @@ if !BC.bottom.periodic && !BC.top.periodic
     i = 2:Nr+1
     j = 2:Ntheta+1
     k = Nz+2
-    phiBC[i,j,k]= (BC.front.c-(phi.value[i,j,end-1]).*(-BC.front.a/dz_end+BC.front.b/2.0))./(BC.front.a/dz_end+BC.front.b/2.0)
+    phiBC[i,j,k]= (BC.front.c-(phi.value[i,j,end-1:end-1]).*(-BC.front.a/dz_end+BC.front.b/2.0))./(BC.front.a/dz_end+BC.front.b/2.0)
 
     # back boundary
     i = 2:Nr+1
     j = 2:Ntheta+1
     k = 1
-    phiBC[i,j,k]= (BC.back.c-(phi.value[i,j,2]).*(BC.back.a/dz_1+BC.back.b/2.0))./(-BC.back.a/dz_1+BC.back.b/2.0)
+    phiBC[i,j,k]= (BC.back.c-(phi.value[i,j,2:2]).*(BC.back.a/dz_1+BC.back.b/2.0))./(-BC.back.a/dz_1+BC.back.b/2.0)
 else
     # front boundary
     i = 2:Nr+1

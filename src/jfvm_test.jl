@@ -14,7 +14,7 @@ Y= [0.0, 0.1, 1.0, 1.5, 2.9, 3.0, pi, 2*pi]
 Z= [0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0]
 N_mesh=7
 # create nonuniform mesh
-mesh_nonuniform= cell(N_mesh)
+mesh_nonuniform= Array{Any}(N_mesh)
 mesh_nonuniform[1]=createMesh1D(X)
 mesh_nonuniform[2]=createMesh2D(X, Y)
 mesh_nonuniform[3]=createMesh3D(X, Y, Z)
@@ -26,9 +26,9 @@ println("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables
 c_val= 1.0
 # nonuniform
-c_n=cell(N_mesh)
-c_r=cell(N_mesh)
-D_n=cell(N_mesh)
+c_n=Array{Any}(N_mesh)
+c_r=Array{Any}(N_mesh)
+D_n=Array{Any}(N_mesh)
 for i=1:N_mesh
     c_n[i]= createCellVariable(mesh_nonuniform[i], c_val)
 end
@@ -44,13 +44,13 @@ println("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
 # nonuniform
-f_n=cell(N_mesh)
+f_n=Array{Any}(N_mesh)
 for i=1:N_mesh
     f_n[i]= createFaceVariable(mesh_nonuniform[i], f_val)
 end
 println("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
-BC_n=cell(N_mesh)
+BC_n=Array{Any}(N_mesh)
 for i=1:N_mesh
     BC_n[i]=createBC(mesh_nonuniform[i])
     BC_n[i].left.a[:]=0.0
@@ -62,10 +62,10 @@ for i=1:N_mesh
 end
 println("Boundary condition over a nonuniform mesh created successfully!")
 ## Part V: solve a steady-state diffusion equation
-c_dif=cell(N_mesh)
-M_bc=cell(N_mesh)
-M_dif=cell(N_mesh)
-RHS_bc=cell(N_mesh)
+c_dif=Array{Any}(N_mesh)
+M_bc=Array{Any}(N_mesh)
+M_dif=Array{Any}(N_mesh)
+RHS_bc=Array{Any}(N_mesh)
 for i=1:N_mesh
     M_bc[i], RHS_bc[i]= boundaryConditionTerm(BC_n[i])
     M_dif[i]=diffusionTerm(f_n[i])
@@ -80,11 +80,11 @@ end
 # println("Diffusion equation solved and visualized successfully")
 ## Part VI: solve convection diffucion equation
 # nonuniform
-c_conv=cell(N_mesh)
-M_bc=cell(N_mesh)
-M_dif=cell(N_mesh)
-M_conv=cell(N_mesh)
-RHS_bc=cell(N_mesh)
+c_conv=Array{Any}(N_mesh)
+M_bc=Array{Any}(N_mesh)
+M_dif=Array{Any}(N_mesh)
+M_conv=Array{Any}(N_mesh)
+RHS_bc=Array{Any}(N_mesh)
 for i=1:N_mesh
     M_bc[i], RHS_bc[i]= boundaryConditionTerm(BC_n[i])
     M_dif[i]=diffusionTerm(f_n[i])
@@ -99,11 +99,11 @@ end
 # end
 # println("Convection-Diffusion equation solved and visualized successfully")
 ## Part VII: test the calculus fanctions
-grad_c=cell(N_mesh)
+grad_c=Array{Any}(N_mesh)
 for i=1:N_mesh
     grad_c[i]=gradientTerm(c_dif[i])
 end
-div_c=cell(N_mesh)
+div_c=Array{Any}(N_mesh)
 for i=1:N_mesh
     div_c[i]=divergenceTerm(grad_c[i])
 end
@@ -111,13 +111,13 @@ println("Gradient and divergence functions work fine!")
 ## Solve a dynamic equation
 dt=0.1
 c_old=c_n
-c_trans=cell(N_mesh)
-M_bc=cell(N_mesh)
-M_dif=cell(N_mesh)
-M_conv=cell(N_mesh)
-RHS_bc=cell(N_mesh)
-M_ls=cell(N_mesh)
-RHS_s=cell(N_mesh)
+c_trans=Array{Any}(N_mesh)
+M_bc=Array{Any}(N_mesh)
+M_dif=Array{Any}(N_mesh)
+M_conv=Array{Any}(N_mesh)
+RHS_bc=Array{Any}(N_mesh)
+M_ls=Array{Any}(N_mesh)
+RHS_s=Array{Any}(N_mesh)
 for i=1:N_mesh
     M_bc[i], RHS_bc[i]= boundaryConditionTerm(BC_n[i])
     M_dif[i]=diffusionTerm(0.1*f_n[i])
@@ -143,14 +143,14 @@ end
 println("Transient convection-diffucion-reaction solved successfully!")
 ## Part VIII: test the utilities
 # only test the averaging, don"t save the result
-FL=fluxLimiter("Superbee")
+FL1=fluxLimiter("SUPERBEE")
 for i=1:N_mesh
     linearMean(c_trans[i])
     arithmeticMean(c_trans[i])
     geometricMean(D_n[i])
     harmonicMean(D_n[i])
     upwindMean(c_trans[i], f_n[i])
-    tvdMean(c_trans[i], f_n[i], FL)
+    tvdMean(c_trans[i], f_n[i], FL1)
 end
 println("Averaging functions run smoothly!")
 ## Part IX: test the classes and operators

@@ -94,8 +94,8 @@ mny = Nx*Ny
 # reassign the east, west for code readability (use broadcasting in Julia)
 De = D.xvalue[2:Nx+1,:]./(dx[2:Nx+1].*DX[2:Nx+1])
 Dw = D.xvalue[1:Nx,:]./(dx[1:Nx].*DX[2:Nx+1])
-Dn = D.yvalue[:,2:Ny+1]./(dy[1,2:Ny+1].*DY[1,2:Ny+1])
-Ds = D.yvalue[:,1:Ny]./(dy[1,1:Ny].*DY[1,2:Ny+1])
+Dn = D.yvalue[:,2:Ny+1]./(dy[:,2:Ny+1].*DY[:,2:Ny+1])
+Ds = D.yvalue[:,1:Ny]./(dy[:,1:Ny].*DY[:,2:Ny+1])
 
 # calculate the coefficients for the internal cells
 AE = reshape(De,mnx)
@@ -132,14 +132,24 @@ Nx = D.domain.dims[1]
 Ny = D.domain.dims[2]
 Nz = D.domain.dims[3]
 G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
+
+# DX = repeat(D.domain.cellsize.x, outer=(1, Ny, Nz))
+# DY = repeat(D.domain.cellsize.y.', outer=(Nx, 1, Nz))
+# DZ = zeros(1,1,Nz+2);
+# DZ(1,1,:) = D.domain.cellsize.z;
+# DZ=repmat(DZ, Nx, Ny, 1);
+# dx = 0.5*(DX(1:end-1,:,:)+DX(2:end,:,:));
+# dy = 0.5*(DY(:,1:end-1,:)+DY(:,2:end,:));
+# dz = 0.5*(DZ(:,:,1:end-1)+DZ(:,:,2:end));
+
 DX = D.domain.cellsize.x
 DY = Array(Float64, 1, Ny+2)
 DY[:] = D.domain.cellsize.y
 DZ = Array(Float64, 1,1,Nz+2)
 DZ[:] = D.domain.cellsize.z
 dx = 0.5*(DX[1:end-1]+DX[2:end])
-dy = 0.5*(DY[1,1:end-1]+DY[1,2:end])
-dz = 0.5*(DZ[1,1,1:end-1]+DZ[1,1,2:end])
+dy = 0.5*(DY[:,1:end-1]+DY[:,2:end])
+dz = 0.5*(DZ[:,:,1:end-1]+DZ[:,:,2:end])
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
@@ -159,10 +169,10 @@ mnz = Nx*Ny*Nz
 # code readability (use broadcasting)
 De = D.xvalue[2:Nx+1,:,:]./(dx[2:Nx+1].*DX[2:Nx+1])
 Dw = D.xvalue[1:Nx,:,:]./(dx[1:Nx].*DX[2:Nx+1])
-Dn = D.yvalue[:,2:Ny+1,:]./(dy[1,2:Ny+1].*DY[1,2:Ny+1])
-Ds = D.yvalue[:,1:Ny,:]./(dy[1,1:Ny].*DY[1,2:Ny+1])
-Df = D.zvalue[:,:,2:Nz+1]./(dz[1,1,2:Nz+1].*DZ[1,1,2:Nz+1])
-Db = D.zvalue[:,:,1:Nz]./(dz[1,1,1:Nz].*DZ[1,1,2:Nz+1])
+Dn = D.yvalue[:,2:Ny+1,:]./(dy[:,2:Ny+1].*DY[:,2:Ny+1])
+Ds = D.yvalue[:,1:Ny,:]./(dy[:,1:Ny].*DY[:,2:Ny+1])
+Df = D.zvalue[:,:,2:Nz+1]./(dz[:,:,2:Nz+1].*DZ[:,:,2:Nz+1])
+Db = D.zvalue[:,:,1:Nz]./(dz[:,:,1:Nz].*DZ[:,:,2:Nz+1])
 
 # calculate the coefficients for the internal cells
 AE = reshape(De,mnx)
@@ -277,8 +287,8 @@ mny = Nr*Ntheta
 # reassign the east, west for code readability
 De = rf[2:Nr+1].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
 Dw = rf[1:Nr].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
-Dn = D.yvalue[:,2:Ntheta+1]./(rp.*rp.*dtheta[1,2:Ntheta+1].*DTHETA[1,2:Ntheta+1])
-Ds = D.yvalue[:,1:Ntheta]./(rp.*rp.*dtheta[1,1:Ntheta].*DTHETA[1,2:Ntheta+1])
+Dn = D.yvalue[:,2:Ntheta+1]./(rp.*rp.*dtheta[:,2:Ntheta+1].*DTHETA[:,2:Ntheta+1])
+Ds = D.yvalue[:,1:Ntheta]./(rp.*rp.*dtheta[:,1:Ntheta].*DTHETA[:,2:Ntheta+1])
 
 # calculate the coefficients for the internal cells
 AE = reshape(De,mnx)
@@ -342,8 +352,8 @@ Dy = D.yvalue
 # reassign the east, west for code readability
 De = rf[2:Nr+1,:].*D.xvalue[2:Nr+1,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
 Dw = rf[1:Nr,:].*D.xvalue[1:Nr,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
-Dn = D.yvalue[:,2:Nz+1]./(dz[1,2:Nz+1].*DZ[1,2:Nz+1])
-Ds = D.yvalue[:,1:Nz]./(dz[1,1:Nz].*DZ[1,2:Nz+1])
+Dn = D.yvalue[:,2:Nz+1]./(dz[:,2:Nz+1].*DZ[:,2:Nz+1])
+Ds = D.yvalue[:,1:Nz]./(dz[:,1:Nz].*DZ[:,2:Nz+1])
 
 # calculate the coefficients for the internal cells
 AE = reshape(De,mnx)
@@ -388,8 +398,8 @@ DTHETA[:] = D.domain.cellsize.y
 DZ = Array(Float64, 1,1,Nz+2)
 DZ[:] = D.domain.cellsize.z
 dr = 0.5*(DR[1:end-1]+DR[2:end])
-dtheta = 0.5*(DTHETA[1,1:end-1]+DTHETA[1,2:end])
-dz = 0.5*(DZ[1,1,1:end-1]+DZ[1,1,2:end])
+dtheta = 0.5*(DTHETA[:,1:end-1]+DTHETA[:,2:end])
+dz = 0.5*(DZ[:,:,1:end-1]+DZ[:,:,2:end])
 rp = D.domain.cellcenters.x # use broadcasting
 rf = D.domain.facecenters.x
 
@@ -417,10 +427,10 @@ Dz = D.zvalue
 # code readability
 De = rf[2:Nr+1].*D.xvalue[2:Nr+1,:,:]./(rp.*dr[2:Nr+1].*DR[2:Nr+1])
 Dw = rf[1:Nr].*D.xvalue[1:Nr,:,:]./(rp.*dr[1:Nr].*DR[2:Nr+1])
-Dn = D.yvalue[:,2:Ntheta+1,:]./(rp.*rp.*dtheta[1,2:Ntheta+1].*DTHETA[1,2:Ntheta+1])
-Ds = D.yvalue[:,1:Ntheta,:]./(rp.*rp.*dtheta[1,1:Ntheta].*DTHETA[1,2:Ntheta+1])
-Df = D.zvalue[:,:,2:Nz+1]./(dz[1,1,2:Nz+1].*DZ[1,1,2:Nz+1])
-Db = D.zvalue[:,:,1:Nz]./(dz[1,1,1:Nz].*DZ[1,1,2:Nz+1])
+Dn = D.yvalue[:,2:Ntheta+1,:]./(rp.*rp.*dtheta[:,2:Ntheta+1].*DTHETA[:,2:Ntheta+1])
+Ds = D.yvalue[:,1:Ntheta,:]./(rp.*rp.*dtheta[:,1:Ntheta].*DTHETA[:,2:Ntheta+1])
+Df = D.zvalue[:,:,2:Nz+1]./(dz[:,:,2:Nz+1].*DZ[:,:,2:Nz+1])
+Db = D.zvalue[:,:,1:Nz]./(dz[:,:,1:Nz].*DZ[:,:,2:Nz+1])
 
 # calculate the coefficients for the internal cells
 AE = reshape(De,mnx)
