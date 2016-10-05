@@ -110,6 +110,7 @@ end
 println("Gradient and divergence functions work fine!")
 ## Solve a dynamic equation
 dt=0.1
+FL1=fluxLimiter("SUPERBEE")
 c_old=c_n
 c_trans=Array{Any}(N_mesh)
 M_bc=Array{Any}(N_mesh)
@@ -118,10 +119,12 @@ M_conv=Array{Any}(N_mesh)
 RHS_bc=Array{Any}(N_mesh)
 M_ls=Array{Any}(N_mesh)
 RHS_s=Array{Any}(N_mesh)
+RHS_tvd=Array{Any}(N_mesh)
 for i=1:N_mesh
     M_bc[i], RHS_bc[i]= boundaryConditionTerm(BC_n[i])
     M_dif[i]=diffusionTerm(0.1*f_n[i])
     M_conv[i]=convectionUpwindTerm(0.01*f_n[i])
+    RHS_tvd[i]=convectionTvdRHS(0.01*f_n[i], c_old[i], FL1) #only called, not used
     M_ls[i]=linearSourceTerm(0.1*c_n[i])
     RHS_s[i]=constantSourceTerm(0.2*c_n[i])
 end
@@ -143,7 +146,6 @@ end
 println("Transient convection-diffucion-reaction solved successfully!")
 ## Part VIII: test the utilities
 # only test the averaging, don"t save the result
-FL1=fluxLimiter("SUPERBEE")
 for i=1:N_mesh
     linearMean(c_trans[i])
     arithmeticMean(c_trans[i])

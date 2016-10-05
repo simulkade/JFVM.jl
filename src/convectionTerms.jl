@@ -2,14 +2,9 @@
 # Written by AAE
 # TU Delft, Spring 2014
 # simulkade.com
+# edited on multiple occasions at
+# Technical University of Denmark
 # ===============================
-
-# ===============================================================
-# Changes
-#    2014-12-29 Import all the convection terms from matlab code
-#    2015-01-10 extended to accept nonuniform grids
-# ===============================================================
-
 
 
 function convectionTerm(u::FaceValue)
@@ -70,6 +65,26 @@ elseif d==3.2
   M, RHS, Mx, My, Mz, RHSx, RHSy, RHSz = convectionTvdTermCylindrical3D(u::FaceValue, phi::CellValue, FL::Function)
 end
 (M, RHS)
+end
+
+function convectionTvdRHS(u::FaceValue, phi::CellValue, FL::Function)
+d = u.domain.dimension
+if d==1
+  RHS = convectionTvdRHS1D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==1.5
+  RHS = convectionTvdRHSCylindrical1D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==2
+  RHS, RHSx, RHSy = convectionTvdRHS2D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==2.5
+  RHS, RHSx, RHSy = convectionTvdRHSCylindrical2D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==2.8
+  RHS, RHSx, RHSy = convectionTvdRHSRadial2D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==3
+  RHS, RHSx, RHSy, RHSz = convectionTvdRHS3D(u::FaceValue, phi::CellValue, FL::Function)
+elseif d==3.2
+  RHS, RHSx, RHSy, RHSz = convectionTvdRHSCylindrical3D(u::FaceValue, phi::CellValue, FL::Function)
+end
+RHS
 end
 
 # =================== 1D Convection Terms =======================
@@ -326,6 +341,52 @@ M = sparse(iix[1:kx], jjx[1:kx], sx[1:kx], Nx+2, Nx+2)
 (M, RHS)
 end
 
+######################### Convection TVD only RHS ############################
+function convectionTvdRHSCylindrical1D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# phi is a cell variable
+
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+
+# extract data from the mesh structure
+Nx = u.domain.dims[1]
+G = [1:Nx+2;]
+DXp = u.domain.cellsize.x[2:end-1]
+dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+RHS = zeros(Float64, Nx+2)
+psi_p = zeros(Float64, Nx+1)
+psi_m = zeros(Float64, Nx+1)
+r = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
+rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
+psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[1] = 0.0 # left boundary will be handled explicitly
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
+psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
+
+# reassign the east, west for code readability
+re = rf[2:Nx+1]
+rw = rf[1:Nx]
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
+
+# calculate the TVD correction term
+RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
+              rw.*(uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
+return RHS
+end
 
 # ================= 1D Convection Terms Cartesian TVD =====================
 function convectionTvdTerm1D(u::FaceValue, phi::CellValue, FL::Function)
@@ -397,6 +458,46 @@ M = sparse(iix[1:kx], jjx[1:kx], sx[1:kx], Nx+2, Nx+2)
 (M, RHS)
 end
 
+# ================= 1D Convection RHS Cartesian TVD =====================
+function convectionTvdRHS1D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# phi is a cell variable
+
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+
+# extract data from the mesh structure
+Nx = u.domain.dims[1]
+G = [1:Nx+2;]
+DXp = u.domain.cellsize.x[2:end-1]
+dx = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+RHS = zeros(Float64, Nx+2)
+psi_p = zeros(Float64, Nx+1)
+psi_m = zeros(Float64, Nx+1)
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
+rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
+psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[1] = 0.0 # left boundary will be handled explicitly
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
+psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nx+1],0.0)
+ue_max = max(u.xvalue[2:Nx+1],0.0)
+uw_min = min(u.xvalue[1:Nx],0.0)
+uw_max = max(u.xvalue[1:Nx],0.0)
+
+# calculate the TVD correction term
+RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
+              (uw_max.*psi_p[1:Nx]+uw_min.*psi_m[1:Nx]))
+return RHS
+end
 
 
 # =================== 2D Convection Terms =======================
@@ -675,8 +776,89 @@ M = Mx + My
 (M, RHS, Mx, My, RHSx, RHSy)
 end
 
+# ================ 2D Convection Term TVD =======================
+function convectionTvdRHS2D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# phi is a cell variable
 
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
 
+# extract data from the mesh structure
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DYp = Array(Float64, 1, Ny)
+DYp[:] = u.domain.cellsize.y[2:end-1]
+dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dy=Array(Float64, 1, Ny+1)
+dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+
+psiX_p = zeros(Nx+1,Ny)
+psiX_m = zeros(Nx+1,Ny)
+psiY_p = zeros(Nx,Ny+1)
+psiY_m = zeros(Nx,Ny+1)
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+# x direction
+dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
+rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
+psiX_p[2:Nx+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
+		    phi.value[2:Nx+1, 2:Ny+1])
+psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+# y direction
+dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
+rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
+psiY_p[:,2:Ny+1] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
+		  phi.value[2:Nx+1, 2:Ny+1])
+psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+# x direction
+rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
+psiX_m[1:Nx,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
+		phi.value[2:Nx+1, 2:Ny+1])
+psiX_m[Nx+1,:] = 0.0 # right boundary
+# y direction
+rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
+psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
+	      phi.value[2:Nx+1, 2:Ny+1])
+psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min(u.xvalue[1:Nx,:],0.0)
+uw_max = max(u.xvalue[1:Nx,:],0.0)
+vn_min = min(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min(u.yvalue[:,1:Ny],0.0)
+vs_max = max(u.yvalue[:,1:Ny],0.0)
+
+# calculate the TVD correction term
+div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
+              (uw_max.*psiX_p[1:Nx,:]+uw_min.*psiX_m[1:Nx,:]))
+div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
+              (vs_max.*psiY_p[:,1:Ny]+vs_min.*psiY_m[:,1:Ny]))
+
+# define the RHS Vector
+RHS = zeros((Nx+2)*(Ny+2))
+RHSx = zeros((Nx+2)*(Ny+2))
+RHSy = zeros((Nx+2)*(Ny+2))
+
+# assign the values of the RHS vector
+mnx = Nx*Ny
+mny = Nx*Ny
+rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
+rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
+RHS[rowx_index] = reshape(div_x+div_y,Nx*Ny)
+RHSx[rowx_index] = reshape(div_x,Nx*Ny)
+RHSy[rowy_index] = reshape(div_y,Nx*Ny)
+
+(RHS, RHSx, RHSy)
+end
 
 # ================ 2D Convection Term Cylindrical Central ===================
 function convectionTermCylindrical2D(u::FaceValue)
@@ -969,6 +1151,94 @@ M = Mx + My
 end
 
 
+# ==================== 2D Convection RHS Cylindrical TVD ===========================
+function convectionTvdRHSCylindrical2D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# phi is a cell variable
+
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+
+# extract data from the mesh structure
+Nr = u.domain.dims[1]
+Nz = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DZp = Array(Float64, 1, Nz)
+DZp[:] = u.domain.cellsize.y[2:end-1]
+dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dz=Array(Float64, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+rp = repmat(u.domain.cellcenters.x, 1, Nz)
+rf = repmat(u.domain.facecenters.x, 1, Nz)
+psiX_p = zeros(Nr+1,Nz)
+psiX_m = zeros(Nr+1,Nz)
+psiY_p = zeros(Nr,Nz+1)
+psiY_m = zeros(Nr,Nz+1)
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+# x direction
+dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
+rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
+psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
+		    phi.value[2:Nr+1, 2:Nz+1])
+psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+# y direction
+dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
+rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
+psiY_p[:,2:Nz+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
+		  phi.value[2:Nr+1, 2:Nz+1])
+psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+# x direction
+rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
+psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
+		phi.value[2:Nr+1, 2:Nz+1])
+psiX_m[Nr+1,:] = 0.0 # right boundary
+# y direction
+rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
+psiY_m[:,1:Nz] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
+	      phi.value[2:Nr+1, 2:Nz+1])
+psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
+
+re = rf[2:Nr+1,:]
+rw = rf[1:Nr,:]
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min(u.yvalue[:,1:Nz],0.0)
+vs_max = max(u.yvalue[:,1:Nz],0.0)
+
+# calculate the TVD correction term
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+              rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
+div_y = -(1./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
+              (vs_max.*psiY_p[:,1:Nz]+vs_min.*psiY_m[:,1:Nz]))
+
+# define the RHS Vector
+RHS = zeros((Nr+2)*(Nz+2))
+RHSx = zeros((Nr+2)*(Nz+2))
+RHSy = zeros((Nr+2)*(Nz+2))
+
+# assign the values of the RHS vector
+mnx = Nr*Nz
+mny = Nr*Nz
+rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
+rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
+RHS[rowx_index] = reshape(div_x+div_y,Nr*Nz)
+RHSx[rowx_index] = reshape(div_x,Nr*Nz)
+RHSy[rowy_index] = reshape(div_y,Nr*Nz)
+
+(RHS, RHSx, RHSy)
+end
+
 # ================ 2D Convection Term Radial Central ===================
 function convectionTermRadial2D(u::FaceValue)
 # u is a face variable
@@ -1260,6 +1530,94 @@ M = Mx + My
 (M, RHS, Mx, My, RHSx, RHSy)
 end
 
+
+# ================ 2D Convection RHS Radial TVD =======================
+function convectionTvdRHSRadial2D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# phi is a cell variable
+
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+
+# extract data from the mesh structure
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETAp = Array(Float64, 1, Ntheta)
+DTHETAp[:] = u.domain.cellsize.y[2:end-1]
+dr = 0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dtheta = Array(Float64, 1, 1+Ntheta)
+dtheta[:] = 0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
+psiX_p = zeros(Nr+1,Ntheta)
+psiX_m = zeros(Nr+1,Ntheta)
+psiY_p = zeros(Nr,Ntheta+1)
+psiY_m = zeros(Nr,Ntheta+1)
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+# x direction
+dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
+rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
+psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
+		    phi.value[2:Nr+1, 2:Ntheta+1])
+psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+# y direction
+dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
+rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
+psiY_p[:,2:Ntheta+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
+		  phi.value[2:Nr+1, 2:Ntheta+1])
+psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+# x direction
+rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
+psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
+		phi.value[2:Nr+1, 2:Ntheta+1])
+psiX_m[Nr+1,:] = 0.0 # right boundary
+# y direction
+rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
+psiY_m[:,1:Ntheta] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
+	      phi.value[2:Nr+1, 2:Ntheta+1])
+psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
+
+re = rf[2:Nr+1,:]
+rw = rf[1:Nr,:]
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min(u.xvalue[1:Nr,:],0.0)
+uw_max = max(u.xvalue[1:Nr,:],0.0)
+vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max(u.yvalue[:,1:Ntheta],0.0)
+
+# calculate the TVD correction term
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+              rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
+div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
+              (vs_max.*psiY_p[:,1:Ntheta]+vs_min.*psiY_m[:,1:Ntheta]))
+
+# define the RHS Vector
+RHS = zeros((Nr+2)*(Ntheta+2))
+RHSx = zeros((Nr+2)*(Ntheta+2))
+RHSy = zeros((Nr+2)*(Ntheta+2))
+
+# assign the values of the RHS vector
+mnx = Nr*Ntheta
+mny = Nr*Ntheta
+rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
+rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
+RHS[rowx_index] = reshape(div_x+div_y,Nr*Ntheta)
+RHSx[rowx_index] = reshape(div_x,Nr*Ntheta)
+RHSy[rowy_index] = reshape(div_y,Nr*Ntheta)
+
+(RHS, RHSx, RHSy)
+end
 
 # ============================= 3D Convection Term ===============================
 function convectionTerm3D(u::FaceValue)
@@ -1634,6 +1992,111 @@ M = Mx + My + Mz;
 (M, RHS, Mx, My, Mz, RHSx, RHSy, RHSz)
 end
 
+
+# ============================= 3D Convection TVD RHS ===============================
+function convectionTvdRHS3D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+# extract data from the mesh structure
+Nx = u.domain.dims[1]
+Ny = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
+DXp = u.domain.cellsize.x[2:end-1]
+DY = Array(Float64, 1, Ny+2)
+DY[:] = u.domain.cellsize.y
+DYp = DY[:,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZp = DZ[:,:,2:end-1]
+dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dy=Array(Float64, 1, Ny+1)
+dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+dz=Array(Float64, 1, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.z[1:end-1]+u.domain.cellsize.z[2:end])
+psiX_p = zeros(Nx+1,Ny,Nz)
+psiX_m = zeros(Nx+1,Ny,Nz)
+psiY_p = zeros(Nx,Ny+1,Nz)
+psiY_m = zeros(Nx,Ny+1,Nz)
+psiZ_p = zeros(Nx,Ny,Nz+1)
+psiZ_m = zeros(Nx,Ny,Nz+1)
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+# x direction
+dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
+rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
+psiX_p[2:Nx+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiX_p[1,:,:] = 0.0  # left boundary
+# y direction
+dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
+rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
+psiY_p[:,2:Ny+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
+psiY_p[:,1,:] = 0.0  # Bottom boundary
+# z direction
+dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
+rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_p[:,:,1] = 0.0  # Back boundary
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+# x direction
+rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
+psiX_m[1:Nx,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
+psiX_m[Nx+1,:,:] = 0.0  # right boundary
+# y direction
+rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
+psiY_m[:,1:Ny,:] = 0.5*FL(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiY_m[:,Ny+1,:] = 0.0  # top boundary
+# z direction
+rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
+psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min(u.xvalue[1:Nx,:,:],0)
+uw_max = max(u.xvalue[1:Nx,:,:],0)
+vn_min = min(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min(u.yvalue[:,1:Ny,:],0)
+vs_max = max(u.yvalue[:,1:Ny,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
+
+# calculate the TVD correction term
+div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
+              (uw_max.*psiX_p[1:Nx,:,:]+uw_min.*psiX_m[1:Nx,:,:]))
+div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
+              (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
+div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+              (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
+
+# define the RHS Vector
+RHS = zeros((Nx+2)*(Ny+2)*(Nz+2))
+RHSx = zeros((Nx+2)*(Ny+2)*(Nz+2))
+RHSy = zeros((Nx+2)*(Ny+2)*(Nz+2))
+RHSz = zeros((Nx+2)*(Ny+2)*(Nz+2))
+
+# assign the values of the RHS vector
+mnx = Nx*Ny*Nz
+mny = Nx*Ny*Nz
+mnz = Nx*Ny*Nz
+rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
+rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
+rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
+row_index = rowx_index
+RHS[row_index] = reshape(div_x+div_y+div_z,Nx*Ny*Nz)
+RHSx[rowx_index] = reshape(div_x,Nx*Ny*Nz)
+RHSy[rowy_index] = reshape(div_y,Nx*Ny*Nz)
+RHSz[rowz_index] = reshape(div_z,Nx*Ny*Nz)
+
+(RHS, RHSx, RHSy, RHSz)
+end
 
 # ============================= 3D Cylindrical Convection Term ===============================
 function convectionTermCylindrical3D(u::FaceValue)
@@ -2033,4 +2496,121 @@ Mz = sparse(iiz[1:kz], jjz[1:kz], sz[1:kz], (Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Nt
 M = Mx + My + Mz;
 
 (M, RHS, Mx, My, Mz, RHSx, RHSy, RHSz)
+end
+
+
+# ============================= 3D Cylindrical Convection TVD RHS ===============================
+function convectionTvdRHSCylindrical3D(u::FaceValue, phi::CellValue, FL::Function)
+# u is a face variable
+# a function to avoid division by zero
+eps1 = 1.0e-20
+fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+# extract data from the mesh structure
+Nr = u.domain.dims[1]
+Ntheta = u.domain.dims[2]
+Nz = u.domain.dims[3]
+G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
+DRe = u.domain.cellsize.x[3:end]
+DRw = u.domain.cellsize.x[1:end-2]
+DRp = u.domain.cellsize.x[2:end-1]
+DTHETA = Array(Float64, 1, Ntheta+2)
+DTHETA[:] = u.domain.cellsize.y
+DTHETAn = DTHETA[:,3:end]
+DTHETAs = DTHETA[:,1:end-2]
+DTHETAp = DTHETA[:,2:end-1]
+DZ = Array(Float64, 1, 1, Nz+2)
+DZ[:] = u.domain.cellsize.z
+DZf = DZ[:,:,3:end]
+DZb = DZ[:,:,1:end-2]
+DZp = DZ[:,:,2:end-1]
+dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
+dtheta = Array(Float64, 1, Ntheta+1)
+dtheta[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
+dz = Array(Float64, 1, 1, Nz+1)
+dz[:]=0.5*(u.domain.cellsize.z[1:end-1]+u.domain.cellsize.z[2:end])
+psiX_p = zeros(Nr+1,Ntheta,Nz)
+psiX_m = zeros(Nr+1,Ntheta,Nz)
+psiY_p = zeros(Nr,Ntheta+1,Nz)
+psiY_m = zeros(Nr,Ntheta+1,Nz)
+psiZ_p = zeros(Nr,Ntheta,Nz+1)
+psiZ_m = zeros(Nr,Ntheta,Nz+1)
+rp = u.domain.cellcenters.x
+rf = u.domain.facecenters.x
+
+# calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+# x direction
+dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
+rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
+psiX_p[2:Nr+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiX_p[1,:,:] = 0  # left boundary
+# y direction
+dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
+rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
+psiY_p[:,2:Ntheta+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
+psiY_p[:,1,:] = 0.0  # Bottom boundary
+# z direction
+dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
+rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_p[:,:,1] = 0.0  # Back boundary
+
+# calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+# x direction
+rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
+psiX_m[1:Nr,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
+psiX_m[Nr+1,:,:] = 0.0  # right boundary
+# y direction
+rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
+psiY_m[:,1:Ntheta,:] = 0.5*FL(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
+# z direction
+rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
+psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+
+re = rf[2:Nr+1]
+rw = rf[1:Nr]
+
+# find the velocity direction for the upwind scheme
+ue_min = min(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min(u.xvalue[1:Nr,:,:],0)
+uw_max = max(u.xvalue[1:Nr,:,:],0)
+vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min(u.zvalue[:,:,1:Nz],0)
+wb_max = max(u.zvalue[:,:,1:Nz],0)
+
+# calculate the TVD correction term
+div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
+              rw.*(uw_max.*psiX_p[1:Nr,:,:]+uw_min.*psiX_m[1:Nr,:,:]))
+div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
+              (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
+div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+              (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
+
+# define the RHS Vector
+RHS = zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+RHSx = zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+RHSy = zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+RHSz = zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+
+# assign the values of the RHS vector
+mnx = Nr*Ntheta*Nz
+mny = Nr*Ntheta*Nz
+mnz = Nr*Ntheta*Nz
+rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
+rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
+rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
+row_index = rowx_index
+RHS[row_index] = reshape(div_x+div_y+div_z,Nr*Ntheta*Nz)
+RHSx[rowx_index] = reshape(div_x,Nr*Ntheta*Nz)
+RHSy[rowy_index] = reshape(div_y,Nr*Ntheta*Nz)
+RHSz[rowz_index] = reshape(div_z,Nr*Ntheta*Nz)
+
+(RHS, RHSx, RHSy, RHSz)
 end
