@@ -239,7 +239,7 @@ function tvdMean(phi::CellValue, u::FaceValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 d=phi.domain.dimension
 
