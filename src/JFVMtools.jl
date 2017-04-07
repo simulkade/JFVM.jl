@@ -30,28 +30,28 @@ elseif flName=="VanAlbada1"
 elseif flName=="VanAlbada2"
   r->(2.0*r./(1+r.*r))
 elseif flName=="MinMod"
-  r->((r>0.0).*min(r,1.0))
+  r->((r>0.0).*min.(r,1.0))
 elseif flName=="SUPERBEE"
-  r->(max(0.0, max(min(2.0*r,1.0), min(r,2.0))))
+  r->(max.(0.0, max.(min.(2.0*r,1.0), min.(r,2.0))))
 elseif flName=="Osher"
   b=1.5
-  r->(max(0.0, min(r,b)))
+  r->(max.(0.0, min.(r,b)))
 elseif flName=="Sweby"
   b=1.5
-  r->(max(0.0, max(min(b*r,1.0), min(r,b))))
+  r->(max.(0.0, max.(min.(b*r,1.0), min.(r,b))))
 elseif flName=="smart"
-  r->(max(0.0, min(4.0,min(0.25+0.75*r, 2.0*r))))
+  r->(max.(0.0, min.(4.0,min.(0.25+0.75*r, 2.0*r))))
 elseif flName=="Koren"
-  r->(max(0.0, min(2.0*r, min((1.0+2.0*r)/3.0, 2.0))))
+  r->(max.(0.0, min.(2.0*r, min.((1.0+2.0*r)/3.0, 2.0))))
 elseif flName=="MUSCL"
-  r->(max(0.0, min(2.0*r, min(0.5*(1+r), 2.0))))
+  r->(max.(0.0, min.(2.0*r, min.(0.5*(1+r), 2.0))))
 elseif flName=="QUICK"
-  r->(max(0.0, min(2.0, min(2.0*r, (3.0+r)/4.0))))
+  r->(max.(0.0, min.(2.0, min.(2.0*r, (3.0+r)/4.0))))
 elseif flName=="UMIST"
-  r->(max(0.0, min(2.0, min(2.0*r, min((1.0+3.0*r)/4.0, (3.0+r)/4.0)))))
+  r->(max.(0.0, min.(2.0, min.(2.0*r, min.((1.0+3.0*r)/4.0, (3.0+r)/4.0)))))
 else
   println("The flux limiter of your choice is not available. The SUPERBEE flux limiter is used instead.")
-  r->(max(0.0, max(min(2.0*r,1.0), min(r,2.0))))
+  r->(max.(0.0, max.(min.(2.0*r,1.0), min.(r,2.0))))
 end
 
 end

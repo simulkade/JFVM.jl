@@ -183,10 +183,10 @@ jjx = zeros(Int64, 3*(Nx+2))
 sx = zeros(Float64, 3*(Nx+2))
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the coefficients for the internal cells
 AE = reshape(ue_min./DXp,Nx)
@@ -234,10 +234,10 @@ re = rf[2:Nx+1]
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the coefficients for the internal cells
 AE = reshape(re.*ue_min./(DXp.*rp),Nx)
@@ -306,10 +306,10 @@ re = rf[2:Nx+1]
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -377,10 +377,10 @@ re = rf[2:Nx+1]
 rw = rf[1:Nx]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -423,10 +423,10 @@ psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -488,10 +488,10 @@ psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1],0.0)
-ue_max = max(u.xvalue[2:Nx+1],0.0)
-uw_min = min(u.xvalue[1:Nx],0.0)
-uw_max = max(u.xvalue[1:Nx],0.0)
+ue_min = min.(u.xvalue[2:Nx+1],0.0)
+ue_max = max.(u.xvalue[2:Nx+1],0.0)
+uw_min = min.(u.xvalue[1:Nx],0.0)
+uw_max = max.(u.xvalue[1:Nx],0.0)
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -582,14 +582,14 @@ mnx = Nx*Ny
 mny = Nx*Ny
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:],0.0)
-ue_max = max(u.xvalue[2:Nx+1,:],0.0)
-uw_min = min(u.xvalue[1:Nx,:],0.0)
-uw_max = max(u.xvalue[1:Nx,:],0.0)
-vn_min = min(u.yvalue[:,2:Ny+1],0.0)
-vn_max = max(u.yvalue[:,2:Ny+1],0.0)
-vs_min = min(u.yvalue[:,1:Ny],0.0)
-vs_max = max(u.yvalue[:,1:Ny],0.0)
+ue_min = min.(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nx,:],0.0)
+uw_max = max.(u.xvalue[1:Nx,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ny],0.0)
+vs_max = max.(u.yvalue[:,1:Ny],0.0)
 
 # calculate the coefficients for the internal cells, not reshape
 AE = ue_min./DXp
@@ -702,14 +702,14 @@ psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:],0.0)
-ue_max = max(u.xvalue[2:Nx+1,:],0.0)
-uw_min = min(u.xvalue[1:Nx,:],0.0)
-uw_max = max(u.xvalue[1:Nx,:],0.0)
-vn_min = min(u.yvalue[:,2:Ny+1],0.0)
-vn_max = max(u.yvalue[:,2:Ny+1],0.0)
-vs_min = min(u.yvalue[:,1:Ny],0.0)
-vs_max = max(u.yvalue[:,1:Ny],0.0)
+ue_min = min.(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nx,:],0.0)
+uw_max = max.(u.xvalue[1:Nx,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ny],0.0)
+vs_max = max.(u.yvalue[:,1:Ny],0.0)
 
 # calculate the coefficients for the internal cells, not reshape
 AE = ue_min./DXp
@@ -828,14 +828,14 @@ psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:],0.0)
-ue_max = max(u.xvalue[2:Nx+1,:],0.0)
-uw_min = min(u.xvalue[1:Nx,:],0.0)
-uw_max = max(u.xvalue[1:Nx,:],0.0)
-vn_min = min(u.yvalue[:,2:Ny+1],0.0)
-vn_max = max(u.yvalue[:,2:Ny+1],0.0)
-vs_min = min(u.yvalue[:,1:Ny],0.0)
-vs_max = max(u.yvalue[:,1:Ny],0.0)
+ue_min = min.(u.xvalue[2:Nx+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nx+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nx,:],0.0)
+uw_max = max.(u.xvalue[1:Nx,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ny+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ny+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ny],0.0)
+vs_max = max.(u.yvalue[:,1:Ny],0.0)
 
 # calculate the TVD correction term
 div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
@@ -952,14 +952,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Nz+1],0.0)
-vn_max = max(u.yvalue[:,2:Nz+1],0.0)
-vs_min = min(u.yvalue[:,1:Nz],0.0)
-vs_max = max(u.yvalue[:,1:Nz],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max.(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min.(u.yvalue[:,1:Nz],0.0)
+vs_max = max.(u.yvalue[:,1:Nz],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -1076,14 +1076,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Nz+1],0.0)
-vn_max = max(u.yvalue[:,2:Nz+1],0.0)
-vs_min = min(u.yvalue[:,1:Nz],0.0)
-vs_max = max(u.yvalue[:,1:Nz],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max.(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min.(u.yvalue[:,1:Nz],0.0)
+vs_max = max.(u.yvalue[:,1:Nz],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -1207,14 +1207,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Nz+1],0.0)
-vn_max = max(u.yvalue[:,2:Nz+1],0.0)
-vs_min = min(u.yvalue[:,1:Nz],0.0)
-vs_max = max(u.yvalue[:,1:Nz],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Nz+1],0.0)
+vn_max = max.(u.yvalue[:,2:Nz+1],0.0)
+vs_min = min.(u.yvalue[:,1:Nz],0.0)
+vs_max = max.(u.yvalue[:,1:Nz],0.0)
 
 # calculate the TVD correction term
 div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
@@ -1332,14 +1332,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
-vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
-vs_min = min(u.yvalue[:,1:Ntheta],0.0)
-vs_max = max(u.yvalue[:,1:Ntheta],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max.(u.yvalue[:,1:Ntheta],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -1456,14 +1456,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
-vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
-vs_min = min(u.yvalue[:,1:Ntheta],0.0)
-vs_max = max(u.yvalue[:,1:Ntheta],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max.(u.yvalue[:,1:Ntheta],0.0)
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -1587,14 +1587,14 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:],0.0)
-ue_max = max(u.xvalue[2:Nr+1,:],0.0)
-uw_min = min(u.xvalue[1:Nr,:],0.0)
-uw_max = max(u.xvalue[1:Nr,:],0.0)
-vn_min = min(u.yvalue[:,2:Ntheta+1],0.0)
-vn_max = max(u.yvalue[:,2:Ntheta+1],0.0)
-vs_min = min(u.yvalue[:,1:Ntheta],0.0)
-vs_max = max(u.yvalue[:,1:Ntheta],0.0)
+ue_min = min.(u.xvalue[2:Nr+1,:],0.0)
+ue_max = max.(u.xvalue[2:Nr+1,:],0.0)
+uw_min = min.(u.xvalue[1:Nr,:],0.0)
+uw_max = max.(u.xvalue[1:Nr,:],0.0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1],0.0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1],0.0)
+vs_min = min.(u.yvalue[:,1:Ntheta],0.0)
+vs_max = max.(u.yvalue[:,1:Ntheta],0.0)
 
 # calculate the TVD correction term
 div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
@@ -1733,18 +1733,18 @@ mny = Nx*Ny*Nz
 mnz = Nx*Ny*Nz
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:,:],0)
-ue_max = max(u.xvalue[2:Nx+1,:,:],0)
-uw_min = min(u.xvalue[1:Nx,:,:],0)
-uw_max = max(u.xvalue[1:Nx,:,:],0)
-vn_min = min(u.yvalue[:,2:Ny+1,:],0)
-vn_max = max(u.yvalue[:,2:Ny+1,:],0)
-vs_min = min(u.yvalue[:,1:Ny,:],0)
-vs_max = max(u.yvalue[:,1:Ny,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nx,:,:],0)
+uw_max = max.(u.xvalue[1:Nx,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ny,:],0)
+vs_max = max.(u.yvalue[:,1:Ny,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
 AE = ue_min./DXp
@@ -1891,18 +1891,18 @@ psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:,:],0)
-ue_max = max(u.xvalue[2:Nx+1,:,:],0)
-uw_min = min(u.xvalue[1:Nx,:,:],0)
-uw_max = max(u.xvalue[1:Nx,:,:],0)
-vn_min = min(u.yvalue[:,2:Ny+1,:],0)
-vn_max = max(u.yvalue[:,2:Ny+1,:],0)
-vs_min = min(u.yvalue[:,1:Ny,:],0)
-vs_max = max(u.yvalue[:,1:Ny,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nx,:,:],0)
+uw_max = max.(u.xvalue[1:Nx,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ny,:],0)
+vs_max = max.(u.yvalue[:,1:Ny,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
 AE = ue_min./DXp
@@ -2055,18 +2055,18 @@ psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nx+1,:,:],0)
-ue_max = max(u.xvalue[2:Nx+1,:,:],0)
-uw_min = min(u.xvalue[1:Nx,:,:],0)
-uw_max = max(u.xvalue[1:Nx,:,:],0)
-vn_min = min(u.yvalue[:,2:Ny+1,:],0)
-vn_max = max(u.yvalue[:,2:Ny+1,:],0)
-vs_min = min(u.yvalue[:,1:Ny,:],0)
-vs_max = max(u.yvalue[:,1:Ny,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nx+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nx+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nx,:,:],0)
+uw_max = max.(u.xvalue[1:Nx,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ny+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ny+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ny,:],0)
+vs_max = max.(u.yvalue[:,1:Ny,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the TVD correction term
 div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
@@ -2228,18 +2228,18 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:,:],0)
-ue_max = max(u.xvalue[2:Nr+1,:,:],0)
-uw_min = min(u.xvalue[1:Nr,:,:],0)
-uw_max = max(u.xvalue[1:Nr,:,:],0)
-vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
-vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
-vs_min = min(u.yvalue[:,1:Ntheta,:],0)
-vs_max = max(u.yvalue[:,1:Ntheta,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nr,:,:],0)
+uw_max = max.(u.xvalue[1:Nr,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max.(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
 AE = re.*ue_min./(DRp.*rp)
@@ -2397,18 +2397,18 @@ re = rf[2:Nr+1]
 rw = rf[1:Nr]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:,:],0)
-ue_max = max(u.xvalue[2:Nr+1,:,:],0)
-uw_min = min(u.xvalue[1:Nr,:,:],0)
-uw_max = max(u.xvalue[1:Nr,:,:],0)
-vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
-vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
-vs_min = min(u.yvalue[:,1:Ntheta,:],0)
-vs_max = max(u.yvalue[:,1:Ntheta,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nr,:,:],0)
+uw_max = max.(u.xvalue[1:Nr,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max.(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the coefficients for the internal cells
 AE = re.*ue_min./(DRp.*rp)
@@ -2572,18 +2572,18 @@ re = rf[2:Nr+1]
 rw = rf[1:Nr]
 
 # find the velocity direction for the upwind scheme
-ue_min = min(u.xvalue[2:Nr+1,:,:],0)
-ue_max = max(u.xvalue[2:Nr+1,:,:],0)
-uw_min = min(u.xvalue[1:Nr,:,:],0)
-uw_max = max(u.xvalue[1:Nr,:,:],0)
-vn_min = min(u.yvalue[:,2:Ntheta+1,:],0)
-vn_max = max(u.yvalue[:,2:Ntheta+1,:],0)
-vs_min = min(u.yvalue[:,1:Ntheta,:],0)
-vs_max = max(u.yvalue[:,1:Ntheta,:],0)
-wf_min = min(u.zvalue[:,:,2:Nz+1],0)
-wf_max = max(u.zvalue[:,:,2:Nz+1],0)
-wb_min = min(u.zvalue[:,:,1:Nz],0)
-wb_max = max(u.zvalue[:,:,1:Nz],0)
+ue_min = min.(u.xvalue[2:Nr+1,:,:],0)
+ue_max = max.(u.xvalue[2:Nr+1,:,:],0)
+uw_min = min.(u.xvalue[1:Nr,:,:],0)
+uw_max = max.(u.xvalue[1:Nr,:,:],0)
+vn_min = min.(u.yvalue[:,2:Ntheta+1,:],0)
+vn_max = max.(u.yvalue[:,2:Ntheta+1,:],0)
+vs_min = min.(u.yvalue[:,1:Ntheta,:],0)
+vs_max = max.(u.yvalue[:,1:Ntheta,:],0)
+wf_min = min.(u.zvalue[:,:,2:Nz+1],0)
+wf_max = max.(u.zvalue[:,:,2:Nz+1],0)
+wb_min = min.(u.zvalue[:,:,1:Nz],0)
+wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the TVD correction term
 div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
