@@ -272,7 +272,7 @@ function convectionTvdTermCylindrical1D(u::FaceValue, phi::CellValue, FL::Functi
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -348,7 +348,7 @@ function convectionTvdRHSCylindrical1D(u::FaceValue, phi::CellValue, FL::Functio
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -395,7 +395,7 @@ function convectionTvdTerm1D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -465,7 +465,7 @@ function convectionTvdRHS1D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -647,7 +647,7 @@ function convectionTvdTerm2D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -783,7 +783,7 @@ function convectionTvdRHS2D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
@@ -1017,7 +1017,7 @@ function convectionTvdTermCylindrical2D(u::FaceValue, phi::CellValue, FL::Functi
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
@@ -1158,7 +1158,7 @@ function convectionTvdRHSCylindrical2D(u::FaceValue, phi::CellValue, FL::Functio
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
@@ -1397,7 +1397,7 @@ function convectionTvdTermRadial2D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
@@ -1538,7 +1538,7 @@ function convectionTvdRHSRadial2D(u::FaceValue, phi::CellValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
@@ -1820,7 +1820,7 @@ function convectionTvdTerm3D(u::FaceValue, phi::CellValue, FL::Function)
 # u is a face variable
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
@@ -1998,7 +1998,7 @@ function convectionTvdRHS3D(u::FaceValue, phi::CellValue, FL::Function)
 # u is a face variable
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 # extract data from the mesh structure
 Nx = u.domain.dims[1]
 Ny = u.domain.dims[2]
@@ -2315,7 +2315,7 @@ function convectionTvdTermCylindrical3D(u::FaceValue, phi::CellValue, FL::Functi
 # u is a face variable
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
@@ -2504,7 +2504,7 @@ function convectionTvdRHSCylindrical3D(u::FaceValue, phi::CellValue, FL::Functio
 # u is a face variable
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign.(phi_in)
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
 Ntheta = u.domain.dims[2]
