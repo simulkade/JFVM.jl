@@ -89,7 +89,7 @@ if d==1 || d==1.5
       if phi.value[i]==0.0 || phi.value[i+1]==0.0
           phix[i]=0.0
       else
-          phix[i]=exp((dx[i]*log(phi.value[i])+dx[i+1]*log(phi.value[i+1]))/(dx[i+1]+dx[i]))
+          phix[i]=exp.((dx[i]*log.(phi.value[i])+dx[i+1]*log.(phi.value[i+1]))/(dx[i+1]+dx[i]))
       end
   end
   FaceValue(phi.domain,
@@ -102,8 +102,8 @@ elseif d==2 || d==2.5 || d==2.8
   dy = zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
-    exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1]))./(dx[2:end]+dx[1:end-1])),
-    exp((dy[:,1:end-1].*log(phi.value[2:end-1,1:end-1])+dy[:,2:end].*log(phi.value[2:end-1,2:end]))./(dy[:,2:end]+dy[:,1:end-1])),
+    exp.((dx[1:end-1].*log.(phi.value[1:end-1,2:end-1])+dx[2:end].*log.(phi.value[2:end,2:end-1]))./(dx[2:end]+dx[1:end-1])),
+    exp.((dy[:,1:end-1].*log.(phi.value[2:end-1,1:end-1])+dy[:,2:end].*log.(phi.value[2:end-1,2:end]))./(dy[:,2:end]+dy[:,1:end-1])),
     [1.0])
 elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
@@ -114,9 +114,9 @@ elseif d==3 || d==3.2
   dz= zeros( 1, 1, Nz+2)
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
-    exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1,2:end-1]))./(dx[2:end]+dx[1:end-1])),
-    exp((dy[:,1:end-1].*log(phi.value[2:end-1,1:end-1,2:end-1])+dy[:,2:end].*log(phi.value[2:end-1,2:end,2:end-1]))./(dy[:,1:end-1]+dy[:,2:end])),
-    exp((dz[:,:,1:end-1].*log(phi.value[2:end-1,2:end-1,1:end-1])+dz[:,:,2:end].*log(phi.value[2:end-1,2:end-1,2:end]))./(dz[:,:,1:end-1]+dz[:,:,2:end])))
+    exp.((dx[1:end-1].*log.(phi.value[1:end-1,2:end-1,2:end-1])+dx[2:end].*log.(phi.value[2:end,2:end-1,2:end-1]))./(dx[2:end]+dx[1:end-1])),
+    exp.((dy[:,1:end-1].*log.(phi.value[2:end-1,1:end-1,2:end-1])+dy[:,2:end].*log.(phi.value[2:end-1,2:end,2:end-1]))./(dy[:,1:end-1]+dy[:,2:end])),
+    exp.((dz[:,:,1:end-1].*log.(phi.value[2:end-1,2:end-1,1:end-1])+dz[:,:,2:end].*log.(phi.value[2:end-1,2:end-1,2:end]))./(dz[:,:,1:end-1]+dz[:,:,2:end])))
 end
 end
 
@@ -239,7 +239,7 @@ function tvdMean(phi::CellValue, u::FaceValue, FL::Function)
 
 # a function to avoid division by zero
 eps1 = 1.0e-20
-fsign(phi_in) = (abs(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs(phi_in).<eps1).*sign(phi_in)
+fsign(phi_in) = (abs.(phi_in).>=eps1).*phi_in+eps1*(phi_in.==0.0)+eps1*(abs.(phi_in).<eps1).*sign(phi_in)
 
 d=phi.domain.dimension
 
