@@ -106,7 +106,7 @@ Nx = F.domain.dims[1]
 Ny = F.domain.dims[2]
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 DX = F.domain.cellsize.x[2:end-1]
-DY = Array(Float64, 1, Ny)
+DY = zeros( 1, Ny)
 DY[:] = F.domain.cellsize.y[2:end-1]
 
 # define the vector of cell index
@@ -149,7 +149,7 @@ Nr = F.domain.dims[1]
 Nz = F.domain.dims[2]
 G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 dr = F.domain.cellsize.x[2:end-1]
-dz= Array(Float64, 1, Nz)
+dz= zeros( 1, Nz)
 dz[:] = F.domain.cellsize.y[2:end-1]
 rp = F.domain.cellcenters.x
 rf = F.domain.facecenters.x
@@ -196,7 +196,7 @@ Nr = F.domain.dims[1]
 Ntheta = F.domain.dims[2]
 G=reshape([1:(Nr+2)*(Ntheta+2);], Nr+2, Ntheta+2)
 dr = F.domain.cellsize.x[2:end-1]
-dtheta= Array(Float64, 1, Ntheta)
+dtheta= zeros( 1, Ntheta)
 dtheta[:]= F.domain.cellsize.y[2:end-1]
 rp = F.domain.cellcenters.x
 rf = F.domain.facecenters.x
@@ -242,9 +242,9 @@ Ny = F.domain.dims[2]
 Nz = F.domain.dims[3]
 G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx = F.domain.cellsize.x[2:end-1]
-dy = Array(Float64, 1, Ny)
+dy = zeros( 1, Ny)
 dy[:] = F.domain.cellsize.y[2:end-1]
-dz = Array(Float64, 1,1,Nz)
+dz = zeros( 1,1,Nz)
 dz[:] = F.domain.cellsize.z[2:end-1]
 
 # define the vector of cell index
@@ -293,9 +293,9 @@ Ny = F.domain.dims[2]
 Nz = F.domain.dims[3]
 G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 dx = F.domain.cellsize.x[2:end-1]
-dy = Array(Float64, 1, Ny)
+dy = zeros( 1, Ny)
 dy[:] = F.domain.cellsize.y[2:end-1]
-dz = Array(Float64, 1,1,Nz)
+dz = zeros( 1,1,Nz)
 dz[:] = F.domain.cellsize.z[2:end-1]
 rp = F.domain.cellcenters.x
 
@@ -347,7 +347,7 @@ if d==1 || d==1.5
 elseif d==2 || d==2.5
   dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
   Ny = phi.domain.dims[2]
-  dy = Array(Float64, 1, Ny+1)
+  dy = zeros( 1, Ny+1)
   dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
   FaceValue(phi.domain,
     (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
@@ -356,7 +356,7 @@ elseif d==2 || d==2.5
 elseif d==2.8
   dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
   Ntheta = phi.domain.dims[2]
-  dtheta = Array(Float64, 1, Ntheta+1)
+  dtheta = zeros( 1, Ntheta+1)
   dtheta[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
   rp = phi.domain.cellcenters.x
   FaceValue(phi.domain,
@@ -367,9 +367,9 @@ elseif d==3
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  dy= Array(Float64, 1, Ny+1)
+  dy= zeros( 1, Ny+1)
   dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  dz= Array(Float64, 1, 1, Nz+1)
+  dz= zeros( 1, 1, Nz+1)
   dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
   FaceValue(phi.domain,
     (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
@@ -379,9 +379,9 @@ elseif d==3.2
   Ntheta = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  dy= Array(Float64, 1, Ntheta+1)
+  dy= zeros( 1, Ntheta+1)
   dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  dz= Array(Float64, 1, 1, Nz+1)
+  dz= zeros( 1, 1, Nz+1)
   dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
   rp = phi.domain.cellcenters.x
   FaceValue(phi.domain,

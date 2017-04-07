@@ -1,4 +1,4 @@
-# ===============================
+zeros(# ===============================
 # Written by AAE
 # TU Delft, Winter 2014
 # simulkade.com
@@ -95,9 +95,9 @@ elseif d==3
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   x=[phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
-  y=Array(Float64,1,Ny+2)
+  y=zeros(1,Ny+2)
   y[:]=[phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
-  z=Array(Float64,1,1,Nz+2)
+  z=zeros(1,1,Nz+2)
   z[:]=[phi.domain.facecenters.z[1]; phi.domain.cellcenters.z; phi.domain.facecenters.z[end]]
 
   phi0 = Base.copy(phi.value)
@@ -155,9 +155,9 @@ elseif d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   r=[phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
-  theta = Array(Float64,1,Ny+2)
+  theta = zeros(1,Ny+2)
   theta[:]=[phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
-  z=Array(Float64,1,1,Nz+2)
+  z=zeros(1,1,Nz+2)
   z[:]=[phi.domain.facecenters.z[1]; phi.domain.cellcenters.z; phi.domain.facecenters.z[end]]
   a=ones(Nx+2,Ny+2,Nz+2)
   R=r.*a
@@ -223,9 +223,9 @@ elseif d==3
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   x=phi.domain.cellcenters.x
-  y=Array(Float64,1,Ny)
+  y=zeros(1,Ny)
   y[:]=phi.domain.cellcenters.y
-  z=Array(Float64,1,1,Nz)
+  z=zeros(1,1,Nz)
   z[:]=phi.domain.cellcenters.z
 
   #vmin = minimum(phi.xvalue)
@@ -270,9 +270,9 @@ elseif d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   r=phi.domain.cellcenters.x
-  theta = Array(Float64,1,Ny)
+  theta = zeros(1,Ny)
   theta[:]=phi.domain.cellcenters.y
-  z=Array(Float64,1,1,Nz)
+  z=zeros(1,1,Nz)
   z[:]=phi.domain.cellcenters.z
   a=ones(Nx,Ny,Nz)
   R=r.*a

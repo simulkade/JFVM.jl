@@ -17,7 +17,7 @@ if d==1 || d==1.5
 elseif d==2 || d==2.5 || d==2.8
   dx = phi.domain.cellsize.x
   Ny = phi.domain.dims[2]
-  dy = Array(Float64, 1, Ny+2)
+  dy = zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     (dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
@@ -27,9 +27,9 @@ elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = phi.domain.cellsize.x
-  dy= Array(Float64, 1, Ny+2)
+  dy= zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
-  dz= Array(Float64, 1, 1, Nz+2)
+  dz= zeros( 1, 1, Nz+2)
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
@@ -54,7 +54,7 @@ if d==1 || d==1.5
 elseif d==2 || d==2.5 || d==2.8
   dx = phi.domain.cellsize.x
   Ny = phi.domain.dims[2]
-  dy = Array(Float64, 1, Ny+2)
+  dy = zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     (dx[1:end-1].*phi.value[1:end-1,2:end-1]+dx[2:end].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
@@ -64,9 +64,9 @@ elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = phi.domain.cellsize.x
-  dy= Array(Float64, 1, Ny+2)
+  dy= zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
-  dz= Array(Float64, 1, 1, Nz+2)
+  dz= zeros( 1, 1, Nz+2)
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     (dx[1:end-1].*phi.value[1:end-1,2:end-1,2:end-1]+dx[2:end].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
@@ -99,7 +99,7 @@ if d==1 || d==1.5
 elseif d==2 || d==2.5 || d==2.8
   dx = phi.domain.cellsize.x
   Ny = phi.domain.dims[2]
-  dy = Array(Float64, 1, Ny+2)
+  dy = zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1]))./(dx[2:end]+dx[1:end-1])),
@@ -109,9 +109,9 @@ elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = phi.domain.cellsize.x
-  dy= Array(Float64, 1, Ny+2)
+  dy= zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
-  dz= Array(Float64, 1, 1, Nz+2)
+  dz= zeros( 1, 1, Nz+2)
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     exp((dx[1:end-1].*log(phi.value[1:end-1,2:end-1,2:end-1])+dx[2:end].*log(phi.value[2:end,2:end-1,2:end-1]))./(dx[2:end]+dx[1:end-1])),
@@ -144,7 +144,7 @@ if d==1 || d==1.5
 elseif d==2 || d==2.5 || d==2.8
   dx = phi.domain.cellsize.x
   Ny = phi.domain.dims[2]
-  dy = Array(Float64, 1, Ny+2)
+  dy = zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
   FaceValue(phi.domain,
     phi.value[2:end,2:end-1].*phi.value[1:end-1,2:end-1].*(dx[2:end]+dx[1:end-1])./(dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1]),
@@ -154,9 +154,9 @@ elseif d==3 || d==3.2
   Ny = phi.domain.dims[2]
   Nz = phi.domain.dims[3]
   dx = phi.domain.cellsize.x
-  dy= Array(Float64, 1, Ny+2)
+  dy= zeros( 1, Ny+2)
   dy[:] = phi.domain.cellsize.y
-  dz= Array(Float64, 1, 1, Nz+2)
+  dz= zeros( 1, 1, Nz+2)
   dz[:] = phi.domain.cellsize.z
   FaceValue(phi.domain,
     phi.value[2:end,2:end-1,2:end-1].*phi.value[1:end-1,2:end-1,2:end-1].*(dx[2:end]+dx[1:end-1])./(dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1]),
@@ -274,7 +274,7 @@ elseif d==2 || d==2.5 || d==2.8
   Nx = u.domain.dims[1]
   Ny = u.domain.dims[2]
   dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
-  dy=Array(Float64, 1, Ny+1)
+  dy=zeros( 1, Ny+1)
   dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
   phi_p = zeros(Float64, Nx+1)
   phi_m = zeros(Float64, Nx+1)
@@ -326,9 +326,9 @@ elseif d==3 || d==3.2
   Ny = u.domain.dims[2]
   Nz = u.domain.dims[3]
   dx=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
-  dy=Array(Float64, 1, Ny+1)
+  dy=zeros( 1, Ny+1)
   dy[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
-  dz=Array(Float64, 1, 1, Nz+1)
+  dz=zeros( 1, 1, Nz+1)
   dz[:]=0.5*(u.domain.cellsize.z[1:end-1]+u.domain.cellsize.z[2:end])
   # extract the velocity data
   ux = u.xvalue
