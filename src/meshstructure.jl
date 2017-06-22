@@ -19,10 +19,11 @@ Outputs:
    + m: a mesh structure
 
 Usage:
-
+```
 Nx=10
 Lx=1.0
 m=createMesh1D(Nx, Lx)
+```
 """
 function createMesh1D(Nx::Int, Width::Real)
 # builds a uniform 1D mesh:
@@ -60,9 +61,10 @@ Outputs:
    + m: a mesh structure
 
 Usage:
-
+```
 	x= [0.0, 1.0, 1.4, 2.5, 4.1, 6.0, 10.0]
 	m=createMesh1D(x)
+```
 """
 function createMesh1D{T<:Real}(facelocationX::Array{T,1})
 # builds a uniform 1D mesh:

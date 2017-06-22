@@ -12,14 +12,14 @@ FaceValue(a.domain,
   a.zvalue-b.zvalue)
 end
 
-function .*(a::FaceValue, b::FaceValue)
+function broadcast(::typeof(*), a::FaceValue, b::FaceValue)
 FaceValue(a.domain,
   a.xvalue.*b.xvalue,
   a.yvalue.*b.yvalue,
   a.zvalue.*b.zvalue)
 end
 
-function ./(a::FaceValue, b::FaceValue)
+function broadcast(::typeof(/), a::FaceValue, b::FaceValue)
 FaceValue(a.domain,
   a.xvalue./b.xvalue,
   a.yvalue./b.yvalue,
@@ -100,12 +100,12 @@ CellValue(a.domain,
   a.value-b.value)
 end
 
-function .*(a::CellValue, b::CellValue)
+function broadcast(::typeof(*), a::CellValue, b::CellValue)
 CellValue(a.domain,
   a.value.*b.value)
 end
 
-function ./(a::CellValue, b::CellValue)
+function broadcast(::typeof(/), a::CellValue, b::CellValue)
 CellValue(a.domain,
   a.value./b.value)
 end
@@ -122,7 +122,7 @@ end
 
 function -(a::Real, b::CellValue)
 CellValue(b.domain,
-  a.-b.value)
+  a-b.value)
 end
 
 function -(a::CellValue)
@@ -132,17 +132,17 @@ end
 
 function -(a::CellValue, b::Real)
 CellValue(a.domain,
-  a.value.-b)
+  a.value-b)
 end
 
 function *(a::Real, b::CellValue)
 CellValue(b.domain,
-  a.*b.value)
+  a*b.value)
 end
 
 function *(a::CellValue, b::Real)
 CellValue(a.domain,
-  b.*a.value)
+  b*a.value)
 end
 
 function /(a::Real, b::CellValue)
@@ -152,7 +152,7 @@ end
 
 function /(a::CellValue, b::Real)
 CellValue(a.domain,
-  a.value./b)
+  a.value/b)
 end
 
 # Cell Vector operators
@@ -170,14 +170,14 @@ CellVector(a.domain,
   a.zvalue-b.zvalue)
 end
 
-function .*(a::CellVector, b::CellVector)
+function broadcast(::typeof(*), a::CellVector, b::CellVector)
 CellVector(a.domain,
   a.xvalue.*b.xvalue,
   a.yvalue.*b.yvalue,
   a.zvalue.*b.zvalue)
 end
 
-function ./(a::CellVector, b::CellVector)
+function broadcast(::typeof(/), a::CellVector, b::CellVector)
 CellVector(a.domain,
   a.xvalue./b.xvalue,
   a.yvalue./b.yvalue,
@@ -214,23 +214,23 @@ end
 
 function -(a::CellVector, b::Real)
 CellVector(a.domain,
-  a.xvalue.-b,
-  a.yvalue.-b,
-  a.zvalue.-b)
+  a.xvalue-b,
+  a.yvalue-b,
+  a.zvalue-b)
 end
 
 function *(a::Real, b::CellVector)
 CellVector(b.domain,
-  a.*b.xvalue,
-  a.*b.yvalue,
-  a.*b.zvalue)
+  a*b.xvalue,
+  a*b.yvalue,
+  a*b.zvalue)
 end
 
 function *(a::CellVector, b::Real)
 CellVector(a.domain,
-  b.*a.xvalue,
-  b.*a.yvalue,
-  b.*a.zvalue)
+  b*a.xvalue,
+  b*a.yvalue,
+  b*a.zvalue)
 end
 
 function /(a::Real, b::CellVector)
@@ -242,7 +242,7 @@ end
 
 function /(a::CellVector, b::Real)
 CellVector(a.domain,
-  a.xvalue./b,
-  a.yvalue./b,
-  a.zvalue./b)
+  a.xvalue/b,
+  a.yvalue/b,
+  a.zvalue/b)
 end

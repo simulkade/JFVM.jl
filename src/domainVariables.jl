@@ -36,7 +36,7 @@ elseif prod(m.dims)==length(phi0)
   phi = CellValue(m, phival)
   cellBoundary!(phi, BC)
 else
-  error("jFVT: Matrix must be the same size as the domain.")
+  error("JFVM: Matrix must be the same size as the domain.")
 end
 end
 
@@ -44,7 +44,7 @@ end
 function createCellVariable{T<:Real}(m::MeshStructure, phi0::Array{T}, BC::BoundaryCondition)
 # creates a cell variable and assigns value phi0 to it
 if prod(m.dims+2)==length(phi0)
-  error("jFVT: Matrix must be the same size as the domain.")
+  error("JFVM: Matrix must be the same size as the domain.")
 elseif prod(m.dims)==length(phi0)
   d=m.dimension
   phival = zeros(tuple(m.dims.+2...))
@@ -58,7 +58,7 @@ elseif prod(m.dims)==length(phi0)
   phi = CellValue(m, phival)
   cellBoundary!(phi, BC)
 else
-  error("jFVT: Matrix must be the same size as the domain.")
+  error("JFVM: Matrix must be the same size as the domain.")
 end
 end
 
@@ -161,5 +161,5 @@ end
 
 # ================== copy function for cell variables ===================
 function copyCell(phi::CellValue)
-CellValue(phi.domain, Base.copy(phi.value))
+  CellValue(phi.domain, Base.copy(phi.value))
 end

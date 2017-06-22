@@ -2,8 +2,24 @@
 
 [![Build Status](https://travis-ci.org/simulkade/JFVM.jl.svg?branch=master)](https://travis-ci.org/simulkade/JFVM.jl)
 
+## IMPORTANT NOTES
+  + The code now works with the new type system of Julia 6. All you need to do is to check out the master branch:
+```
+Pkg.checkout("JFVM")
+```
+  + 3D visualization requires calling Mayavi via PyCall. It made too many problems recently, so I have decided to disable it until I find a better solution for 3D visualization. Suggestions/PRs are very welcome.
+
+## Equations
+You can solve the following PDE (or a subset of it):  
+![advection diffusion](pde.png)
+
+with the following boundary conditions:  
+![boundary condition](boundarycond.png)
+
+Believe it or not, the above equations describe the majority of the transport phenomena in chemical and petroleum engineering and similar fields.
+
 ## A simple finite volume tool written in Julia
-This code is a Matlabesque implementation of my Matlab finite volume tool. The code is not in its most beautiful form, but it works if you believe my words. Please remember that the code is written by a chemical/petroleum engineer. Petroleum engineers are known for being simple-minded folks and chemical engineers have only one rule: "any answer is better than no answer". You can expect to easily discretize a linear transient convection-diffusion PDE into the matrix of coefficients and RHS vectors. Domain shape is limited to rectangles, circles (or a section of a circle), cylinders, and soon spheres. The mesh can be uniform or nonuniform:
+This code is a Matlabesque implementation of my [Matlab finite volume tool](https://github.com/simulkade/FVTool). The code is not in its most beautiful form, but it works if you believe my words. Please remember that the code is written by a chemical/petroleum engineer. Petroleum engineers are known for being simple-minded folks and chemical engineers have only one rule: "any answer is better than no answer". You can expect to easily discretize a linear transient advection-diffusion PDE into the matrix of coefficients and RHS vectors. Domain shape is limited to rectangles, circles (or a section of a circle), cylinders, and soon spheres. The mesh can be uniform or nonuniform:
   - Cartesian (1D, 2D, 3D)
   - Cylindrical (1D, 2D, 3D)
   - Radial (2D r and \theta)
@@ -17,29 +33,27 @@ You can have the following boundary conditions or a combination of them on each 
 It is relatively easy to use the code to solve a system of coupled linear PDE's and not too difficult to solve nonlinear PDE's.
 
 ## Installation
-You need to have [matplotlib](http://matplotlib.org/) and [mayavi](http://code.enthought.com/projects/mayavi/) installed. 
+You need to have [matplotlib](http://matplotlib.org/) (only for visualization)
+
 ### Linux
 In Ubuntu-based systems, try
 ```
-sudo apt-get install python-matplotlib mayavi2
+sudo apt-get install python-matplotlib
 ```
-Then install `JFVM` by the following commands. The second line pulls the latest (and recommended) version of `JFVM`:
+Then install `JFVM` by the following commands:
 ```
 Pkg.add("JFVM")
-Pkg.checkout("JFVM")
 ```
 
 ### Windows
-There are a few issues with 3D visualization in windows right now. This is the workflow if you want to give it a try:
-  - Download and install [Anaconda](http://continuum.io/downloads)
-  - Run `anaconda command prompt` (as administrator) and install `mayavi` and `wxpython`:
-    * `conda install mayavi`
-    * `conda install wxpython` (Not necessary if you clone the latest version of JFVM)
-  - Install [github for windows](https://windows.github.com/)
-  - open `Julia` and type 
+  + open `Julia` and type
   ```
   Pkg.add("JFVM")
-  Pkg.checkout("JFVM")
+  ```
+  + For visualization, download and install [Anaconda](http://continuum.io/downloads)  
+  Run `anaconda command prompt` (as administrator) and install `matplotlib` by   
+  ```
+  conda install matplotlib
   ```
 
 Please let me know if it does not work on your windows machines.
@@ -49,7 +63,7 @@ I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/J
 
 ## In action
 Copy and paste the following code to solve a transient diffusion equation:
-```jl
+```julia
 using JFVM
 Nx = 10
 Lx = 1.0
@@ -74,11 +88,16 @@ for i =1:5
     M=M_t-M_diff+M_bc # add all the [sparse] matrices of coefficient
     RHS=RHS_bc+RHS_t # add all the RHS's together
     c_old = solveLinearPDE(m, M, RHS) # solve the PDE
-    visualizeCells(c_old)
 end
+figure(figsize=(5,6))
+visualizeCells(c_old)
+colorbar()
 ```
+Now change the 4th line to `m=createMesh2D(Nx, Nx, Lx, Lx)` and see this:
+![diffusion 2D](2d_diff.png)
 
-Now change the 4th line to `m=createMesh2D(Nx,2*Nx, Lx,2*Lx)` and see what happens.
+## More examples
+TO DO
 
 # IJulia notebooks
   - [Introduction](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm-a-finite-volume-tool-for-julia.ipynb)
