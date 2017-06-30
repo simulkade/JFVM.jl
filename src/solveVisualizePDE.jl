@@ -20,10 +20,14 @@ phi
 end
 
 function solveMUMPSLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
-N=m.dims
-x=solveMUMPS(M,RHS) # until the problem is solved with Julia "\" solver
-phi = CellValue(m, reshape(full(x), tuple(N+2...)))
-phi
+  try
+    N = m.dims
+    x = MUMPS.solveMUMPS(M,RHS) # until the problem is solved with Julia "\" solver
+    phi = CellValue(m, reshape(full(x), tuple(N+2...)))
+    return phi
+  catch
+    error("MUMPS needs to be installed and imported (import MUMPS).")
+  end
 end
 
 function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
