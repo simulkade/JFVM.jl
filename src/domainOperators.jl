@@ -5,6 +5,20 @@ FaceValue(a.domain,
   a.zvalue+b.zvalue)
 end
 
+function *(a::FaceValue, b::FaceValue)
+FaceValue(a.domain,
+  a.xvalue.*b.xvalue,
+  a.yvalue.*b.yvalue,
+  a.zvalue.*b.zvalue)
+end
+
+function /(a::FaceValue, b::FaceValue)
+FaceValue(a.domain,
+  a.xvalue./b.xvalue,
+  a.yvalue./b.yvalue,
+  a.zvalue./b.zvalue)
+end
+
 function -(a::FaceValue, b::FaceValue)
 FaceValue(a.domain,
   a.xvalue-b.xvalue,
@@ -93,6 +107,16 @@ end
 function +(a::CellValue, b::CellValue)
 CellValue(a.domain,
   a.value+b.value)
+end
+
+function *(a::CellValue, b::CellValue)
+CellValue(a.domain,
+  a.value.*b.value)
+end
+
+function /(a::CellValue, b::CellValue)
+CellValue(a.domain,
+  a.value./b.value)
 end
 
 function -(a::CellValue, b::CellValue)
