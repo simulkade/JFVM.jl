@@ -99,7 +99,7 @@ FaceValue(x1.domain,
 end
 
 function cellEval(f::Function, x::CellValue)
-CellValue(x1.domain,
+CellValue(x.domain,
     f(x.value))
 end
 
