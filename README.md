@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/simulkade/JFVM.jl.svg?branch=master)](https://travis-ci.org/simulkade/JFVM.jl)
 
+[![DOI](https://zenodo.org/badge/28677142.svg)](https://zenodo.org/badge/latestdoi/28677142)
+
 ## IMPORTANT NOTES
   + The code now works with the new type system of Julia 6. All you need to do is to check out the master branch:
 ```
