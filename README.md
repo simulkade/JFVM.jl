@@ -101,10 +101,25 @@ Now change the 4th line to `m=createMesh2D(Nx, Nx, Lx, Lx)` and see this:
 ## More examples
 TO DO
 
-# IJulia notebooks
+## IJulia notebooks
   - [Introduction](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm-a-finite-volume-tool-for-julia.ipynb)
   - [tutorial](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_tutorial.ipynb)
   - [compare analytical solution of a diffusion equation with uniform and nonuniform grids](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/jfvm_diffusion_analytics.ipynb)
   - [Nonlinear PDE](http://nbviewer.ipython.org/github/simulkade/JFVM.jl/blob/master/examples/solving-nonlinear-pdes-with-fvm.ipynb)
   - [Foam flow in porous media](https://github.com/simulkade/FoamFingering/blob/master/foam_flow_stars_numeric.ipynb)
   - New notebooks soon...
+
+# How to cite
+If you have used the code in your research, please cite it as
+> Ali A Eftekhari. (2017, August 23). JFVM.jl: A Finite Volume Tool for Solving Advection-Diffusion Equations. Zenodo. http://doi.org/10.5281/zenodo.847056
+```
+@misc{ali_a_eftekhari_2017_847056,
+  author       = {Ali A Eftekhari},
+  title        = {{JFVM.jl: A Finite Volume Tool for Solving 
+                   Advection-Diffusion Equations}},
+  month        = aug,
+  year         = 2017,
+  doi          = {10.5281/zenodo.847056},
+  url          = {https://doi.org/10.5281/zenodo.847056}
+}
+```
