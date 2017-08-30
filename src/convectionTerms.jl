@@ -1230,7 +1230,7 @@ M = Mx + My
 (M, Mx, My)
 end
 
-function convectionUpwindTermCylindrical2D(u::FaceValue, u_upwind::FaceValue)
+function convectionUpwindTermCylindrical2D(u::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
@@ -1703,10 +1703,6 @@ M = Mx + My
 (M, Mx, My)
 end
 
-"""
-convectionUpwindTermRadial2D(u::FaceValue, u_upwind::FaceValue)
-better upwind for nonlinear convection term
-"""
 function convectionUpwindTermRadial2D(u::FaceValue, u_upwind::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
@@ -2224,132 +2220,6 @@ M = Mx + My + Mz;
 (M, Mx, My, Mz)
 end
 
-"""
-convectionUpwindTerm3D(u::FaceValue, u_upwind::FaceValue)
-useful for nonlinear terms
-"""
-function convectionUpwindTerm3D(u::FaceValue, u_upwind::FaceValue)
-# u is a face variable
-# extract data from the mesh structure
-Nx = u.domain.dims[1]
-Ny = u.domain.dims[2]
-Nz = u.domain.dims[3]
-G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
-DXp = u.domain.cellsize.x[2:end-1]
-DY = zeros( 1, Ny+2)
-DY[:] = u.domain.cellsize.y
-DYp = DY[:,2:end-1]
-DZ = zeros( 1, 1, Nz+2)
-DZ[:] = u.domain.cellsize.z
-DZp = DZ[:,:,2:end-1]
-
-# define the vectors to stores the sparse matrix data
-iix = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-jjx = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-sx = zeros(Float64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-iiy = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-jjy = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-sy = zeros(Float64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-iiz = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-jjz = zeros(Int64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-sz = zeros(Float64, 3*(Nx+2)*(Ny+2)*(Nz+2))
-mnx = Nx*Ny*Nz
-mny = Nx*Ny*Nz
-mnz = Nx*Ny*Nz
-
-# find the velocity direction for the upwind scheme
-ue_min = u.xvalue[2:Nx+1,:,:]
-ue_max = u.xvalue[2:Nx+1,:,:]
-uw_min = u.xvalue[1:Nx,:,:]
-uw_max = u.xvalue[1:Nx,:,:]
-vn_min = u.yvalue[:,2:Ny+1,:]
-vn_max = u.yvalue[:,2:Ny+1,:]
-vs_min = u.yvalue[:,1:Ny,:]
-vs_max = u.yvalue[:,1:Ny,:]
-wf_min = u.zvalue[:,:,2:Nz+1]
-wf_max = u.zvalue[:,:,2:Nz+1]
-wb_min = u.zvalue[:,:,1:Nz]
-wb_max = u.zvalue[:,:,1:Nz]
-
-ue_min[u_upwind.xvalue[2:Nx+1,:,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1,:,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx,:,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] = 0.0
-
-# calculate the coefficients for the internal cells
-AE = ue_min./DXp
-AW = -uw_max./DXp
-AN = vn_min./DYp
-AS = -vs_max./DYp
-AF = wf_min./DZp
-AB = -wb_max./DZp
-APx = (ue_max-uw_min)./DXp
-APy = (vn_max-vs_min)./DYp
-APz = (wf_max-wb_min)./DZp
-
-# Also correct for the boundary cells (not the ghost cells)
-# Left boundary:
-APx[1,:,:] = APx[1,:,:]-uw_max[1,:,:]/(2.0*DXp[1])
-AW[1,:,:] = AW[1,:,:]/2.0
-# Right boundary:
-AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+ue_min[end,:,:]/(2.0*DXp[end])
-# Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]/(2.0*DYp[1])
-AS[:,1,:] = AS[:,1,:]/2.0
-# Top boundary:
-AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]/(2.0*DYp[end])
-# Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
-AB[:,:,1] = AB[:,:,1]/2.0
-# Front boundary:
-AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
-
-AE = reshape(AE,mnx)
-AW = reshape(AW,mnx)
-AN = reshape(AN,mny)
-AS = reshape(AS,mny)
-AF = reshape(AF,mnz)
-AB = reshape(AB,mnz)
-APx = reshape(APx,mnx)
-APy = reshape(APy,mny)
-APz = reshape(APz,mnz)
-
-# build the sparse matrix based on the numbering system
-rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
-rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
-rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
-jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
-jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
-jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)]
-sx[1:3*mnx] = [AW; APx; AE]
-sy[1:3*mny] = [AS; APy; AN]
-sz[1:3*mnz] = [AB; APz; AF]
-
-# build the sparse matrix
-kx = 3*mnx
-ky = 3*mny
-kz = 3*mnz
-Mx = sparse(iix[1:kx], jjx[1:kx], sx[1:kx], (Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2))
-My = sparse(iiy[1:ky], jjy[1:ky], sy[1:ky], (Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2))
-Mz = sparse(iiz[1:kz], jjz[1:kz], sz[1:kz], (Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2))
-M = Mx + My + Mz;
-
-(M, Mx, My, Mz)
-end
 
 
 # ============================= 3D Convection TVD Term ===============================
@@ -2845,139 +2715,7 @@ M = Mx + My + Mz;
 (M, Mx, My, Mz)
 end
 
-function convectionUpwindTermCylindrical3D(u::FaceValue, u_upwind::FaceValue)
-# u is a face variable
-# extract data from the mesh structure
-Nr = u.domain.dims[1]
-Ntheta = u.domain.dims[2]
-Nz = u.domain.dims[3]
-G=reshape([1:(Nr+2)*(Ntheta+2)*(Nz+2);], Nr+2, Ntheta+2, Nz+2)
-DRe = u.domain.cellsize.x[3:end]
-DRw = u.domain.cellsize.x[1:end-2]
-DRp = u.domain.cellsize.x[2:end-1]
-DTHETA = zeros( 1, Ntheta+2)
-DTHETA[:] = u.domain.cellsize.y
-DTHETAn = DTHETA[:,3:end]
-DTHETAs = DTHETA[:,1:end-2]
-DTHETAp = DTHETA[:,2:end-1]
-DZ = zeros( 1, 1, Nz+2)
-DZ[:] = u.domain.cellsize.z
-DZf = DZ[:,:,3:end]
-DZb = DZ[:,:,1:end-2]
-DZp = DZ[:,:,2:end-1]
-rp = u.domain.cellcenters.x
-rf = u.domain.facecenters.x
 
-# define the vectors to stores the sparse matrix data
-iix = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-jjx = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-sx = zeros(Float64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-iiy = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-jjy = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-sy = zeros(Float64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-iiz = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-jjz = zeros(Int64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-sz = zeros(Float64, 3*(Nr+2)*(Ntheta+2)*(Nz+2))
-mnx = Nr*Ntheta*Nz
-mny = Nr*Ntheta*Nz
-mnz = Nr*Ntheta*Nz
-
-re = rf[2:Nr+1,:]
-rw = rf[1:Nr,:]
-
-# find the velocity direction for the upwind scheme
-ue_min = u.xvalue[2:Nr+1,:,:]
-ue_max = u.xvalue[2:Nr+1,:,:]
-uw_min = u.xvalue[1:Nr,:,:]
-uw_max = u.xvalue[1:Nr,:,:]
-vn_min = u.yvalue[:,2:Ntheta+1,:]
-vn_max = u.yvalue[:,2:Ntheta+1,:]
-vs_min = u.yvalue[:,1:Ntheta,:]
-vs_max = u.yvalue[:,1:Ntheta,:]
-wf_min = u.zvalue[:,:,2:Nz+1]
-wf_max = u.zvalue[:,:,2:Nz+1]
-wb_min = u.zvalue[:,:,1:Nz]
-wb_max = u.zvalue[:,:,1:Nz]
-
-ue_min[u_upwind.xvalue[2:Nr+1,:,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ntheta+1,:].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ntheta+1,:].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ntheta,:].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ntheta,:].<0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] = 0.0
-
-# calculate the coefficients for the internal cells
-AE = re.*ue_min./(DRp.*rp)
-AW = -rw.*uw_max./(DRp.*rp)
-AN = vn_min./(DTHETAp.*rp)
-AS = -vs_max./(DTHETAp.*rp)
-AF = wf_min./DZp
-AB = -wb_max./DZp
-APx = (re.*ue_max-rw.*uw_min)./(DRp.*rp)
-APy = (vn_max-vs_min)./(DTHETAp.*rp)
-APz = (wf_max-wb_min)./DZp
-
-# Also correct for the boundary cells (not the ghost cells)
-# Left boundary:
-APx[1,:,:] = APx[1,:,:]-rw[1,:,:].*uw_max[1,:,:]./(2.0*DRp[1]*rp[1,:,:])
-AW[1,:,:] = AW[1,:,:]/2.0
-# Right boundary:
-AE[end,:,:] = AE[end,:,:]/2.0
-APx[end,:,:] = APx[end,:,:]+re[end,:,:].*ue_min[end,:,:]./(2.0*DRp[end]*rp[end,:,:])
-# Bottom boundary:
-APy[:,1,:] = APy[:,1,:]-vs_max[:,1,:]./(2.0*DTHETAp[1]*rp[:,1,:])
-AS[:,1,:] = AS[:,1,:]/2.0
-# Top boundary:
-AN[:,end,:] = AN[:,end,:]/2.0
-APy[:,end,:] = APy[:,end,:]+vn_min[:,end,:]./(2.0*DTHETAp[end]*rp[:,end,:])
-# Back boundary:
-APz[:,:,1] = APz[:,:,1]-wb_max[:,:,1]/(2.0*DZp[1])
-AB[:,:,1] = AB[:,:,1]/2.0
-# Front boundary:
-AF[:,:,end] = AF[:,:,end]/2.0
-APz[:,:,end] = APz[:,:,end]+wf_min[:,:,end]/(2.0*DZp[end])
-
-AE = reshape(AE,mnx)
-AW = reshape(AW,mnx)
-AN = reshape(AN,mny)
-AS = reshape(AS,mny)
-AF = reshape(AF,mnz)
-AB = reshape(AB,mnz)
-APx = reshape(APx,mnx)
-APy = reshape(APy,mny)
-APz = reshape(APz,mnz)
-
-# build the sparse matrix based on the numbering system
-rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
-rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
-rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
-jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
-jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
-jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
-sx[1:3*mnx] = [AW; APx; AE]
-sy[1:3*mny] = [AS; APy; AN]
-sz[1:3*mnz] = [AB; APz; AF]
-
-# build the sparse matrix
-kx = 3*mnx
-ky = 3*mny
-kz = 3*mnz
-Mx = sparse(iix[1:kx], jjx[1:kx], sx[1:kx], (Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2))
-My = sparse(iiy[1:ky], jjy[1:ky], sy[1:ky], (Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2))
-Mz = sparse(iiz[1:kz], jjz[1:kz], sz[1:kz], (Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2))
-M = Mx + My + Mz;
-
-(M, Mx, My, Mz)
-end
 
 # ============================= 3D Cylindrical Convection TVD Term ===============================
 function convectionTvdTermCylindrical3D(u::FaceValue, phi::CellValue, FL::Function)
