@@ -2330,7 +2330,7 @@ RHSy[rowy_index] = reshape(div_y,Nr*Ntheta)
 (RHS, RHSx, RHSy)
 end
 
-function convectionTvdRHSRadial2D(u::FaceValue, phi::CellValue, FL::Function)
+function convectionTvdRHSRadial2D(u::FaceValue, phi::CellValue, FL::Function, u_upwind::FaceValue)
 # u is a face variable
 # phi is a cell variable
 
@@ -2670,7 +2670,7 @@ uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] = 0.0
 vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] = 0.0
 vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] = 0.0
 vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny,:.<0.0]] = 0.0
+vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] = 0.0
 wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] = 0.0
 wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] = 0.0
 wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
