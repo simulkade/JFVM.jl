@@ -1230,7 +1230,7 @@ M = Mx + My
 (M, Mx, My)
 end
 
-function convectionUpwindTermCylindrical2D(u::FaceValue)
+function convectionUpwindTermCylindrical2D(u::FaceValue, u_upwind::FaceValue)
 # u is a face variable
 # extract data from the mesh structure
 Nr = u.domain.dims[1]
