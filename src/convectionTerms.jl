@@ -87,6 +87,12 @@ end
 (M, RHS)
 end
 
+function convectionTvdTerm(u::FaceValue, phi::CellValue, FL::Function, u_upwind)
+    M   = convectionUpwindTerm(u, u_upwind)
+    RHS = convectionTvdRHS(u, phi, FL, u_upwind)
+    (M, RHS)
+end
+
 function convectionTvdRHS(u::FaceValue, phi::CellValue, FL::Function)
 d = u.domain.dimension
 if d==1
