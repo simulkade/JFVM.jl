@@ -58,7 +58,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
 end
 
 # =========================== Visualization =================================
-function visualizeCells(phi::CellValue)
+function visualizeCells(phi::CellValue; vmin::Real =0.0, vmax::Real = 0.0, cmap="viridis", shading = "gouraud")
 d=phi.domain.dimension
 if d==1 || d==1.5
   x = [phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
@@ -76,7 +76,11 @@ elseif d==2 || d==2.5
   phi0[1,end] = phi0[1,end-1]
   phi0[end,1] = phi0[end,2]
   phi0[end,end] = phi0[end,end-1]
-  pcolor(x, y, phi0')
+  if vmin == 0.0 && vmax == 0.0
+      vmin = minimum(phi0)
+      vmax = maximum(phi0)
+  end
+  pcolormesh(x, y, phi0', vmin = vmin, vmax = vmax, cmap = cmap, shading = shading)
 elseif d==2.8
   x = [phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
   y = [phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
