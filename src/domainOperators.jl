@@ -37,7 +37,7 @@ end
 # face value operators
 for f in [:+, :-, :*, :/, :^, :(==), :>, :(>=), :<, :(<=)]
   @eval function $f(a::FaceValue, b::FaceValue)
-      return CellValue(a.domain, 
+      return FaceValue(a.domain, 
         $f.(a.xvalue, b.xvalue),
         $f.(a.yvalue, b.yvalue),
         $f.(a.zvalue, b.zvalue))
@@ -46,7 +46,7 @@ end
 
 for f in [:+, :-, :*, :/, :^, :(==), :>, :(>=), :<, :(<=)]
   @eval function $f(a::FaceValue, b::Real)
-      return CellValue(a.domain, 
+      return FaceValue(a.domain, 
         $f.(a.xvalue, b),
         $f.(a.yvalue, b),
         $f.(a.zvalue, b))
@@ -55,7 +55,7 @@ end
 
 for f in [:+, :-, :*, :/, :^, :(==), :>, :(>=), :<, :(<=)]
   @eval function $f(a::Real, b::FaceValue)
-      return CellValue(b.domain, 
+      return FaceValue(b.domain, 
         $f.(a, b.xvalue),
         $f.(a, b.yvalue),
         $f.(a, b.zvalue))
