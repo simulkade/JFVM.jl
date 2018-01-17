@@ -1,8 +1,10 @@
 module JFVM
 
+global mumps_solver = 0
 using PyPlot
 try
-  using MUMPS
+  import MUMPS
+  mumps_solver = MUMPS
 catch
   info("MUMPS solver (optional) is not available.")
 end

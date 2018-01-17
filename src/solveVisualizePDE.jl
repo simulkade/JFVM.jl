@@ -21,7 +21,7 @@ end
 
 function solveMUMPSLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
   N = m.dims
-  x = solveMUMPS(M,RHS) # until the problem is solved with Julia "\" solver
+  x = mumps_solver.solveMUMPS(M,RHS) # until the problem is solved with Julia "\" solver
   phi = CellValue(m, reshape(full(x), tuple(N+2...)))
   return phi
   error("MUMPS needs to be installed and imported (import MUMPS).")
@@ -58,7 +58,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
 end
 
 # =========================== Visualization =================================
-function visualizeCells(phi::CellValue)
+function visualizeCells(phi::CellValue; vmin::Real =0.0, vmax::Real = 0.0, cmap="viridis", shading = "gouraud")
 d=phi.domain.dimension
 if d==1 || d==1.5
   x = [phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
@@ -76,7 +76,11 @@ elseif d==2 || d==2.5
   phi0[1,end] = phi0[1,end-1]
   phi0[end,1] = phi0[end,2]
   phi0[end,end] = phi0[end,end-1]
-  pcolor(x, y, phi0')
+  if vmin == 0.0 && vmax == 0.0
+      vmin = minimum(phi0)
+      vmax = maximum(phi0)
+  end
+  pcolormesh(x, y, phi0', vmin = vmin, vmax = vmax, cmap = cmap, shading = shading)
 elseif d==2.8
   x = [phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
   y = [phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
@@ -92,38 +96,54 @@ elseif d==2.8
   subplot(111, polar="true")
   pcolor(y, x, phi0)
 elseif d==3
-  Nx = phi.domain.dims[1]
-  Ny = phi.domain.dims[2]
-  Nz = phi.domain.dims[3]
-  x=[phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
-  y=zeros(1,Ny+2)
-  y[:]=[phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
-  z=zeros(1,1,Nz+2)
-  z[:]=[phi.domain.facecenters.z[1]; phi.domain.cellcenters.z; phi.domain.facecenters.z[end]]
+    Nx = phi.domain.dims[1]
+    Ny = phi.domain.dims[2]
+    Nz = phi.domain.dims[3]
+    x=[phi.domain.facecenters.x[1]; phi.domain.cellcenters.x; phi.domain.facecenters.x[end]]
+    y=zeros(1,Ny+2)
+    y[:]=[phi.domain.facecenters.y[1]; phi.domain.cellcenters.y; phi.domain.facecenters.y[end]]
+    z=zeros(1,1,Nz+2)
+    z[:]=[phi.domain.facecenters.z[1]; phi.domain.cellcenters.z; phi.domain.facecenters.z[end]]
 
-  phi0 = Base.copy(phi.value)
-  phi0[:,1,:]=0.5*(phi0[:,1,:]+phi0[:,2,:])
-  phi0[:,end,:]=0.5*(phi0[:,end-1,:]+phi0[:,end,:])
-  phi0[:,:,1]=0.5*(phi0[:,:,1]+phi0[:,:,1])
-  phi0[:,:,end]=0.5*(phi0[:,:,end-1]+phi0[:,:,end])
-  phi0[1,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
-  phi0[end,:,:]=0.5*(phi0[end-1,:,:]+phi0[end,:,:])
+    phi0 = Base.copy(phi.value)
+    phi0[:,1,:]=0.5*(phi0[:,1,:]+phi0[:,2,:])
+    phi0[:,end,:]=0.5*(phi0[:,end-1,:]+phi0[:,end,:])
+    phi0[:,:,1]=0.5*(phi0[:,:,1]+phi0[:,:,1])
+    phi0[:,:,end]=0.5*(phi0[:,:,end-1]+phi0[:,:,end])
+    phi0[1,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
+    phi0[end,:,:]=0.5*(phi0[end-1,:,:]+phi0[end,:,:])
 
-  vmin = minimum(phi0)
-  vmax = maximum(phi0)
+    vmin = minimum(phi0)
+    vmax = maximum(phi0)
+    mynormalize = a -> (a .- vmin)./(vmax-vmin)
 
-  a=ones(Nx+2,Ny+2,Nz+2)
-  X = x.*a
-  Y = y.*a
-  Z = z.*a
+    a=ones(Nx+2,Ny+2,Nz+2)
+    X = x.*a
+    Y = y.*a
+    Z = z.*a
 
-  s=mayavis.pipeline[:scalar_field](X,Y,Z,phi0)
-
-  mayavis.pipeline[:image_plane_widget](s, plane_orientation="x_axes", slice_index=0, vmin=vmin, vmax=vmax)
-  mayavis.pipeline[:image_plane_widget](s, plane_orientation="y_axes", slice_index=0, vmin=vmin, vmax=vmax)
-  mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=0, vmin=vmin, vmax=vmax)
-  mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=floor(Integer,Nz/2.0), vmin=vmin, vmax=vmax)
-  mayavis.outline()
+    fig = figure()
+    ax = fig[:add_subplot](111, projection = "3d")
+    # r = linspace(1.25, 1.25, 50)
+    # p = linspace(0, 2π, 50)
+    # R = repmat(r, 1, 50)
+    # P = repmat(p', 50, 1)
+    # Zc = rand(50, 50) # (P.^2-1).^2
+    # Z = repmat(linspace(0, 2, 50), 1, 50)
+    # X, Y = R.*cos.(P), R.*sin.(P)
+    ax[:plot_surface](X[1,:,:], Y[1,:,:], Z[1,:,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[1,:,:])), alpha=0.8)
+    ax[:plot_surface](X[end,:,:], Y[end,:,:], Z[end,:,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[end,:,:])), alpha=0.8)
+    ax[:plot_surface](X[:,1,:], Y[:,1,:], Z[:,1,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[:,1,:])), alpha=0.8)
+    ax[:plot_surface](X[:,end,:], Y[:,end,:], Z[:,end,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[:,end,:])), alpha=0.8)
+    ax[:plot_surface](X[:,:,1], Y[:,:,1], Z[:,:,1], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[:,:,1])), alpha=0.8)
+    ax[:plot_surface](X[:,:,end], Y[:,:,end], Z[:,:,end], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[:,:,end])), alpha=0.8)
+  # s=mayavis.pipeline[:scalar_field](X,Y,Z,phi0)
+  #
+  # mayavis.pipeline[:image_plane_widget](s, plane_orientation="x_axes", slice_index=0, vmin=vmin, vmax=vmax)
+  # mayavis.pipeline[:image_plane_widget](s, plane_orientation="y_axes", slice_index=0, vmin=vmin, vmax=vmax)
+  # mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=0, vmin=vmin, vmax=vmax)
+  # mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=floor(Integer,Nz/2.0), vmin=vmin, vmax=vmax)
+  # mayavis.outline()
 
 #   # 6 surfaces
 #   # surfaces 1,2 (x=x[1], x=x[end])
@@ -145,11 +165,11 @@ elseif d==3
 #   mayavis.mesh(X,Y',z[1]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,2], vmin=vmin, vmax=vmax, opacity=0.8)
 #   mayavis.mesh(X,Y',z[end]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,end-1], vmin=vmin, vmax=vmax, opacity=0.8)
 
-  mayavis.colorbar()
-  mayavis.axes()
-  mshot= mayavis.screenshot()
-  mayavis.show()
-  return mshot
+  # mayavis.colorbar()
+  # mayavis.axes()
+  # mshot= mayavis.screenshot()
+  # mayavis.show()
+  # return mshot
 
 elseif d==3.2
   Nx = phi.domain.dims[1]
