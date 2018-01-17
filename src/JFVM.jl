@@ -17,7 +17,7 @@ end
 #   warn("Mayavi is not installed or could not be imported.")
 # end
 
-import Base: +, -, *, /, broadcast
+import Base: +, -, *, /, ^, ==, >, <=, <, <=, broadcast, sin, cos, tan, cot, abs, exp, log, log10
 export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        arithmeticMean, geometricMean, harmonicMean, upwindMean, linearMean,
        tvdMean, createBC, boundaryConditionTerm, cellBoundary, solvePDE,
