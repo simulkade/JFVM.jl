@@ -26,23 +26,23 @@ struct MeshStructure
   edge::Array{Int,1}
 end
 
-struct CellValue{T<:Real}
+struct CellValue # {T<:Real}
   domain::MeshStructure
-  value::Array{T}
+  value::Union{Array{<:Real}, DenseArray{Bool}} #Union{Array{T}, BitArray{}}
 end
 
-struct CellVector{T<:Real}
+struct CellVector # {T<:Real}
   domain::MeshStructure
-  xvalue::Array{T}
-  yvalue::Array{T}
-  zvalue::Array{T}
+  xvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
+  yvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
+  zvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
 end
 
-struct FaceValue{T<:Real}
+struct FaceValue # {T<:Real}
   domain::MeshStructure
-  xvalue::Array{T}
-  yvalue::Array{T}
-  zvalue::Array{T}
+  xvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
+  yvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
+  zvalue::Union{Array{<:Real}, DenseArray{Bool}} # Array{T}
 end
 
 mutable struct BorderValue{T<:Real}
