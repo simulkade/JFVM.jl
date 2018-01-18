@@ -30,7 +30,7 @@ end
 
 for f in [:+, :-, :*, :/, :^, :(==), :>, :(>=), :<, :(<=)]
   @eval function $f(a::Real, b::CellValue)
-      return CellValue(b.domain, $f.(a.value, b.value))
+      return CellValue(b.domain, $f.(a, b.value))
   end
 end
 
