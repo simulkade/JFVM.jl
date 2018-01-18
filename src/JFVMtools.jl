@@ -140,12 +140,12 @@ function permfieldlogrndg(Nx,k_avrg,V_dp,cl)
   Z = s*randn(Nx)
 
   # Gaussian filter
-  F = exp(-x.^2/(cl^2/2.0))
+  F = exp.(-x.^2/(cl^2/2.0))
 
   # correlation of surface using convolution (faltung), inverse
   # Fourier transform and normalizing prefactors
   f = sqrt(2.0/sqrt(pi))*sqrt(Lx/Nx/cl)*ifft(fft(Z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 
 function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
@@ -159,12 +159,12 @@ function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
   Z = s*randn(Nx)
 
   # Gaussian filter
-  F = exp(-abs(x)/(cl/2.0))
+  F = exp.(-abs.(x)/(cl/2.0))
 
   # correlation of surface using convolution (faltung), inverse
   # Fourier transform and normalizing prefactors
   f = sqrt(2.0)*sqrt(Lx/Nx/cl)*ifft(fft(Z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 
 
@@ -183,11 +183,11 @@ function permfieldlogrndg(Nx,Ny,k_avrg,V_dp,clx,cly)
   mu = log(k_avrg)-s^2/2
   Z = s*randn(Nx,Ny)
   # Gaussian filter
-  F = exp(-(X.^2/(clx^2/2.0).+Y.^2/(cly^2/2.0)))
+  F = exp.(-(X.^2/(clx^2/2.0).+Y.^2/(cly^2/2.0)))
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0/sqrt(pi)*Lx/sqrt(Nx*Ny)/sqrt(clx)/sqrt(cly)*ifft(fft(Z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 
 function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
@@ -204,11 +204,11 @@ function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
   mu = log(k_avrg)-s^2/2
   Z = s*randn(Nx,Ny)
   # Gaussian filter
-  F = exp(-(abs(X)/(clx/2).+abs(Y)/(cly/2)))
+  F = exp.(-(abs.(X)/(clx/2).+abs.(Y)/(cly/2)))
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0*Lx/sqrt(Nx*Ny)/sqrt(clx*cly)*ifft(fft(Z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 # <========================= 2D ================================
 
@@ -229,11 +229,11 @@ function permfieldlogrndg(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
   mu = log(k_avrg)-s^2/2
   z = s*randn(Nx,Ny,Nz)
   # Gaussian filter
-  F = exp(-(X.^2/(clx^2/2.0).+Y.^2/(cly^2/2.0).+Z.^2/(clz^2/2.0)))
+  F = exp.(-(X.^2/(clx^2/2.0).+Y.^2/(cly^2/2.0).+Z.^2/(clz^2/2.0)))
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0/sqrt(pi)*Lx/(Nx*Ny*Nz)^(1/3)/(clx*cly*clz)^(1/3)*ifft(fft(z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 
 function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
@@ -251,11 +251,11 @@ function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
   mu = log(k_avrg)-s^2/2
   z = s*randn(Nx,Ny,Nz)
   # Gaussian filter
-  F = exp(-(abs(X)/(clx/2.0).+abs(Y)/(cly/2.0).+abs(Z)/(clz/2.0)))
+  F = exp.(-(abs.(X)/(clx/2.0).+abs.(Y)/(cly/2.0).+abs.(Z)/(clz/2.0)))
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0*Lx/(Nx*Ny*Nz)^(1/3)/(clx*cly*clz)^(1/3)*ifft(fft(z).*fft(F))
-  perm = exp(mu+real(f))
+  perm = exp.(mu+real(f))
 end
 # <============================== 3D ==============================
 
@@ -267,19 +267,23 @@ function cellVolume(m::MeshStructure)
   dim = m.dimension
   BC = createBC(m)
   if dim==1
-          c=m.cellsize.x[2:end-1]
+    c=m.cellsize.x[2:end-1]
   elseif dim==1.5
-          c=2.0*pi()*m.cellsize.x[2:end-1].*m.cellcenters.x
+    c=2.0*pi()*m.cellsize.x[2:end-1].*m.cellcenters.x
   elseif dim==2
-          c=m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+    c=m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
   elseif dim== 2.5 # cylindrical
-          c=2.0*pi*m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+    c=2.0*pi*m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
   elseif dim==2.8 # radial
-          c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
+    c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
   elseif dim==3
-          error("Not available yet")
+    z = zeros(1,1,m.dims[3])
+    z[1,1,:] = m.cellsize.z[2:end-1]
+    c=m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'.*z
   elseif dim==3.2
-          error("Not available yet")
+    z = zeros(1,1,m.dims[3])
+    z[1,1,:] = m.cellsize.z[2:end-1]
+    c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'.*z
   end
   cellvol= createCellVariable(m, c, BC)
 end
@@ -290,7 +294,7 @@ matrix based on the mesh structure data; it is assumed that the phi
 includes the ghost cell data as well.
 """
 function reshapeCell(m, phi)
-  reshape(full(x), tuple(m.dims+2...))
+  reshape(full(phi), tuple(m.dims+2...))
 end
 
 """
@@ -299,7 +303,7 @@ matrix based on the mesh structure data; it is assumed that the phi
 does NOT include the ghost cell data.
 """
 function reshapeInternalCell(m, phi)
-  reshape(full(x), tuple(m.dims...))
+  reshape(full(phi), tuple(m.dims...))
 end
 
 """
