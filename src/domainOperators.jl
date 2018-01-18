@@ -69,6 +69,11 @@ function -(a::FaceValue)
     -a.zvalue)
 end
 
+function -(a::CellValue)
+  CellValue(a.domain,
+    -a.value)
+end
+
 # # cell value operators
 # for f in [:+, :-, :*, :/, :^, :(==), :>, :(>=), :<, :(<=)]
 #   @eval function $f(a::CellValue, b::CellValue)
