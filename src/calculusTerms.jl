@@ -335,59 +335,119 @@ end
 
 # ===================== Gradient Term ============================
 function gradientTerm(phi)
-# calculates the gradient of a variable
-# the output is a face variable
-d=phi.domain.dimension
-if d==1 || d==1.5
-  dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  FaceValue(phi.domain,
-    (phi.value[2:end]-phi.value[1:end-1])./dx,
-    [1.0],
-    [1.0])
-elseif d==2 || d==2.5
-  dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  Ny = phi.domain.dims[2]
-  dy = zeros( 1, Ny+1)
-  dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  FaceValue(phi.domain,
-    (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
-    (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./dy,
-    [1.0])
-elseif d==2.8
-  dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  Ntheta = phi.domain.dims[2]
-  dtheta = zeros( 1, Ntheta+1)
-  dtheta[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  rp = phi.domain.cellcenters.x
-  FaceValue(phi.domain,
-    (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
-    (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./(dtheta.*rp),
-    [1.0])
-elseif d==3
-  Ny = phi.domain.dims[2]
-  Nz = phi.domain.dims[3]
-  dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  dy= zeros( 1, Ny+1)
-  dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  dz= zeros( 1, 1, Nz+1)
-  dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
-  FaceValue(phi.domain,
-    (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
-    (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./dy,
-    (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
-elseif d==3.2
-  Ntheta = phi.domain.dims[2]
-  Nz = phi.domain.dims[3]
-  dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
-  dy= zeros( 1, Ntheta+1)
-  dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
-  dz= zeros( 1, 1, Nz+1)
-  dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
-  rp = phi.domain.cellcenters.x
-  FaceValue(phi.domain,
-    (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
-    (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./(dy.*rp),
-    (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
+  # calculates the gradient of a variable
+  # the output is a face variable
+  d=phi.domain.dimension
+  if d==1 || d==1.5
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    FaceValue(phi.domain,
+      (phi.value[2:end]-phi.value[1:end-1])./dx,
+      [1.0],
+      [1.0])
+  elseif d==2 || d==2.5
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    Ny = phi.domain.dims[2]
+    dy = zeros( 1, Ny+1)
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    FaceValue(phi.domain,
+      (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./dy,
+      [1.0])
+  elseif d==2.8
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    Ntheta = phi.domain.dims[2]
+    dtheta = zeros( 1, Ntheta+1)
+    dtheta[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    rp = phi.domain.cellcenters.x
+    FaceValue(phi.domain,
+      (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./(dtheta.*rp),
+      [1.0])
+  elseif d==3
+    Ny = phi.domain.dims[2]
+    Nz = phi.domain.dims[3]
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dy= zeros( 1, Ny+1)
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dz= zeros( 1, 1, Nz+1)
+    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
+    FaceValue(phi.domain,
+      (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./dy,
+      (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
+  elseif d==3.2
+    Ntheta = phi.domain.dims[2]
+    Nz = phi.domain.dims[3]
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dy= zeros( 1, Ntheta+1)
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dz= zeros( 1, 1, Nz+1)
+    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
+    rp = phi.domain.cellcenters.x
+    FaceValue(phi.domain,
+      (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./(dy.*rp),
+      (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
 
+  end
 end
+
+
+# ===================== Gradient Term ============================
+function gradientCellTerm(phi)
+  # calculates the gradient of a variable
+  # the output is a face variable
+  d=phi.domain.dimension
+  phi_face = linearMean(phi)
+  if d==1 || d==1.5
+    dx = phi.domain.cellsize.x[2:end-1]
+    CellVector(phi.domain,
+      (phi_face.xvalue[2:end] .- phi_face.xvalue[1:end-1])./dx,
+      [1.0],
+      [1.0])
+  elseif d==2 || d==2.5
+    dx = phi.domain.cellsize.x[2:end-1]
+    Ny = phi.domain.dims[2]
+    dy = zeros(1, Ny)
+    dy[:] = phi.domain.cellsize.y[2:end-1]
+    CellVector(phi.domain,
+      (phi_face.xvalue[2:end, :] .- phi_face.xvalue[1:end-1, :])./dx,
+      (phi_face.yvalue[:, 2:end] .- phi_face.yvalue[:, 1:end-1])./dy,
+      [1.0])
+  elseif d==2.8
+    dx = phi.domain.cellsize.x[2:end-1]
+    Ntheta = phi.domain.dims[2]
+    dtheta = zeros(1, Ntheta)
+    dtheta[:] = phi.domain.cellsize.y[2:end-1]
+    rp = phi.domain.cellcenters.x
+    CellVector(phi.domain,
+      (phi_face.xvalue[2:end, :] .- phi_face.xvalue[1:end-1, :])./dx,
+      (phi_face.yvalue[:, 2:end] .- phi_face.yvalue[:, 1:end-1])./(dtheta.*rp),
+      [1.0])
+  elseif d==3
+    Ny = phi.domain.dims[2]
+    Nz = phi.domain.dims[3]
+    dx = phi.domain.cellsize.x[2:end-1]
+    dy= zeros(1, Ny)
+    dy[:] = phi.domain.cellsize.y[2:end-1]
+    dz= zeros( 1, 1, Nz)
+    dz[:] = phi.domain.cellsize.z[2:end-1]
+    CellVector(phi.domain,
+      (phi_face.xvalue[2:end, :, :] .- phi_face.xvalue[1:end-1, :, :])./dx,
+      (phi_face.yvalue[:, 2:end, :] .- phi_face.yvalue[:, 1:end-1, :])./dy,
+      (phi_face.zvalue[:, :, 2:end] .- phi_face.zvalue[:, :, 1:end-1])./dz)
+  elseif d==3.2
+    Ntheta = phi.domain.dims[2]
+    Nz = phi.domain.dims[3]
+    dx = phi.domain.cellsize.x[2:end-1]
+    dy= zeros(1, Ntheta)
+    dy[:] = phi.domain.cellsize.y[2:end-1]
+    dz= zeros(1, 1, Nz)
+    dz[:] = phi.domain.cellsize.z[2:end-1]
+    rp = phi.domain.cellcenters.x
+    CellVector(phi.domain,
+      (phi_face.xvalue[2:end, :, :] .- phi_face.xvalue[1:end-1, :, :])./dx,
+      (phi_face.yvalue[:, 2:end, :] .- phi_face.yvalue[:, 1:end-1, :])./(dy.*rp),
+      (phi_face.zvalue[:, :, 2:end] .- phi_face.zvalue[:, :, 1:end-1])./dz)
+  end
 end
