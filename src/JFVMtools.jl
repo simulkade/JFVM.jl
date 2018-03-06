@@ -58,74 +58,74 @@ end
 
 function faceEval(f::Function, x::FaceValue)
 FaceValue(x.domain,
-    f(x.xvalue),
-    f(x.yvalue),
-    f(x.zvalue))
+    f.(x.xvalue),
+    f.(x.yvalue),
+    f.(x.zvalue))
 end
 
 function faceEval(f::Function, x1::FaceValue, x2::FaceValue)
 FaceValue(x1.domain,
-    f(x1.xvalue, x2.xvalue),
-    f(x1.yvalue, x2.yvalue),
-    f(x1.zvalue, x2.zvalue))
+    f.(x1.xvalue, x2.xvalue),
+    f.(x1.yvalue, x2.yvalue),
+    f.(x1.zvalue, x2.zvalue))
 end
 
 function faceEval(f::Function, x1::FaceValue, x2::FaceValue, x3::FaceValue)
 FaceValue(x1.domain,
-    f(x1.xvalue, x2.xvalue, x3.xvalue),
-    f(x1.yvalue, x2.yvalue, x3.yvalue),
-    f(x1.zvalue, x2.zvalue, x3.zvalue))
+    f.(x1.xvalue, x2.xvalue, x3.xvalue),
+    f.(x1.yvalue, x2.yvalue, x3.yvalue),
+    f.(x1.zvalue, x2.zvalue, x3.zvalue))
 end
 
 function faceEval(f::Function, x1::FaceValue, x2::FaceValue, x3::FaceValue, x4::FaceValue)
 FaceValue(x1.domain,
-    f(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue),
-    f(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue),
-    f(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue))
+    f.(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue),
+    f.(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue),
+    f.(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue))
 end
 
 function faceEval(f::Function, x1::FaceValue, x2::FaceValue, x3::FaceValue, x4::FaceValue, x5::FaceValue)
 FaceValue(x1.domain,
-    f(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue, x5.xvalue),
-    f(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue, x5.yvalue),
-    f(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue, x5.zvalue))
+    f.(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue, x5.xvalue),
+    f.(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue, x5.yvalue),
+    f.(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue, x5.zvalue))
 end
 
 function faceEval(f::Function, x1::FaceValue, x2::FaceValue, x3::FaceValue, x4::FaceValue, x5::FaceValue, x6::FaceValue)
 FaceValue(x1.domain,
-    f(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue, x5.xvalue, x6.xvalue),
-    f(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue, x5.yvalue, x6.yvalue),
-    f(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue, x5.zvalue, x6.zvalue))
+    f.(x1.xvalue, x2.xvalue, x3.xvalue, x4.xvalue, x5.xvalue, x6.xvalue),
+    f.(x1.yvalue, x2.yvalue, x3.yvalue, x4.yvalue, x5.yvalue, x6.yvalue),
+    f.(x1.zvalue, x2.zvalue, x3.zvalue, x4.zvalue, x5.zvalue, x6.zvalue))
 end
 
 function cellEval(f::Function, x::CellValue)
 CellValue(x.domain,
-    f(x.value))
+    f.(x.value))
 end
 
 function cellEval(f::Function, x1::CellValue, x2::CellValue)
 CellValue(x1.domain,
-    f(x1.value, x2.value))
+    f.(x1.value, x2.value))
 end
 
 function cellEval(f::Function, x1::CellValue, x2::CellValue, x3::CellValue)
 CellValue(x1.domain,
-    f(x1.value, x2.value, x3.value))
+    f.(x1.value, x2.value, x3.value))
 end
 
 function cellEval(f::Function, x1::CellValue, x2::CellValue, x3::CellValue, x4::CellValue)
 CellValue(x1.domain,
-    f(x1.value, x2.value, x3.value, x4.value))
+    f.(x1.value, x2.value, x3.value, x4.value))
 end
 
 function cellEval(f::Function, x1::CellValue, x2::CellValue, x3::CellValue, x4::CellValue, x5::CellValue)
 CellValue(x1.domain,
-    f(x1.value, x2.value, x3.value, x4.value, x5.value))
+    f.(x1.value, x2.value, x3.value, x4.value, x5.value))
 end
 
 function cellEval(f::Function, x1::CellValue, x2::CellValue, x3::CellValue, x4::CellValue, x5::CellValue, x6::CellValue)
 CellValue(x1.domain,
-    f(x1.value, x2.value, x3.value, x4.value, x5.value, x6.value))
+    f.(x1.value, x2.value, x3.value, x4.value, x5.value, x6.value))
 end
 
 # ========================= Generate random perm field ======================
