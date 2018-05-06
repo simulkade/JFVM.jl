@@ -451,12 +451,12 @@ sx = zeros(Float64, 3*(Nx+2))
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # reassign the east, west for code readability
@@ -522,12 +522,12 @@ rf = u.domain.facecenters.x
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # reassign the east, west for code readability
@@ -568,12 +568,12 @@ rf = u.domain.facecenters.x
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # reassign the east, west for code readability
@@ -623,12 +623,12 @@ sx = zeros(Float64, 3*(Nx+2))
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # find the velocity direction for the upwind scheme
@@ -688,12 +688,12 @@ psi_m = zeros(Float64, Nx+1)
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # find the velocity direction for the upwind scheme
@@ -728,12 +728,12 @@ psi_m = zeros(Float64, Nx+1)
 # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 dphi_p = (phi.value[2:Nx+2]-phi.value[1:Nx+1])./dx
 rp = dphi_p[1:end-1]./fsign(dphi_p[2:end])
-psi_p[2:Nx+1] = 0.5*FL(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
+psi_p[2:Nx+1] = 0.5*FL.(rp).*(phi.value[3:Nx+2]-phi.value[2:Nx+1])
 psi_p[1] = 0.0 # left boundary will be handled explicitly
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 rm = dphi_p[2:end]./fsign(dphi_p[1:end-1])
-psi_m[1:Nx] = 0.5*FL(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
+psi_m[1:Nx] = 0.5*FL.(rm).*(phi.value[1:Nx]-phi.value[2:Nx+1])
 psi_m[Nx+1] = 0.0 # right boundary will be handled explicitly
 
 # find the velocity direction for the upwind scheme
@@ -1021,25 +1021,25 @@ mny = Nx*Ny
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nx+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
+psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ny+1] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
+psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nx,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
+psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
 psiX_m[Nx+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
+psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -1147,25 +1147,25 @@ psiY_m = zeros(Nx,Ny+1)
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nx+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
+psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ny+1] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
+psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nx,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
+psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
 psiX_m[Nx+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
+psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -1230,25 +1230,25 @@ psiY_m = zeros(Nx,Ny+1)
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nx+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
+psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ny+1] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
+psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nx,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
+psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
 psiX_m[Nx+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ny] = 0.5*FL(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
+psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
 psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -1577,25 +1577,25 @@ mny = Nr*Nz
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Nz+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
+psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Nz] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
+psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
 psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -1708,25 +1708,25 @@ psiY_m = zeros(Nr,Nz+1)
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Nz+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
+psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Nz] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
+psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
 psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -1795,25 +1795,25 @@ psiY_m = zeros(Nr,Nz+1)
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Nz+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
+psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Nz] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
+psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
 psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -2147,25 +2147,25 @@ mny = Nr*Ntheta
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ntheta+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
+psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ntheta] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
+psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -2278,25 +2278,25 @@ psiY_m = zeros(Nr,Ntheta+1)
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ntheta+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
+psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ntheta] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
+psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -2365,25 +2365,25 @@ psiY_m = zeros(Nr,Ntheta+1)
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
-psiX_p[2:Nr+1,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
+psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
-psiY_p[:,2:Ntheta+1] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
+psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
-psiX_m[1:Nr,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
+psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
 psiX_m[Nr+1,:] = 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
-psiY_m[:,1:Ntheta] = 0.5*FL(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
+psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
 psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
 
@@ -2798,31 +2798,31 @@ mnz = Nx*Ny*Nz
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nx+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiX_p[1,:,:] = 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ny+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
+psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nx,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
+psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
 psiX_m[Nx+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ny,:] = 0.5*FL(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiY_m[:,Ny+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
@@ -2962,31 +2962,31 @@ psiZ_m = zeros(Nx,Ny,Nz+1)
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nx+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiX_p[1,:,:] = 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ny+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
+psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nx,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
+psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
 psiX_m[Nx+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ny,:] = 0.5*FL(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiY_m[:,Ny+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
@@ -3066,31 +3066,31 @@ psiZ_m = zeros(Nx,Ny,Nz+1)
 # x direction
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nx+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiX_p[1,:,:] = 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ny+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
+psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nx,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
+psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
 psiX_m[Nx+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ny,:] = 0.5*FL(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiY_m[:,Ny+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
@@ -3551,31 +3551,31 @@ mnz = Nr*Ntheta*Nz
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nr+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiX_p[2:Nr+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiX_p[1,:,:] = 0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ntheta+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
+psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nr,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
+psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
 psiX_m[Nr+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ntheta,:] = 0.5*FL(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 re = rf[2:Nr+1]
@@ -3726,31 +3726,31 @@ rf = u.domain.facecenters.x
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nr+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiX_p[2:Nr+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiX_p[1,:,:] = 0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ntheta+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
+psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nr,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
+psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
 psiX_m[Nr+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ntheta,:] = 0.5*FL(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 re = rf[2:Nr+1]
@@ -3841,31 +3841,31 @@ rf = u.domain.facecenters.x
 # x direction
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
-psiX_p[2:Nr+1,:,:] = 0.5*FL(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiX_p[2:Nr+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiX_p[1,:,:] = 0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
-psiY_p[:,2:Ntheta+1,:] = 0.5*FL(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
+psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
 psiY_p[:,1,:] = 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
-psiZ_p[:,:,2:Nz+1] = 0.5*FL(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_p[:,:,1] = 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
-psiX_m[1:Nr,:,:] = 0.5*FL(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
+psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
 psiX_m[Nr+1,:,:] = 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
-psiY_m[:,1:Ntheta,:] = 0.5*FL(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
-psiZ_m[:,:,1:Nz] = 0.5*FL(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
+psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
 psiZ_m[:,:,Nz+1] = 0.0  # front boundary
 
 re = rf[2:Nr+1]
