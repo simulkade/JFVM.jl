@@ -1,7 +1,9 @@
+__precompile__()
+
 module JFVM
 
 global mumps_solver = 0
-using PyPlot
+# using PyPlot
 try
   import MUMPS
   mumps_solver = MUMPS
@@ -22,17 +24,17 @@ end
 import Base: +, -, *, /, ^, ==, >, >=, <, <=, broadcast, sin, cos, tan, cot, abs, exp, log, log10
 export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        arithmeticMean, geometricMean, harmonicMean, upwindMean, linearMean,
-       tvdMean, createBC, boundaryConditionTerm, cellBoundary, solvePDE,
+       tvdMean, createBC, boundaryConditionTerm, cellBoundary!, solvePDE,
        divergenceTerm, gradientTerm, convectionUpwindTerm, createCellVector,
        convectionTerm, convectionTvdTerm, diffusionTerm, createCellVariable,
        createFaceVariable, copyCell, fluxLimiter, createMesh1D,
        createMesh2D, createMesh3D, createMeshRadial2D, createMeshCylindrical2D,
        createMeshCylindrical3D, createMeshCylindrical1D, solveLinearPDE,
-       visualizeCells, linearSourceTerm, constantSourceTerm, transientTerm,
+       linearSourceTerm, constantSourceTerm, transientTerm,
        solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
-       plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
-       visualizeCellVectors, JFVM_test, solveExplicitPDE, reshapeCell,
-       cellVolume, reshapeInternalCell, internalCells, domainInt, convectionTvdRHS
+       JFVM_test, solveExplicitPDE, reshapeCell,
+       cellVolume, reshapeInternalCell, internalCells, domainInt, convectionTvdRHS # ,
+      #  visualizeCells, visualizeCellVectors, plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
 
 include("fvmToolTypes.jl")
 include("meshstructure.jl")

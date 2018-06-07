@@ -10,6 +10,10 @@
 Pkg.checkout("JFVM")
 ```
   + 3D visualization requires calling Mayavi via PyCall. It made too many problems recently, so I have decided to disable it until I find a better solution for 3D visualization. Suggestions/PRs are very welcome.
+  + I have decided to move the visualization to a new package [JFVMvis.jl](https://github.com/simulkade/JFVMvis.jl.git), that ypu need to install by:
+  ```
+  Pkg.clone("https://github.com/simulkade/JFVMvis.jl")
+  ```
 
 ## Equations
 You can solve the following PDE (or a subset of it):  
@@ -66,7 +70,7 @@ I have written a short [tutorial](http://nbviewer.ipython.org/github/simulkade/J
 ## In action
 Copy and paste the following code to solve a transient diffusion equation:
 ```julia
-using JFVM
+using JFVM, JFVMvis
 Nx = 10
 Lx = 1.0
 m = createMesh1D(Nx, Lx)
