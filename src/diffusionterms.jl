@@ -57,7 +57,7 @@ APx = -(AE+AW)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -107,9 +107,9 @@ APy = -(AN+AS)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1],mnx); reshape(G[2:Nx+1,2:Ny+1],mnx); reshape(G[3:Nx+2,2:Ny+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny],mny); reshape(G[2:Nx+1,2:Ny+1],mny); reshape(G[2:Nx+1,3:Ny+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -137,7 +137,7 @@ G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 # DY = repeat(D.domain.cellsize.y.', outer=(Nx, 1, Nz))
 # DZ = zeros(1,1,Nz+2);
 # DZ(1,1,:) = D.domain.cellsize.z;
-# DZ=repmat(DZ, Nx, Ny, 1);
+# DZ=repeat(DZ, Nx, Ny, 1);
 # dx = 0.5*(DX(1:end-1,:,:)+DX(2:end,:,:));
 # dy = 0.5*(DY(:,1:end-1,:)+DY(:,2:end,:));
 # dz = 0.5*(DZ(:,:,1:end-1)+DZ(:,:,2:end));
@@ -187,11 +187,11 @@ APz = reshape(-(Df+Db),mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3);
+iiy[1:3*mny] = repeat(rowy_index,3);
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx);
 		reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx);
 		reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
@@ -246,7 +246,7 @@ APx = reshape(-(De+Dw),Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -300,9 +300,9 @@ APy = reshape(-(Dn+Ds),mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta],mny); reshape(G[2:Nr+1,2:Ntheta+1],mny); reshape(G[2:Nr+1,3:Ntheta+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -332,8 +332,8 @@ DZ[:] = D.domain.cellsize.y
 dr = 0.5*(DR[1:end-1]+DR[2:end])
 dz = zeros( 1, Nz+1)
 dz[:] = 0.5*(DZ[1:end-1]+DZ[2:end])
-rp = repmat(D.domain.cellcenters.x, 1, Nz)
-rf = repmat(D.domain.facecenters.x, 1, Nz)
+rp = repeat(D.domain.cellcenters.x, 1, Nz)
+rf = repeat(D.domain.facecenters.x, 1, Nz)
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Nz+2))
@@ -365,9 +365,9 @@ APy = reshape(-(Dn+Ds),mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Nz],mny); reshape(G[2:Nr+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Nz+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -445,11 +445,11 @@ APz = reshape(-(Df+Db),mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx);
 		reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx);
 		reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]

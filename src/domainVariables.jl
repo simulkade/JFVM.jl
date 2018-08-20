@@ -20,7 +20,7 @@ end
 # ============================================================
 function createCellVariable(m::MeshStructure, phi0::Array{T}) where T<:Real
 # creates a cell variable and assigns value phi0 to it
-if prod(m.dims+2)==length(phi0)
+if prod(m.dims.+2)==length(phi0)
   CellValue(m, phi0)
 elseif prod(m.dims)==length(phi0)
   d=m.dimension
@@ -43,7 +43,7 @@ end
 # ==============================================================
 function createCellVariable(m::MeshStructure, phi0::Array{T}, BC::BoundaryCondition) where T<:Real
 # creates a cell variable and assigns value phi0 to it
-if prod(m.dims+2)==length(phi0)
+if prod(m.dims.+2)==length(phi0)
   error("JFVM: Matrix must be the same size as the domain.")
 elseif prod(m.dims)==length(phi0)
   d=m.dimension

@@ -121,11 +121,11 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     q=q+1
     ii[q] = G[Nx+2]
     jj[q] = G[Nx+2]
-    s[q] = 1.0
+    s[q] .= 1.0
     q=q+1
     ii[q] = G[Nx+2]
     jj[q] = G[Nx+1]
-    s[q] = -1.0
+    s[q] .= -1.0
     q=q+1
     ii[q] = G[Nx+2]
     jj[q] = G[1]
@@ -134,27 +134,27 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     ii[q] = G[Nx+2]
     jj[q] = G[2]
     s[q] = -dx_end/dx_1
-    BCRHS[G[i]] = 0.0
+    BCRHS[G[i]] .= 0.0
 
     # Left boundary
     i = 1
     q=q+1
     ii[q] = G[1]
     jj[q] = G[1]
-    s[q] = 1.0
+    s[q] .= 1.0
     q=q+1
     ii[q] = G[1]
     jj[q] = G[2]
-    s[q] = 1.0
+    s[q] .= 1.0
     q=q+1
     ii[q] = G[1]
     jj[q] = G[Nx+1]
-    s[q] = -1.0;
+    s[q] .= -1.0;
     q=q+1
     ii[q] = G[1]
     jj[q] = G[Nx+2]
-    s[q] = -1.0;
-    BCRHS[G[i]] = 0.0
+    s[q] .= -1.0;
+    BCRHS[G[i]] .= 0.0
 end
 
 # Build the sparse matrix of the boundary conditions
@@ -230,11 +230,11 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j-1]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,1]
@@ -243,7 +243,7 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     ii[q] = G[i,j]
     jj[q] = G[i,2]
     s[q] = -dy_end/dy_1
-    BCRHS[G[i,j]] = 0.0
+    BCRHS[G[i,j]] .= 0.0
   end
   # bottom boundary
   j=1
@@ -251,20 +251,20 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j+1]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+1]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+2]
-    s[q] = -1.0
-    BCRHS[G[i,j]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j]] .= 0.0
   end
 end
 
@@ -302,11 +302,11 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i-1,j]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[1,j]
@@ -315,7 +315,7 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     ii[q] = G[i,j]
     jj[q] = G[2,j]
     s[q] = -dx_end/dx_1
-    BCRHS[G[i,j]] = 0.0
+    BCRHS[G[i,j]] .= 0.0
   end
   # Left boundary
   i = 1;
@@ -323,20 +323,20 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i+1,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[Nx+1,j]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[Nx+2,j]
-    s[q] = -1.0
-    BCRHS[G[i,j]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j]] .= 0.0
   end
 end
 
@@ -410,11 +410,11 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j-1]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,1]
@@ -423,7 +423,7 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     ii[q] = G[i,j]
     jj[q] = G[i,2]
     s[q] = -dtheta_end/dtheta_1
-    BCRHS[G[i,j]] = 0.0
+    BCRHS[G[i,j]] .= 0.0
   end
   # bottom boundary
   j=1
@@ -431,20 +431,20 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j+1]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+1]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+2]
-    s[q] = -1.0
-    BCRHS[G[i,j]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j]] .= 0.0
   end
 end
 
@@ -482,11 +482,11 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i-1,j]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[1,j]
@@ -495,7 +495,7 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     ii[q] = G[i,j]
     jj[q] = G[2,j]
     s[q] = -dx_end/dx_1
-    BCRHS[G[i,j]] = 0.0
+    BCRHS[G[i,j]] .= 0.0
   end
   # Left boundary
   i = 1;
@@ -503,20 +503,20 @@ elseif BC.right.periodic || BC.left.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i+1,j]
-    s[q] = 1.0
+    s[q] .= 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[Nx+1,j]
-    s[q] = -1.0
+    s[q] .= -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[Nx+2,j]
-    s[q] = -1.0
-    BCRHS[G[i,j]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j]] .= 0.0
   end
 end
 
@@ -554,15 +554,15 @@ BCRHS = zeros(Float64, (Nx+2)*(Ny+2)*(Nz+2))
 q = 1:8
 ii[q] = BC.domain.corner
 jj[q] = BC.domain.corner
-s[q] = 1.0
-BCRHS[BC.domain.corner] = 0.0
+s[q] .= 1.0
+BCRHS[BC.domain.corner] .= 0.0
 
 # assign values to the edges (useless cells)
-q = q[end]+[1:length(BC.domain.edge);]
+q = q[end].+[1:length(BC.domain.edge);]
 ii[q] = BC.domain.edge
 jj[q] = BC.domain.edge
-s[q] = 1.0
-BCRHS[BC.domain.edge] = 0.0
+s[q] .= 1.0
+BCRHS[BC.domain.edge] .= 0.0
 
 # Assign values to the boundary condition matrix and the RHS vector based
 # on the BC structure
@@ -571,11 +571,11 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=Ny+2
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.top.b/2.0 + BC.top.a/dy_end
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j-1,k]
     s[q] = BC.top.b/2.0 - BC.top.a/dy_end
@@ -585,11 +585,11 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=1
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j+1,k]
     s[q] = -(BC.bottom.b/2.0 + BC.bottom.a/dy_1) # consider the reverse direction of normal
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.bottom.b/2.0 - BC.bottom.a/dy_1) # consider the reverse direction of normal
@@ -599,45 +599,45 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     j=Ny+2
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j-1,k]
     s[q] = -1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,1,k]
     s[q] = dy_end/dy_1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,2,k]
     s[q] = -dy_end/dy_1
-    BCRHS[G[i,j,k]] = 0.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Bottom boundary
     j=1
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j+1,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,Ny+1,k]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,Ny+2,k]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 if !BC.right.periodic && !BC.left.periodic
@@ -645,11 +645,11 @@ if !BC.right.periodic && !BC.left.periodic
     i=Nx+2
     j=2:Ny+1
     k=2:Nz+1
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.right.b/2.0 + BC.right.a/dx_end
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i-1,j,k]
     s[q] = BC.right.b/2.0 - BC.right.a/dx_end
@@ -659,12 +659,12 @@ if !BC.right.periodic && !BC.left.periodic
     i = 1
     j=2:Ny+1
     k=2:Nz+1
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i+1,j,k]
     s[q] = -(BC.left.b/2.0 + BC.left.a/dx_1)
     # consider the reverse direction of normal
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.left.b/2.0 - BC.left.a/dx_1)  # consider the reverse direction of normal
@@ -674,45 +674,45 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     i=Nx+2
     j=2:Ny+1
     k=2:Nz+1
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ny*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i-1,j,k]
-    s[q] = -1.0
-    q = q[end]+[1:Ny*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[1,j,k]
     s[q] = dx_end/dx_1
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[2,j,k]
     s[q] = -dx_end/dx_1
-    BCRHS[G[i,j,k]] = 0.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Left boundary
     i = 1
     j=2:Ny+1
     k=2:Nz+1
-    q = q[end]+[1:Ny*Nz;]
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ny*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i+1,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ny*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[Nx+1,j,k]
-    s[q] = -1.0
-    q = q[end]+[1:Ny*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Ny*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[Nx+2,j,k]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 if !BC.front.periodic && !BC.back.periodic
@@ -720,11 +720,11 @@ if !BC.front.periodic && !BC.back.periodic
     k=1
     i = 2:Nx+1
     j=2:Ny+1
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k+1]
     s[q] = -(BC.back.b/2.0 + BC.back.a/dz_1)  # consider the reverse direction of normal
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.back.b/2.0 - BC.back.a/dz_1)  # consider the reverse direction of normal
@@ -734,11 +734,11 @@ if !BC.front.periodic && !BC.back.periodic
     k=Nz+2
     i = 2:Nx+1
     j=2:Ny+1
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.front.b/2.0 + BC.front.a/dz_end
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k-1]
     s[q] = BC.front.b/2.0 - BC.front.a/dz_end
@@ -748,45 +748,45 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     k=1
     i = 2:Nx+1
     j=2:Ny+1
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ny;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k+1]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ny;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+1]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Ny;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+2]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Front boundary
     k=Nz+2
     i = 2:Nx+1
     j=2:Ny+1
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ny;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k-1]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Ny;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,1]
     s[q] = dz_end/dz_1
-    q = q[end]+[1:Nx*Ny;]
+    q = q[end].+[1:Nx*Ny;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,2]
     s[q] = -dz_end/dz_1
-    BCRHS[G[i,j,k]] = 0.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 # Build the sparse matrix of the boundary conditions
@@ -827,15 +827,15 @@ BCRHS = zeros(Float64, (Nx+2)*(Ntheta+2)*(Nz+2))
 q = 1:8
 ii[q] = BC.domain.corner
 jj[q] = BC.domain.corner
-s[q] = 1.0
-BCRHS[BC.domain.corner] = 0.0
+s[q] .= 1.0
+BCRHS[BC.domain.corner] .= 0.0
 
 # assign values to the edges (useless cells)
-q = q[end]+[1:length(BC.domain.edge);]
+q = q[end].+[1:length(BC.domain.edge);]
 ii[q] = BC.domain.edge
 jj[q] = BC.domain.edge
-s[q] = 1.0
-BCRHS[BC.domain.edge] = 0.0
+s[q] .= 1.0
+BCRHS[BC.domain.edge] .= 0.0
 
 # Assign values to the boundary condition matrix and the RHS vector based
 # on the BC structure
@@ -844,11 +844,11 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=Ntheta+2
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.top.b/2.0 + BC.top.a./(dtheta_end*rp)
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j-1,k]
     s[q] = BC.top.b/2.0 - BC.top.a./(dtheta_end*rp)
@@ -858,11 +858,11 @@ if !BC.top.periodic && !BC.bottom.periodic
     j=1
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j+1,k]
     s[q] = -(BC.bottom.b/2.0 + BC.bottom.a./(dtheta_1*rp)) # consider the reverse direction of normal
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.bottom.b/2.0 - BC.bottom.a./(dtheta_1*rp)) # consider the reverse direction of normal
@@ -872,45 +872,45 @@ elseif BC.top.periodic || BC.bottom.periodic # periodic
     j=Ntheta+2
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = 1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,2,k]
     s[q] = -1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,2,k]
     s[q] = -1
-    BCRHS[G[i,j,k]] = 0.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Bottom boundary
     j=1
     i=2:Nx+1
     k=2:Nz+1
-    q = q[end]+[1:Nx*Nz;]
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,Ntheta+1,k]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,Ntheta+1,k]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 if !BC.right.periodic && !BC.left.periodic
@@ -918,11 +918,11 @@ if !BC.right.periodic && !BC.left.periodic
     i=Nx+2
     j=2:Ntheta+1
     k=2:Nz+1
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.right.b/2.0 + BC.right.a/dx_end
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i-1,j,k]
     s[q] = BC.right.b/2.0 - BC.right.a/dx_end
@@ -932,12 +932,12 @@ if !BC.right.periodic && !BC.left.periodic
     i = 1
     j=2:Ntheta+1
     k=2:Nz+1
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i+1,j,k]
     s[q] = -(BC.left.b/2.0 + BC.left.a/dx_1)
     # consider the reverse direction of normal
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.left.b/2.0 - BC.left.a/dx_1)  # consider the reverse direction of normal
@@ -947,45 +947,45 @@ elseif BC.right.periodic || BC.left.periodic # periodic
     i=Nx+2
     j=2:Ntheta+1
     k=2:Nz+1
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[2,j,k]
-    s[q] = -1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[2,j,k]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Left boundary
     i = 1
     j=2:Ntheta+1
     k=2:Nz+1
-    q = q[end]+[1:Ntheta*Nz;]
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= 1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[Nx+1,j,k]
-    s[q] = -1.0
-    q = q[end]+[1:Ntheta*Nz;]
+    s[q] .= -1.0
+    q = q[end].+[1:Ntheta*Nz;]
     ii[q] = G[i,j,k]
     jj[q] = G[Nx+1,j,k]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 if !BC.front.periodic && !BC.back.periodic
@@ -993,11 +993,11 @@ if !BC.front.periodic && !BC.back.periodic
     k=1
     i = 2:Nx+1
     j=2:Ntheta+1
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k+1]
     s[q] = -(BC.back.b/2.0 + BC.back.a/dz_1)  # consider the reverse direction of normal
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = -(BC.back.b/2.0 - BC.back.a/dz_1)  # consider the reverse direction of normal
@@ -1007,11 +1007,11 @@ if !BC.front.periodic && !BC.back.periodic
     k=Nz+2
     i = 2:Nx+1
     j=2:Ntheta+1
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
     s[q] = BC.front.b/2.0 + BC.front.a/dz_end
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k-1]
     s[q] = BC.front.b/2.0 - BC.front.a/dz_end
@@ -1021,45 +1021,45 @@ elseif BC.front.periodic || BC.back.periodic  # periodic
     k=1
     i = 2:Nx+1
     j=2:Ntheta+1
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+1]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,Nz+1]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 
     # Front boundary
     k=Nz+2
     i = 2:Nx+1
     j=2:Ntheta+1
-    q = q[end]+[1:Nx*Ntheta;]
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,k]
-    s[q] = 1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= 1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,2]
-    s[q] = -1.0
-    q = q[end]+[1:Nx*Ntheta;]
+    s[q] .= -1.0
+    q = q[end].+[1:Nx*Ntheta;]
     ii[q] = G[i,j,k]
     jj[q] = G[i,j,2]
-    s[q] = -1.0
-    BCRHS[G[i,j,k]] = 0.0
+    s[q] .= -1.0
+    BCRHS[G[i,j,k]] .= 0.0
 end
 
 # Build the sparse matrix of the boundary conditions

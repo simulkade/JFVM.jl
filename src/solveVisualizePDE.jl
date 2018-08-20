@@ -8,21 +8,21 @@
 function solveLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
 N=m.dims
 x=M\RHS # until the problem is solved with Julia "\" solver
-phi = CellValue(m, reshape(full(x), tuple(N+2...)))
+phi = CellValue(m, reshape(x, tuple(N.+2...)))
 phi
 end
 
 function solvePDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
 N=m.dims
 x=M\RHS # until the problem is solved with Julia "\" solver
-phi = CellValue(m, reshape(full(x), tuple(N+2...)))
+phi = CellValue(m, reshape(x, tuple(N.+2...)))
 phi
 end
 
 function solveMUMPSLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
   N = m.dims
   x = mumps_solver.solveMUMPS(M,RHS) # until the problem is solved with Julia "\" solver
-  phi = CellValue(m, reshape(full(x), tuple(N+2...)))
+  phi = CellValue(m, reshape(x, tuple(N.+2...)))
   return phi
   error("MUMPS needs to be installed and imported (import MUMPS).")
 end
@@ -31,7 +31,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
   BC::BoundaryCondition)
   d = phi_old.domain.dimension
   N = phi_old.domain.dims
-  phi_val=reshape(phi_old.value[:]+dt*RHS, tuple(N+2...))
+  phi_val=reshape(phi_old.value[:]+dt*RHS, tuple(N.+2...))
   if (d==1) || (d==1.5)
   	phi_val= phi_val[2:N[1]+1]
   elseif (d==2) || (d==2.5) || (d==2.8)
@@ -46,7 +46,7 @@ function solveExplicitPDE(phi_old::CellValue, dt::Real, RHS::Array{Float64,1},
   BC::BoundaryCondition, alfa::CellValue)
   d = phi_old.domain.dimension
   N = phi_old.domain.dims
-  phi_val=reshape(phi_old.value[:]+dt*RHS./alfa.value[:], tuple(N+2...))
+  phi_val=reshape(phi_old.value[:]+dt*RHS./alfa.value[:], tuple(N.+2...))
   if (d==1) || (d==1.5)
   	phi_val= phi_val[2:N[1]+1]
   elseif (d==2) || (d==2.5) || (d==2.8)
@@ -126,10 +126,10 @@ end
 #     ax = fig[:add_subplot](111, projection = "3d")
 #     # r = linspace(1.25, 1.25, 50)
 #     # p = linspace(0, 2π, 50)
-#     # R = repmat(r, 1, 50)
-#     # P = repmat(p', 50, 1)
+#     # R = repeat(r, 1, 50)
+#     # P = repeat(p', 50, 1)
 #     # Zc = rand(50, 50) # (P.^2-1).^2
-#     # Z = repmat(linspace(0, 2, 50), 1, 50)
+#     # Z = repeat(linspace(0, 2, 50), 1, 50)
 #     # X, Y = R.*cos.(P), R.*sin.(P)
 #     ax[:plot_surface](X[1,:,:], Y[1,:,:], Z[1,:,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[1,:,:])), alpha=0.8)
 #     ax[:plot_surface](X[end,:,:], Y[end,:,:], Z[end,:,:], facecolors=PyPlot.cm[:viridis](mynormalize(phi0[end,:,:])), alpha=0.8)
@@ -147,21 +147,21 @@ end
 
 # #   # 6 surfaces
 # #   # surfaces 1,2 (x=x[1], x=x[end])
-# #   Y=repmat(y,1,Nz)
-# #   Z=repmat(z,1,Ny)
+# #   Y=repeat(y,1,Nz)
+# #   Z=repeat(z,1,Ny)
 # #   mayavis.mesh(x[1]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[2,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(x[end]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[end-1,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
 # #
 # #   # surfaces 3,4 (y=y[1], y=y[end]
-# #   X = repmat(x,1,Nz)
-# #   Z = repmat(z,1,Nx)
+# #   X = repeat(x,1,Nz)
+# #   Z = repeat(z,1,Nx)
 # #   mayavis.mesh(X,y[1]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,2,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(X,y[end]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,end-1,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.axes()
 # #
 # #   # surfaces 5,6 (z=z[1], z=z[end]
-# #   X = repmat(x,1,Ny)
-# #   Y = repmat(y,1,Nx)
+# #   X = repeat(x,1,Ny)
+# #   Y = repeat(y,1,Nx)
 # #   mayavis.mesh(X,Y',z[1]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,2], vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(X,Y',z[end]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,end-1], vmin=vmin, vmax=vmax, opacity=0.8)
 
@@ -232,12 +232,12 @@ end
 # elseif d==2 || d==2.5
 #   x = phi.domain.cellcenters.x
 #   y = phi.domain.cellcenters.y
-#   quiver(repmat(x, 1, length(y)), repmat(y', length(x), 1), phi.xvalue, phi.yvalue)
+#   quiver(repeat(x, 1, length(y)), repeat(y', length(x), 1), phi.xvalue, phi.yvalue)
 # elseif d==2.8
 #   x = phi.domain.cellcenters.x
 #   y = phi.domain.cellcenters.y'
 #   subplot(111, polar="true")
-#   quiver(repmat(y, length(x), 1), repmat(x, 1, length(y)),
+#   quiver(repeat(y, length(x), 1), repeat(x, 1, length(y)),
 #   phi.xvalue.*cos(y)-phi.yvalue.*sin(y), phi.xvalue.*sin(y)+phi.yvalue.*cos(y))
 # elseif d==3
 #   Nx = phi.domain.dims[1]
@@ -262,21 +262,21 @@ end
 
 # #   # 6 surfaces
 # #   # surfaces 1,2 (x=x[1], x=x[end])
-# #   Y=repmat(y,1,Nz)
-# #   Z=repmat(z,1,Ny)
+# #   Y=repeat(y,1,Nz)
+# #   Z=repeat(z,1,Ny)
 # #   mayavis.mesh(x[1]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[2,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(x[end]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[end-1,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
 # #
 # #   # surfaces 3,4 (y=y[1], y=y[end]
-# #   X = repmat(x,1,Nz)
-# #   Z = repmat(z,1,Nx)
+# #   X = repeat(x,1,Nz)
+# #   Z = repeat(z,1,Nx)
 # #   mayavis.mesh(X,y[1]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,2,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(X,y[end]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,end-1,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.axes()
 # #
 # #   # surfaces 5,6 (z=z[1], z=z[end]
-# #   X = repmat(x,1,Ny)
-# #   Y = repmat(y,1,Nx)
+# #   X = repeat(x,1,Ny)
+# #   Y = repeat(y,1,Nx)
 # #   mayavis.mesh(X,Y',z[1]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,2], vmin=vmin, vmax=vmax, opacity=0.8)
 # #   mayavis.mesh(X,Y',z[end]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,end-1], vmin=vmin, vmax=vmax, opacity=0.8)
 

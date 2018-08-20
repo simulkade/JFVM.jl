@@ -163,7 +163,7 @@ APx = reshape((ue.*DXe-uw.*DXw)./DXp,Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -203,7 +203,7 @@ APx = reshape((ue.*DXe-uw.*DXw)./DXp,Nx)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -249,7 +249,7 @@ APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -282,10 +282,10 @@ ue_max = u.xvalue[2:Nx+1]
 uw_min = u.xvalue[1:Nx]
 uw_max = u.xvalue[1:Nx]
 
-ue_min[u_upwind.xvalue[2:Nx+1].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx].<0.0] .= 0.0
 
 # calculate the coefficients for the internal cells
 AE = reshape(ue_min./DXp,Nx)
@@ -302,7 +302,7 @@ APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -353,7 +353,7 @@ APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*rp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -392,10 +392,10 @@ ue_max = u.xvalue[2:Nx+1]
 uw_min = u.xvalue[1:Nx]
 uw_max = u.xvalue[1:Nx]
 
-ue_min[u_upwind.xvalue[2:Nx+1].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx].<0.0] .= 0.0
 
 
 # calculate the coefficients for the internal cells
@@ -413,7 +413,7 @@ APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*rp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -488,7 +488,7 @@ APx[end] = APx[end] + re[end]*ue_min[end]/(2.0*DXp[end]*r[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -586,10 +586,10 @@ ue_max = u.xvalue[2:Nx+1]
 uw_min = u.xvalue[1:Nx]
 uw_max = u.xvalue[1:Nx]
 
-ue_min[u_upwind.xvalue[2:Nx+1].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx].<0.0] .= 0.0
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./(DXp.*r)).*(re.*(ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -656,7 +656,7 @@ APx[end] = APx[end] + ue_min[end]/(2.0*DXp[end])
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1],Nx) # main diagonal x
-iix[1:3*Nx] = repmat(rowx_index,3)
+iix[1:3*Nx] = repeat(rowx_index,3)
 jjx[1:3*Nx] = [reshape(G[1:Nx],Nx); reshape(G[2:Nx+1],Nx); reshape(G[3:Nx+2],Nx)]
 sx[1:3*Nx] = [AW; APx; AE]
 
@@ -742,10 +742,10 @@ ue_max = u.xvalue[2:Nx+1]
 uw_min = u.xvalue[1:Nx]
 uw_max = u.xvalue[1:Nx]
 
-ue_min[u_upwind.xvalue[2:Nx+1].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx].<0.0] .= 0.0
 
 # calculate the TVD correction term
 RHS[2:Nx+1] = -(1.0./DXp).*((ue_max.*psi_p[2:Nx+1]+ue_min.*psi_m[2:Nx+1])-
@@ -797,9 +797,9 @@ APy = reshape((vn.*DYn-vs.*DYs)./DYp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1],mnx); reshape(G[2:Nx+1,2:Ny+1],mnx); reshape(G[3:Nx+2,2:Ny+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny],mny); reshape(G[2:Nx+1,2:Ny+1],mny); reshape(G[2:Nx+1,3:Ny+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -877,9 +877,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1],mnx); reshape(G[2:Nx+1,2:Ny+1],mnx); reshape(G[3:Nx+2,2:Ny+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny],mny); reshape(G[2:Nx+1,2:Ny+1],mny); reshape(G[2:Nx+1,3:Ny+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -924,14 +924,14 @@ vn_max = u.yvalue[:,2:Ny+1]
 vs_min = u.yvalue[:,1:Ny]
 vs_max = u.yvalue[:,1:Ny]
 
-ue_min[u_upwind.xvalue[2:Nx+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ny+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ny+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ny].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ny+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ny+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ny].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ny].<0.0] .= 0.0
 
 # calculate the coefficients for the internal cells, not reshape
 AE = ue_min./DXp
@@ -965,9 +965,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1],mnx); reshape(G[2:Nx+1,2:Ny+1],mnx); reshape(G[3:Nx+2,2:Ny+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny],mny); reshape(G[2:Nx+1,2:Ny+1],mny); reshape(G[2:Nx+1,3:Ny+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1023,25 +1023,25 @@ dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
-psiX_m[Nx+1,:] = 0.0 # right boundary
+psiX_m[Nx+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
-psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ny+1] .= 0.0 # top boundary will be handled in the main matrix
 
 # find the velocity direction for the upwind scheme
 ue_min = min.(u.xvalue[2:Nx+1,:],0.0)
@@ -1085,9 +1085,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1],mnx); reshape(G[2:Nx+1,2:Ny+1],mnx); reshape(G[3:Nx+2,2:Ny+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny],mny); reshape(G[2:Nx+1,2:Ny+1],mny); reshape(G[2:Nx+1,3:Ny+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1149,25 +1149,25 @@ dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
-psiX_m[Nx+1,:] = 0.0 # right boundary
+psiX_m[Nx+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
-psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ny+1] .= 0.0 # top boundary will be handled in the main matrix
 
 # find the velocity direction for the upwind scheme
 ue_min = min.(u.xvalue[2:Nx+1,:],0.0)
@@ -1232,25 +1232,25 @@ dphiX_p = (phi.value[2:Nx+2, 2:Ny+1]-phi.value[1:Nx+1, 2:Ny+1])./dx
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nx+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1]-
 		    phi.value[2:Nx+1, 2:Ny+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2]-phi.value[2:Nx+1, 1:Ny+1])./dy
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ny+1] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2]-
 		  phi.value[2:Nx+1, 2:Ny+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nx,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1]-
 		phi.value[2:Nx+1, 2:Ny+1])
-psiX_m[Nx+1,:] = 0.0 # right boundary
+psiX_m[Nx+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ny] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1, 1:Ny]-
 	      phi.value[2:Nx+1, 2:Ny+1])
-psiY_m[:, Ny+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ny+1] .= 0.0 # top boundary will be handled in the main matrix
 
 # find the velocity direction for the upwind scheme
 ue_min = u.xvalue[2:Nx+1,:]
@@ -1262,14 +1262,14 @@ vn_max = u.yvalue[:,2:Ny+1]
 vs_min = u.yvalue[:,1:Ny]
 vs_max = u.yvalue[:,1:Ny]
 
-ue_min[u_upwind.xvalue[2:Nx+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ny+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ny+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ny].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ny+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ny+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ny].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ny].<0.0] .= 0.0
 
 # calculate the TVD correction term
 div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
@@ -1309,8 +1309,8 @@ DZ[:] = u.domain.cellsize.y
 DYn = DZ[:,3:end]
 DYs = DZ[:,1:end-2]
 DYp = DZ[:,2:end-1]
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Nz+2))
@@ -1340,9 +1340,9 @@ APy = reshape((vn.*DYn-vs.*DYs)./DYp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Nz],mny); reshape(G[2:Nr+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Nz+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1369,8 +1369,8 @@ G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DZp = zeros( 1, Nz)
 DZp[:] = u.domain.cellsize.y[2:end-1]
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Nz+2))
@@ -1427,9 +1427,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Nz],mny); reshape(G[2:Nr+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Nz+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1453,8 +1453,8 @@ G=reshape([1:(Nr+2)*(Nz+2);], Nr+2, Nz+2)
 DRp = u.domain.cellsize.x[2:end-1]
 DZp = zeros( 1, Nz)
 DZp[:] = u.domain.cellsize.y[2:end-1]
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 
 # define the vectors to store the sparse matrix data
 iix = zeros(Int64, 3*(Nr+2)*(Nz+2))
@@ -1479,14 +1479,14 @@ vn_max = u.yvalue[:,2:Nz+1]
 vs_min = u.yvalue[:,1:Nz]
 vs_max = u.yvalue[:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Nz+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Nz+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Nz].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Nz].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Nz+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Nz+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Nz].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Nz].<0.0] .= 0.0
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -1520,9 +1520,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Nz],mny); reshape(G[2:Nr+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Nz+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1556,8 +1556,8 @@ DZp[:] = u.domain.cellsize.y[2:end-1]
 dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 dz=zeros( 1, Nz+1)
 dz[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 psiX_p = zeros(Nr+1,Nz)
 psiX_m = zeros(Nr+1,Nz)
 psiY_p = zeros(Nr,Nz+1)
@@ -1579,25 +1579,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
-psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Nz+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -1644,9 +1644,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Nz+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Nz+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Nz],mny); reshape(G[2:Nr+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Nz+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1697,8 +1697,8 @@ DZp[:] = u.domain.cellsize.y[2:end-1]
 dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 dz=zeros( 1, Nz+1)
 dz[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 psiX_p = zeros(Nr+1,Nz)
 psiX_m = zeros(Nr+1,Nz)
 psiY_p = zeros(Nr,Nz+1)
@@ -1710,25 +1710,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
-psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Nz+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -1784,8 +1784,8 @@ DZp[:] = u.domain.cellsize.y[2:end-1]
 dr=0.5*(u.domain.cellsize.x[1:end-1]+u.domain.cellsize.x[2:end])
 dz=zeros( 1, Nz+1)
 dz[:]=0.5*(u.domain.cellsize.y[1:end-1]+u.domain.cellsize.y[2:end])
-rp = repmat(u.domain.cellcenters.x, 1, Nz)
-rf = repmat(u.domain.facecenters.x, 1, Nz)
+rp = repeat(u.domain.cellcenters.x, 1, Nz)
+rf = repeat(u.domain.facecenters.x, 1, Nz)
 psiX_p = zeros(Nr+1,Nz)
 psiX_m = zeros(Nr+1,Nz)
 psiY_p = zeros(Nr,Nz+1)
@@ -1797,25 +1797,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Nz+1]-phi.value[1:Nr+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Nz+1]-
 		    phi.value[2:Nr+1, 2:Nz+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Nz+2]-phi.value[2:Nr+1, 1:Nz+1])./dz
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Nz+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Nz+2]-
 		  phi.value[2:Nr+1, 2:Nz+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Nz+1]-
 		phi.value[2:Nr+1, 2:Nz+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Nz] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Nz]-
 	      phi.value[2:Nr+1, 2:Nz+1])
-psiY_m[:, Nz+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Nz+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -1830,14 +1830,14 @@ vn_max = u.yvalue[:,2:Nz+1]
 vs_min = u.yvalue[:,1:Nz]
 vs_max = u.yvalue[:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Nz+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Nz+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Nz].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Nz].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Nz+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Nz+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Nz].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Nz].<0.0] .= 0.0
 
 # calculate the TVD correction term
 div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
@@ -1909,9 +1909,9 @@ APy = reshape((vn.*DTHETAn-vs.*DTHETAs)./DTHETAp,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta],mny); reshape(G[2:Nr+1,2:Ntheta+1],mny); reshape(G[2:Nr+1,3:Ntheta+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -1996,9 +1996,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta],mny); reshape(G[2:Nr+1,2:Ntheta+1],mny); reshape(G[2:Nr+1,3:Ntheta+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -2048,14 +2048,14 @@ vn_max = u.yvalue[:,2:Ntheta+1]
 vs_min = u.yvalue[:,1:Ntheta]
 vs_max = u.yvalue[:,1:Ntheta]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ntheta+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ntheta+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ntheta].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ntheta].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ntheta+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ntheta+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ntheta].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ntheta].<0.0] .= 0.0
 
 # calculate the coefficients for the internal cells, do not reshape yet
 AE = re.*ue_min./(DRp.*rp)
@@ -2089,9 +2089,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta],mny); reshape(G[2:Nr+1,2:Ntheta+1],mny); reshape(G[2:Nr+1,3:Ntheta+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -2149,25 +2149,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ntheta+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -2214,9 +2214,9 @@ APy = reshape(APy,mny)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1],mnx) # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1],mny) # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta],mny); reshape(G[2:Nr+1,2:Ntheta+1],mny); reshape(G[2:Nr+1,3:Ntheta+2],mny)]
 sx[1:3*mnx] = [AW; APx; AE]
@@ -2280,25 +2280,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ntheta+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -2367,25 +2367,25 @@ dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1]-phi.value[1:Nr+1, 2:Ntheta+1])./dr
 rX_p = dphiX_p[1:end-1,:]./fsign(dphiX_p[2:end,:])
 psiX_p[2:Nr+1,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1]-
 		    phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_p[1, :] = 0.0 # left boundary will be handled in the main matrix
+psiX_p[1, :] .= 0.0 # left boundary will be handled in the main matrix
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2]-phi.value[2:Nr+1, 1:Ntheta+1])./dtheta
 rY_p = dphiY_p[:,1:end-1]./fsign(dphiY_p[:,2:end])
 psiY_p[:,2:Ntheta+1] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2]-
 		  phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_p[:,1] = 0.0 # Bottom boundary will be handled in the main matrix
+psiY_p[:,1] .= 0.0 # Bottom boundary will be handled in the main matrix
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:]./fsign(dphiX_p[1:end-1,:])
 psiX_m[1:Nr,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1]-
 		phi.value[2:Nr+1, 2:Ntheta+1])
-psiX_m[Nr+1,:] = 0.0 # right boundary
+psiX_m[Nr+1,:] .= 0.0 # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end]./fsign(dphiY_p[:,1:end-1])
 psiY_m[:,1:Ntheta] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1, 1:Ntheta]-
 	      phi.value[2:Nr+1, 2:Ntheta+1])
-psiY_m[:, Ntheta+1] = 0.0 # top boundary will be handled in the main matrix
+psiY_m[:, Ntheta+1] .= 0.0 # top boundary will be handled in the main matrix
 
 re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
@@ -2400,14 +2400,14 @@ vn_max = u.yvalue[:,2:Ntheta+1]
 vs_min = u.yvalue[:,1:Ntheta]
 vs_max = u.yvalue[:,1:Ntheta]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ntheta+1].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ntheta+1].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ntheta].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ntheta].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ntheta+1].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ntheta+1].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ntheta].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ntheta].<0.0] .= 0.0
 
 # calculate the TVD correction term
 div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
@@ -2490,11 +2490,11 @@ APz = reshape((wf.*DZf-wb.*DZb)./DZp,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)]
@@ -2602,11 +2602,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)]
@@ -2669,18 +2669,18 @@ wf_max = u.zvalue[:,:,2:Nz+1]
 wb_min = u.zvalue[:,:,1:Nz]
 wb_max = u.zvalue[:,:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nx+1,:,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1,:,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx,:,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1,:,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1,:,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx,:,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] .= 0.0
+wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] .= 0.0
+wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] .= 0.0
+wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] .= 0.0
+wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] .= 0.0
 
 # calculate the coefficients for the internal cells
 AE = ue_min./DXp
@@ -2725,11 +2725,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)]
@@ -2799,31 +2799,31 @@ mnz = Nx*Ny*Nz
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiX_p[1,:,:] = 0.0  # left boundary
+psiX_p[1,:,:] .= 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
-psiX_m[Nx+1,:,:] = 0.0  # right boundary
+psiX_m[Nx+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiY_m[:,Ny+1,:] = 0.0  # top boundary
+psiY_m[:,Ny+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
 ue_min = min.(u.xvalue[2:Nx+1,:,:],0)
@@ -2882,11 +2882,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nx,2:Ny+1,2:Nz+1],mnx); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnx); reshape(G[3:Nx+2,2:Ny+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nx+1,1:Ny,2:Nz+1],mny); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mny); reshape(G[2:Nx+1,3:Ny+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nx+1,2:Ny+1,1:Nz],mnz); reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],mnz); reshape(G[2:Nx+1,2:Ny+1,3:Nz+2],mnz)]
@@ -2963,31 +2963,31 @@ psiZ_m = zeros(Nx,Ny,Nz+1)
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiX_p[1,:,:] = 0.0  # left boundary
+psiX_p[1,:,:] .= 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
-psiX_m[Nx+1,:,:] = 0.0  # right boundary
+psiX_m[Nx+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiY_m[:,Ny+1,:] = 0.0  # top boundary
+psiY_m[:,Ny+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
 ue_min = min.(u.xvalue[2:Nx+1,:,:],0)
@@ -3067,31 +3067,31 @@ psiZ_m = zeros(Nx,Ny,Nz+1)
 dphiX_p = (phi.value[2:Nx+2, 2:Ny+1, 2:Nz+1]-phi.value[1:Nx+1, 2:Ny+1, 2:Nz+1])./dx
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nx+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nx+2,2:Ny+1,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiX_p[1,:,:] = 0.0  # left boundary
+psiX_p[1,:,:] .= 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nx+1, 2:Ny+2, 2:Nz+1]-phi.value[2:Nx+1, 1:Ny+1, 2:Nz+1])./dy
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ny+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nx+1,3:Ny+2,2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nx+1, 2:Ny+1, 2:Nz+2]-phi.value[2:Nx+1, 2:Ny+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nx+1,2:Ny+1,3:Nz+2]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nx,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nx, 2:Ny+1, 2:Nz+1]-phi.value[2:Nx+1, 2:Ny+1, 2:Nz+1])
-psiX_m[Nx+1,:,:] = 0.0  # right boundary
+psiX_m[Nx+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ny,:] = 0.5*FL.(rY_m).*(phi.value[2:Nx+1,1:Ny,2:Nz+1]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiY_m[:,Ny+1,:] = 0.0  # top boundary
+psiY_m[:,Ny+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nx+1,2:Ny+1,1:Nz]-phi.value[2:Nx+1,2:Ny+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 # find the velocity direction for the upwind scheme
 ue_min = u.xvalue[2:Nx+1,:,:]
@@ -3107,18 +3107,18 @@ wf_max = u.zvalue[:,:,2:Nz+1]
 wb_min = u.zvalue[:,:,1:Nz]
 wb_max = u.zvalue[:,:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nx+1,:,:].>0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nx+1,:,:].<0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nx,:,:].>0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nx+1,:,:].>0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nx+1,:,:].<0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nx,:,:].>0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nx,:,:].<0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ny+1,:].>0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ny+1,:].<0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ny,:].>0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ny,:].<0.0] .= 0.0
+wf_min[u_upwind.zvalue[:,:,2:Nz+1].>0.0] .= 0.0
+wf_max[u_upwind.zvalue[:,:,2:Nz+1].<0.0] .= 0.0
+wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] .= 0.0
+wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] .= 0.0
 
 # calculate the TVD correction term
 div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
@@ -3213,11 +3213,11 @@ APz = reshape((DZf.*wf-DZb.*wb)./DZp,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
@@ -3336,11 +3336,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
@@ -3414,18 +3414,18 @@ wf_max = u.zvalue[:,:,2:Nz+1]
 wb_min = u.zvalue[:,:,1:Nz]
 wb_max = u.zvalue[:,:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:,:].> 0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:,:].< 0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:,:].> 0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:,:].< 0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ntheta+1,:].> 0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ntheta+1,:].< 0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ntheta,:].> 0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ntheta,:].< 0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].> 0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].< 0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].> 0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].< 0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:,:].> 0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:,:].< 0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:,:].> 0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:,:].< 0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ntheta+1,:].> 0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ntheta+1,:].< 0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ntheta,:].> 0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ntheta,:].< 0.0] .= 0.0
+wf_min[u_upwind.zvalue[:,:,2:Nz+1].> 0.0] .= 0.0
+wf_max[u_upwind.zvalue[:,:,2:Nz+1].< 0.0] .= 0.0
+wb_min[u_upwind.zvalue[:,:,1:Nz].> 0.0] .= 0.0
+wb_max[u_upwind.zvalue[:,:,1:Nz].< 0.0] .= 0.0
 
 # calculate the coefficients for the internal cells
 AE = re.*ue_min./(DRp.*rp)
@@ -3470,11 +3470,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
@@ -3557,26 +3557,26 @@ psiX_p[1,:,:] = 0  # left boundary
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
-psiX_m[Nr+1,:,:] = 0.0  # right boundary
+psiX_m[Nr+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
+psiY_m[:,Ntheta+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
@@ -3638,11 +3638,11 @@ APz = reshape(APz,mnz)
 
 # build the sparse matrix based on the numbering system
 rowx_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx)  # main diagonal x
-iix[1:3*mnx] = repmat(rowx_index,3)
+iix[1:3*mnx] = repeat(rowx_index,3)
 rowy_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny)  # main diagonal y
-iiy[1:3*mny] = repmat(rowy_index,3)
+iiy[1:3*mny] = repeat(rowy_index,3)
 rowz_index = reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz)  # main diagonal z
-iiz[1:3*mnz] = repmat(rowz_index,3)
+iiz[1:3*mnz] = repeat(rowz_index,3)
 jjx[1:3*mnx] = [reshape(G[1:Nr,2:Ntheta+1,2:Nz+1],mnx); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnx); reshape(G[3:Nr+2,2:Ntheta+1,2:Nz+1],mnx)]
 jjy[1:3*mny] = [reshape(G[2:Nr+1,1:Ntheta,2:Nz+1],mny); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mny); reshape(G[2:Nr+1,3:Ntheta+2,2:Nz+1],mny)]
 jjz[1:3*mnz] = [reshape(G[2:Nr+1,2:Ntheta+1,1:Nz],mnz); reshape(G[2:Nr+1,2:Ntheta+1,2:Nz+1],mnz); reshape(G[2:Nr+1,2:Ntheta+1,3:Nz+2],mnz)]
@@ -3727,31 +3727,31 @@ rf = u.domain.facecenters.x
 dphiX_p = (phi.value[2:Nr+2, 2:Ntheta+1, 2:Nz+1]-phi.value[1:Nr+1, 2:Ntheta+1, 2:Nz+1])./dr
 rX_p = dphiX_p[1:end-1,:,:]./fsign(dphiX_p[2:end,:,:])
 psiX_p[2:Nr+1,:,:] = 0.5*FL.(rX_p).*(phi.value[3:Nr+2,2:Ntheta+1,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiX_p[1,:,:] = 0  # left boundary
+psiX_p[1,:,:] .= 0.0  # left boundary
 # y direction
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
-psiX_m[Nr+1,:,:] = 0.0  # right boundary
+psiX_m[Nr+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
+psiY_m[:,Ntheta+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
@@ -3847,26 +3847,26 @@ psiX_p[1,:,:] = 0  # left boundary
 dphiY_p = (phi.value[2:Nr+1, 2:Ntheta+2, 2:Nz+1]-phi.value[2:Nr+1, 1:Ntheta+1, 2:Nz+1])./dtheta
 rY_p = dphiY_p[:,1:end-1,:]./fsign(dphiY_p[:,2:end,:])
 psiY_p[:,2:Ntheta+1,:] = 0.5*FL.(rY_p).*(phi.value[2:Nr+1,3:Ntheta+2,2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1,2:Nz+1])
-psiY_p[:,1,:] = 0.0  # Bottom boundary
+psiY_p[:,1,:] .= 0.0  # Bottom boundary
 # z direction
 dphiZ_p = (phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+2]-phi.value[2:Nr+1, 2:Ntheta+1, 1:Nz+1])./dz
 rZ_p = dphiZ_p[:,:,1:end-1]./fsign(dphiZ_p[:,:,2:end])
 psiZ_p[:,:,2:Nz+1] = 0.5*FL.(rZ_p).*(phi.value[2:Nr+1,2:Ntheta+1,3:Nz+2]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_p[:,:,1] = 0.0  # Back boundary
+psiZ_p[:,:,1] .= 0.0  # Back boundary
 
 # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
 # x direction
 rX_m = dphiX_p[2:end,:,:]./fsign(dphiX_p[1:end-1,:,:])
 psiX_m[1:Nr,:,:] = 0.5*FL.(rX_m).*(phi.value[1:Nr, 2:Ntheta+1, 2:Nz+1]-phi.value[2:Nr+1, 2:Ntheta+1, 2:Nz+1])
-psiX_m[Nr+1,:,:] = 0.0  # right boundary
+psiX_m[Nr+1,:,:] .= 0.0  # right boundary
 # y direction
 rY_m = dphiY_p[:,2:end,:]./fsign(dphiY_p[:,1:end-1,:])
 psiY_m[:,1:Ntheta,:] = 0.5*FL.(rY_m).*(phi.value[2:Nr+1,1:Ntheta,2:Nz+1]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiY_m[:,Ntheta+1,:] = 0.0  # top boundary
+psiY_m[:,Ntheta+1,:] .= 0.0  # top boundary
 # z direction
 rZ_m = dphiZ_p[:,:,2:end]./fsign(dphiZ_p[:,:,1:end-1])
 psiZ_m[:,:,1:Nz] = 0.5*FL.(rZ_m).*(phi.value[2:Nr+1,2:Ntheta+1,1:Nz]-phi.value[2:Nr+1,2:Ntheta+1,2:Nz+1])
-psiZ_m[:,:,Nz+1] = 0.0  # front boundary
+psiZ_m[:,:,Nz+1] .= 0.0  # front boundary
 
 re = rf[2:Nr+1]
 rw = rf[1:Nr]
@@ -3885,18 +3885,18 @@ wf_max = u.zvalue[:,:,2:Nz+1]
 wb_min = u.zvalue[:,:,1:Nz]
 wb_max = u.zvalue[:,:,1:Nz]
 
-ue_min[u_upwind.xvalue[2:Nr+1,:,:].> 0.0] = 0.0
-ue_max[u_upwind.xvalue[2:Nr+1,:,:].< 0.0] = 0.0
-uw_min[u_upwind.xvalue[1:Nr,:,:].> 0.0] = 0.0
-uw_max[u_upwind.xvalue[1:Nr,:,:].< 0.0] = 0.0
-vn_min[u_upwind.yvalue[:,2:Ntheta+1,:].> 0.0] = 0.0
-vn_max[u_upwind.yvalue[:,2:Ntheta+1,:].< 0.0] = 0.0
-vs_min[u_upwind.yvalue[:,1:Ntheta,:].> 0.0] = 0.0
-vs_max[u_upwind.yvalue[:,1:Ntheta,:].< 0.0] = 0.0
-wf_min[u_upwind.zvalue[:,:,2:Nz+1].> 0.0] = 0.0
-wf_max[u_upwind.zvalue[:,:,2:Nz+1].< 0.0] = 0.0
-wb_min[u_upwind.zvalue[:,:,1:Nz].> 0.0] = 0.0
-wb_max[u_upwind.zvalue[:,:,1:Nz].< 0.0] = 0.0
+ue_min[u_upwind.xvalue[2:Nr+1,:,:].> 0.0] .= 0.0
+ue_max[u_upwind.xvalue[2:Nr+1,:,:].< 0.0] .= 0.0
+uw_min[u_upwind.xvalue[1:Nr,:,:].> 0.0] .= 0.0
+uw_max[u_upwind.xvalue[1:Nr,:,:].< 0.0] .= 0.0
+vn_min[u_upwind.yvalue[:,2:Ntheta+1,:].> 0.0] .= 0.0
+vn_max[u_upwind.yvalue[:,2:Ntheta+1,:].< 0.0] .= 0.0
+vs_min[u_upwind.yvalue[:,1:Ntheta,:].> 0.0] .= 0.0
+vs_max[u_upwind.yvalue[:,1:Ntheta,:].< 0.0] .= 0.0
+wf_min[u_upwind.zvalue[:,:,2:Nz+1].> 0.0] .= 0.0
+wf_max[u_upwind.zvalue[:,:,2:Nz+1].< 0.0] .= 0.0
+wb_min[u_upwind.zvalue[:,:,1:Nz].> 0.0] .= 0.0
+wb_max[u_upwind.zvalue[:,:,1:Nz].< 0.0] .= 0.0
 
 # calculate the TVD correction term
 div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
