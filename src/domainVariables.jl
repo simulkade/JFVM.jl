@@ -18,7 +18,7 @@ end
 
 
 # ============================================================
-function createCellVariable{T<:Real}(m::MeshStructure, phi0::Array{T})
+function createCellVariable(m::MeshStructure, phi0::Array{T}) where T<:Real
 # creates a cell variable and assigns value phi0 to it
 if prod(m.dims+2)==length(phi0)
   CellValue(m, phi0)
@@ -41,7 +41,7 @@ end
 end
 
 # ==============================================================
-function createCellVariable{T<:Real}(m::MeshStructure, phi0::Array{T}, BC::BoundaryCondition)
+function createCellVariable(m::MeshStructure, phi0::Array{T}, BC::BoundaryCondition) where T<:Real
 # creates a cell variable and assigns value phi0 to it
 if prod(m.dims+2)==length(phi0)
   error("JFVM: Matrix must be the same size as the domain.")
@@ -73,7 +73,7 @@ end
 
 
 # ============================================================
-function createFaceVariable{T<:Real}(m::MeshStructure, phi0::Array{T,1})
+function createFaceVariable(m::MeshStructure, phi0::Array{T,1}) where T<:Real
 # creates a face variable based on the mesh structure
 d=m.dimension
   if d==1 || d==1.5
@@ -117,7 +117,7 @@ end
 
 
 # ============================================================
-function createCellVector{T<:Real}(m::MeshStructure, phi0::Array{T,1})
+function createCellVector(m::MeshStructure, phi0::Array{T,1}) where T<:Real
 # creates a cell vector based on the mesh structure
 d=m.dimension
   if d==1 || d==1.5

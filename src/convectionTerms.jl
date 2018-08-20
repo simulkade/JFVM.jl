@@ -1094,9 +1094,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
               (uw_max.*psiX_p[1:Nx,:]+uw_min.*psiX_m[1:Nx,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
               (vs_max.*psiY_p[:,1:Ny]+vs_min.*psiY_m[:,1:Ny]))
 
 # define the RHS Vector
@@ -1180,9 +1180,9 @@ vs_min = min.(u.yvalue[:,1:Ny],0.0)
 vs_max = max.(u.yvalue[:,1:Ny],0.0)
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
               (uw_max.*psiX_p[1:Nx,:]+uw_min.*psiX_m[1:Nx,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
               (vs_max.*psiY_p[:,1:Ny]+vs_min.*psiY_m[:,1:Ny]))
 
 # define the RHS Vector
@@ -1272,9 +1272,9 @@ vs_min[u_upwind.yvalue[:,1:Ny].>0.0] = 0.0
 vs_max[u_upwind.yvalue[:,1:Ny].<0.0] = 0.0
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:]+ue_min.*psiX_m[2:Nx+1,:])-
               (uw_max.*psiX_p[1:Nx,:]+uw_min.*psiX_m[1:Nx,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1]+vn_min.*psiY_m[:,2:Ny+1])-
               (vs_max.*psiY_p[:,1:Ny]+vs_min.*psiY_m[:,1:Ny]))
 
 # define the RHS Vector
@@ -1653,9 +1653,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
+div_y = -(1.0./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
               (vs_max.*psiY_p[:,1:Nz]+vs_min.*psiY_m[:,1:Nz]))
 
 # define the RHS Vector
@@ -1744,9 +1744,9 @@ vs_min = min.(u.yvalue[:,1:Nz],0.0)
 vs_max = max.(u.yvalue[:,1:Nz],0.0)
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
+div_y = -(1.0./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
               (vs_max.*psiY_p[:,1:Nz]+vs_min.*psiY_m[:,1:Nz]))
 
 # define the RHS Vector
@@ -1840,9 +1840,9 @@ vs_min[u_upwind.yvalue[:,1:Nz].>0.0] = 0.0
 vs_max[u_upwind.yvalue[:,1:Nz].<0.0] = 0.0
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
+div_y = -(1.0./DZp).*((vn_max.*psiY_p[:,2:Nz+1]+vn_min.*psiY_m[:,2:Nz+1])-
               (vs_max.*psiY_p[:,1:Nz]+vs_min.*psiY_m[:,1:Nz]))
 
 # define the RHS Vector
@@ -2223,9 +2223,9 @@ sx[1:3*mnx] = [AW; APx; AE]
 sy[1:3*mny] = [AS; APy; AN]
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
               (vs_max.*psiY_p[:,1:Ntheta]+vs_min.*psiY_m[:,1:Ntheta]))
 
 # define the RHS Vector
@@ -2314,9 +2314,9 @@ vs_min = min.(u.yvalue[:,1:Ntheta],0.0)
 vs_max = max.(u.yvalue[:,1:Ntheta],0.0)
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
               (vs_max.*psiY_p[:,1:Ntheta]+vs_min.*psiY_m[:,1:Ntheta]))
 
 # define the RHS Vector
@@ -2410,9 +2410,9 @@ vs_min[u_upwind.yvalue[:,1:Ntheta].>0.0] = 0.0
 vs_max[u_upwind.yvalue[:,1:Ntheta].<0.0] = 0.0
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:]+ue_min.*psiX_m[2:Nr+1,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:]+uw_min.*psiX_m[1:Nr,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1]+vn_min.*psiY_m[:,2:Ntheta+1])-
               (vs_max.*psiY_p[:,1:Ntheta]+vs_min.*psiY_m[:,1:Ntheta]))
 
 # define the RHS Vector
@@ -2895,11 +2895,11 @@ sy[1:3*mny] = [AS; APy; AN]
 sz[1:3*mnz] = [AB; APz; AF]
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
               (uw_max.*psiX_p[1:Nx,:,:]+uw_min.*psiX_m[1:Nx,:,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
               (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector
@@ -3004,11 +3004,11 @@ wb_min = min.(u.zvalue[:,:,1:Nz],0)
 wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
               (uw_max.*psiX_p[1:Nx,:,:]+uw_min.*psiX_m[1:Nx,:,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
               (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector
@@ -3121,11 +3121,11 @@ wb_min[u_upwind.zvalue[:,:,1:Nz].>0.0] = 0.0
 wb_max[u_upwind.zvalue[:,:,1:Nz].<0.0] = 0.0
 
 # calculate the TVD correction term
-div_x = -(1./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
+div_x = -(1.0./DXp).*((ue_max.*psiX_p[2:Nx+1,:,:]+ue_min.*psiX_m[2:Nx+1,:,:])-
               (uw_max.*psiX_p[1:Nx,:,:]+uw_min.*psiX_m[1:Nx,:,:]))
-div_y = -(1./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
+div_y = -(1.0./DYp).*((vn_max.*psiY_p[:,2:Ny+1,:]+vn_min.*psiY_m[:,2:Ny+1,:])-
               (vs_max.*psiY_p[:,1:Ny,:]+vs_min.*psiY_m[:,1:Ny,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector
@@ -3651,11 +3651,11 @@ sy[1:3*mny] = [AS; APy; AN]
 sz[1:3*mnz] = [AB; APz; AF]
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:,:]+uw_min.*psiX_m[1:Nr,:,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
               (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector
@@ -3771,11 +3771,11 @@ wb_min = min.(u.zvalue[:,:,1:Nz],0)
 wb_max = max.(u.zvalue[:,:,1:Nz],0)
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:,:]+uw_min.*psiX_m[1:Nr,:,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
               (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector
@@ -3899,11 +3899,11 @@ wb_min[u_upwind.zvalue[:,:,1:Nz].> 0.0] = 0.0
 wb_max[u_upwind.zvalue[:,:,1:Nz].< 0.0] = 0.0
 
 # calculate the TVD correction term
-div_x = -(1./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
+div_x = -(1.0./(DRp.*rp)).*(re.*(ue_max.*psiX_p[2:Nr+1,:,:]+ue_min.*psiX_m[2:Nr+1,:,:])-
               rw.*(uw_max.*psiX_p[1:Nr,:,:]+uw_min.*psiX_m[1:Nr,:,:]))
-div_y = -(1./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
+div_y = -(1.0./(DTHETAp.*rp)).*((vn_max.*psiY_p[:,2:Ntheta+1,:]+vn_min.*psiY_m[:,2:Ntheta+1,:])-
               (vs_max.*psiY_p[:,1:Ntheta,:]+vs_min.*psiY_m[:,1:Ntheta,:]))
-div_z = -(1./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
+div_z = -(1.0./DZp).*((wf_max.*psiZ_p[:,:,2:Nz+1]+wf_min.*psiZ_m[:,:,2:Nz+1])-
               (wb_max.*psiZ_p[:,:,1:Nz]+wb_min.*psiZ_m[:,:,1:Nz]))
 
 # define the RHS Vector

@@ -2,14 +2,16 @@ __precompile__()
 
 module JFVM
 
-global mumps_solver = 0
+# global mumps_solver
 # using PyPlot
 try
   import MUMPS
-  mumps_solver = MUMPS
+  global mumps_solver = MUMPS
 catch
-  info("MUMPS solver (optional) is not available.")
+  @info "MUMPS solver (optional) is not available."
 end
+
+using SparseArrays
 # using PyCall
 # I prefer not to use the following command for the issues that it has on windows machines
 # pygui_start(:wx)

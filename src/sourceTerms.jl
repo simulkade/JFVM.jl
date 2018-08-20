@@ -46,7 +46,7 @@ linearSourceTerm(CellValue(m, betta0))
 end
 
 
-function linearSourceTerm{T<:Real}(m::MeshStructure, betta0::Array{T})
+function linearSourceTerm(m::MeshStructure, betta0::Array{T}) where T<:Real
 d = m.dimension
 if (d ==1) || (d==1.5)
   Nx = m.dims
@@ -108,7 +108,7 @@ constantSourceTerm(CellValue(m, phi0))
 end
 
 
-function constantSourceTerm{T<:Real}(m::MeshStructure, phi0::Array{T})
+function constantSourceTerm(m::MeshStructure, phi0::Array{T}) where T<:Real
 d = m.dimension
 if (d ==1) || (d==1.5)
   Nx = m.dims

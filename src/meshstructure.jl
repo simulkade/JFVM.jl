@@ -66,7 +66,7 @@ Usage:
 	m=createMesh1D(x)
 ```
 """
-function createMesh1D{T<:Real}(facelocationX::Array{T,1})
+function createMesh1D(facelocationX::Array{T,1}) where T<:Real
 # builds a uniform 1D mesh:
 # facelocationX is the location of each cell face
 # mesh dimension
@@ -145,7 +145,7 @@ Usage:
 	r= [0.1, 1.0, 1.4, 2.5, 4.1, 6.0, 10.0]
 	m=createMeshCylindrical1D(r)
 """
-function createMeshCylindrical1D{T<:Real}(facelocationR::Array{T,1})
+function createMeshCylindrical1D(facelocationR::Array{T,1}) where T<:Real
 # builds a uniform 1D cylindrical mesh:
 # Nx is the number of cells in r (radial) direction
 # Radius is the domain length in r direction
@@ -213,7 +213,7 @@ MeshStructure(2,
 	[1])
 end
 
-function createMesh2D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T,1})
+function createMesh2D(facelocationX::Array{T,1}, facelocationY::Array{T,1}) where T<:Real
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
@@ -257,7 +257,7 @@ MeshStructure(2.8,
 	[1])
 end
 
-function createMeshRadial2D{T<:Real}(facelocationR::Array{T,1}, facelocationTheta::Array{T,1})
+function createMeshRadial2D(facelocationR::Array{T,1}, facelocationTheta::Array{T,1}) where T<:Real
 if facelocationTheta[end]>2.0*pi
 	facelocationTheta = facelocationTheta/facelocationTheta[end]*(2.0*pi)
 	println("The domain size adjusted to match a maximum of 2*pi.")
@@ -300,7 +300,7 @@ MeshStructure(2.5,
 	[1])
 end
 
-function createMeshCylindrical2D{T<:Real}(facelocationR::Array{T,1}, facelocationY::Array{T,1})
+function createMeshCylindrical2D(facelocationR::Array{T,1}, facelocationY::Array{T,1}) where T<:Real
 Nx = length(facelocationR)-1
 Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
@@ -344,7 +344,7 @@ MeshStructure(3,
 	G[2:Nx+1, [1, end], [1, end]][:]])
 end
 
-function createMesh3D{T<:Real}(facelocationX::Array{T,1}, facelocationY::Array{T,1}, facelocationZ::Array{T,1})
+function createMesh3D(facelocationX::Array{T,1}, facelocationY::Array{T,1}, facelocationZ::Array{T,1}) where T<:Real
 Nx = length(facelocationX)-1
 Ny = length(facelocationY)-1
 Nz = length(facelocationZ)-1
@@ -398,7 +398,7 @@ MeshStructure(3.2,
 	G[2:Nr+1, [1, end], [1, end]][:]])
 end
 
-function createMeshCylindrical3D{T<:Real}(facelocationR::Array{T,1}, facelocationTheta::Array{T,1}, facelocationZ::Array{T,1})
+function createMeshCylindrical3D(facelocationR::Array{T,1}, facelocationTheta::Array{T,1}, facelocationZ::Array{T,1}) where T<:Real
 if facelocationTheta[end]>2*pi
 	facelocationTheta = facelocationTheta/facelocationTheta[end]*2.0*pi
 	println("The domain size adjusted to match a maximum of 2*pi.")
