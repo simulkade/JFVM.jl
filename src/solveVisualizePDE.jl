@@ -6,18 +6,25 @@
 
 # =============================== SOLVERS ===================================
 function solveLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
-N=m.dims
-x=M\RHS # until the problem is solved with Julia "\" solver
-phi = CellValue(m, reshape(x, tuple(N.+2...)))
-phi
+  N=m.dims
+  x=M\RHS # until the problem is solved with Julia "\" solver
+  phi = CellValue(m, reshape(x, tuple(N.+2...)))
+  phi
+end
+
+function solveLinearPDE!(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1}, phi::CellValue)
+  N=m.dims
+  x=M\RHS # until the problem is solved with Julia "\" solver
+  phi.value = reshape(x, tuple(N.+2...))
 end
 
 function solvePDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
-N=m.dims
-x=M\RHS # until the problem is solved with Julia "\" solver
-phi = CellValue(m, reshape(x, tuple(N.+2...)))
-phi
+  N=m.dims
+  x=M\RHS # until the problem is solved with Julia "\" solver
+  phi = CellValue(m, reshape(x, tuple(N.+2...)))
+  return phi
 end
+
 
 function solveMUMPSLinearPDE(m::MeshStructure, M::SparseMatrixCSC{Float64, Int64}, RHS::Array{Float64,1})
   N = m.dims

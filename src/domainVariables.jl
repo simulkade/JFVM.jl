@@ -10,12 +10,20 @@
 # =====================================================================
 
 # ============================================================
+
+"""
+creates a cell variable over the domain m and assigns value phi0 to it
+function createCellVariable(m::MeshStructure, phi0::Real)
+"""
 function createCellVariable(m::MeshStructure, phi0::Real)
 # creates a cell variable and assigns value phi0 to it
 CellValue(m, phi0*ones(tuple(m.dims.+2...)))
 end
 
-
+function createCellVariable(phi::CellValue)
+  # similar to copyCell
+  CellValue(phi.domain, Base.copy(phi.value))
+end
 
 # ============================================================
 function createCellVariable(m::MeshStructure, phi0::Array{T}) where T<:Real

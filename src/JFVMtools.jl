@@ -4,6 +4,17 @@
 # simulkade.com
 # ===============================
 
+
+"""
+fluxLimiter(flName::AbstractString)
+This function returns a function handle to a flux limiter of user's
+choice.
+available flux limiters are: 'CHARM', 'HCUS', 'HQUICK', 'VanLeer',
+'VanAlbada1', 'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher',
+'Koren', 'smart', 'MUSCL', 'QUICK', 'MC', and 'UMIST'.
+Default limiter is 'SUPERBEE'. See:
+<http://en.wikipedia.org/wiki/Flux_limiter>
+"""
 function fluxLimiter(flName::AbstractString)
 # This function returns a function handle to a flux limiter of user's
 # choice.
@@ -54,6 +65,28 @@ else
   r->(max.(0.0, max.(min.(2.0*r,1.0), min.(r,2.0))))
 end
 
+end
+
+"""
+update!(phi_old::CellValue, phi_new::CellValue)
+Copies the values of the new variable into the old cell variable:
+phi_old.value .= phi_new.value
+"""
+function update!(phi_old::CellValue, phi_new::CellValue)
+  phi_old.value .= phi_new.value
+end
+
+"""
+update!(phi_old::FaceValue, phi_new::FaceValue)
+Copies the values of the new variable into the old variable:
+  phi_old.xvalue .= phi_new.xvalue
+  phi_old.yvalue .= phi_new.yvalue
+  phi_old.zvalue .= phi_new.zvalue
+"""
+function update!(phi_old::FaceValue, phi_new::FaceValue)
+  phi_old.xvalue .= phi_new.xvalue
+  phi_old.yvalue .= phi_new.yvalue
+  phi_old.zvalue .= phi_new.zvalue
 end
 
 function faceEval(f::Function, x::FaceValue)

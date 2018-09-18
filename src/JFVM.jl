@@ -35,7 +35,9 @@ export MeshStructure, BoundaryCondition, CellValue, FaceValue, CellVector,
        linearSourceTerm, constantSourceTerm, transientTerm,
        solveMUMPSLinearPDE, faceEval, cellEval, permfieldlogrndg, permfieldlogrnde,
        JFVM_test, solveExplicitPDE, reshapeCell,
-       cellVolume, reshapeInternalCell, internalCells, domainInt, convectionTvdRHS # ,
+       cellVolume, reshapeInternalCell, internalCells, domainInt, convectionTvdRHS,
+       linearMean!, update!, solveLinearPDE!
+       
       #  visualizeCells, visualizeCellVectors, plot, imshow, xlabel, ylabel, figure, legend, pcolor, contour, colorbar,
 
 include("fvmToolTypes.jl")

@@ -7,38 +7,75 @@
 function linearMean(phi::CellValue)
 # calculates the average values of a cell variable. The output is a
 # face variable
-d=phi.domain.dimension
-if d==1 || d==1.5
-  dx = phi.domain.cellsize.x
-  FaceValue(phi.domain,
-    (dx[2:end].*phi.value[1:end-1]+dx[1:end-1].*phi.value[2:end])./(dx[2:end]+dx[1:end-1]),
-    [1.0],
-    [1.0])
-elseif d==2 || d==2.5 || d==2.8
-  dx = phi.domain.cellsize.x
-  Ny = phi.domain.dims[2]
-  dy = zeros( 1, Ny+2)
-  dy[:] = phi.domain.cellsize.y
-  FaceValue(phi.domain,
-    (dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[:,2:end].*phi.value[2:end-1,1:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end])./(dy[:,2:end]+dy[:,1:end-1]),
-    [1.0])
-elseif d==3 || d==3.2
-  Ny = phi.domain.dims[2]
-  Nz = phi.domain.dims[3]
-  dx = phi.domain.cellsize.x
-  dy= zeros( 1, Ny+2)
-  dy[:] = phi.domain.cellsize.y
-  dz= zeros( 1, 1, Nz+2)
-  dz[:] = phi.domain.cellsize.z
-  FaceValue(phi.domain,
-    (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
-    (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
-    (dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end]))
-end
+    phi_face = createFaceVariable(phi.domain, 0.0)
+    linearMean!(phi, phi_face)
+    return phi_face
+
+# d=phi.domain.dimension
+# if d==1 || d==1.5
+#   dx = phi.domain.cellsize.x
+#   FaceValue(phi.domain,
+#     (dx[2:end].*phi.value[1:end-1]+dx[1:end-1].*phi.value[2:end])./(dx[2:end]+dx[1:end-1]),
+#     [1.0],
+#     [1.0])
+# elseif d==2 || d==2.5 || d==2.8
+#   dx = phi.domain.cellsize.x
+#   Ny = phi.domain.dims[2]
+#   dy = zeros( 1, Ny+2)
+#   dy[:] = phi.domain.cellsize.y
+#   FaceValue(phi.domain,
+#     (dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1]),
+#     (dy[:,2:end].*phi.value[2:end-1,1:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end])./(dy[:,2:end]+dy[:,1:end-1]),
+#     [1.0])
+# elseif d==3 || d==3.2
+#   Ny = phi.domain.dims[2]
+#   Nz = phi.domain.dims[3]
+#   dx = phi.domain.cellsize.x
+#   dy= zeros( 1, Ny+2)
+#   dy[:] = phi.domain.cellsize.y
+#   dz= zeros( 1, 1, Nz+2)
+#   dz[:] = phi.domain.cellsize.z
+#   FaceValue(phi.domain,
+#     (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
+#     (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
+#     (dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end]))
+# end
 end
 
-
+function linearMean!(phi::CellValue, phi_face::FaceValue)
+    # calculates the average values of a cell variable. The output is a
+    # face variable
+    d=phi.domain.dimension
+    if d==1 || d==1.5
+        dx = phi.domain.cellsize.x
+      
+        phi_face.xvalue .= (dx[2:end].*phi.value[1:end-1]+dx[1:end-1].*phi.value[2:end])./(dx[2:end]+dx[1:end-1])
+        phi_face.yvalue .= [1.0]
+        phi_face.zvalue .= [1.0]
+    elseif d==2 || d==2.5 || d==2.8
+        dx = phi.domain.cellsize.x
+        Ny = phi.domain.dims[2]
+        dy = zeros( 1, Ny+2)
+        dy[:] = phi.domain.cellsize.y
+    
+        phi_face.xvalue .= (dx[2:end].*phi.value[1:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1])./(dx[2:end]+dx[1:end-1])
+        phi_face.yvalue .= (dy[:,2:end].*phi.value[2:end-1,1:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end])./(dy[:,2:end]+dy[:,1:end-1])
+        phi_face.zvalue .= [1.0]
+    elseif d==3 || d==3.2
+        Ny = phi.domain.dims[2]
+        Nz = phi.domain.dims[3]
+        dx = phi.domain.cellsize.x
+        dy= zeros( 1, Ny+2)
+        dy[:] = phi.domain.cellsize.y
+        dz= zeros( 1, 1, Nz+2)
+        dz[:] = phi.domain.cellsize.z
+        
+        phi_face.xvalue .= (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
+        phi_face.yvalue .= (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
+        phi_face.zvalue .= (dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end])
+    end
+end
+    
 
 # ================== Aritmetic averaging scheme ==================
 function arithmeticMean(phi::CellValue)
