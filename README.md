@@ -7,12 +7,12 @@
 ## IMPORTANT NOTES
   + The code now works with Julia 1.0. All you need to do is to check out the master branch:
 ```
-] add JFVM#master
+] add https://github.com/simulkade/JFVM.jl
 ```
   + 3D visualization requires calling Mayavi via PyCall. It made too many problems recently, so I have decided to disable it until I find a better solution for 3D visualization. Suggestions/PRs are very welcome.
   + I have decided to move the visualization to a new package [JFVMvis.jl](https://github.com/simulkade/JFVMvis.jl.git), that ypu need to install by:
   ```
-  Pkg.clone("https://github.com/simulkade/JFVMvis.jl")
+  ] add https://github.com/simulkade/JFVMvis.jl
   ```
 
 ## Equations
@@ -48,13 +48,13 @@ sudo apt-get install python-matplotlib
 ```
 Then install `JFVM` by the following commands:
 ```
-Pkg.add("JFVM")
+] add https://github.com/simulkade/JFVM.jl
 ```
 
 ### Windows
   + open `Julia` and type
   ```
-  Pkg.add("JFVM")
+  ] add https://github.com/simulkade/JFVM.jl
   ```
   + For visualization, download and install [Anaconda](http://continuum.io/downloads)  
   Run `anaconda command prompt` (as administrator) and install `matplotlib` by   
