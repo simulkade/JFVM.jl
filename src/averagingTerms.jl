@@ -70,8 +70,8 @@ function linearMean!(phi::CellValue, phi_face::FaceValue)
         dz= zeros( 1, 1, Nz+2)
         dz[:] = phi.domain.cellsize.z
         
-        phi_face.xvalue .= (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1]+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1]),
-        phi_face.yvalue .= (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end]),
+        phi_face.xvalue .= (dx[2:end].*phi.value[1:end-1,2:end-1,2:end-1].+dx[1:end-1].*phi.value[2:end,2:end-1,2:end-1])./(dx[2:end]+dx[1:end-1])
+        phi_face.yvalue .= (dy[:,2:end].*phi.value[2:end-1,1:end-1,2:end-1]+dy[:,1:end-1].*phi.value[2:end-1,2:end,2:end-1])./(dy[:,1:end-1]+dy[:,2:end])
         phi_face.zvalue .= (dz[:,:,2:end].*phi.value[2:end-1,2:end-1,1:end-1]+dz[:,:,1:end-1].*phi.value[2:end-1,2:end-1,2:end])./(dz[:,:,1:end-1]+dz[:,:,2:end])
     end
 end
