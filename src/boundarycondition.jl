@@ -2,16 +2,7 @@
 # Written by AAE
 # TU Delft, Spring 2014
 # simulkade.com
-# Last edited: 28 December, 2014
 # ===============================
-
-# ==========================================================
-# Last changes:
-#  * 2014-12-28: - support for cylindrical 3D and radial 2D
-#  * 2014-12-30: - cell boundary functions added;
-#                - Debugging and testing
-# ==========================================================
-
 
 # ================================ CREATE BOUNDARY CONDITION =======================
 function createBC(m::MeshStructure)
@@ -410,11 +401,11 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] .= 1.0
+    s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j-1]
-    s[q] .= -1.0
+    s[q] = -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,1]
@@ -423,7 +414,7 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     ii[q] = G[i,j]
     jj[q] = G[i,2]
     s[q] = -dtheta_end/dtheta_1
-    BCRHS[G[i,j]] .= 0.0
+    BCRHS[G[i,j]] = 0.0
   end
   # bottom boundary
   j=1
@@ -431,20 +422,20 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j]
-    s[q] .= 1.0
+    s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,j+1]
-    s[q] .= 1.0
+    s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+1]
-    s[q] .= -1.0
+    s[q] = -1.0
     q+=1
     ii[q] = G[i,j]
     jj[q] = G[i,Ny+2]
-    s[q] .= -1.0
-    BCRHS[G[i,j]] .= 0.0
+    s[q] = -1.0
+    BCRHS[G[i,j]] = 0.0
   end
 end
 
