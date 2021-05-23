@@ -429,11 +429,11 @@ elseif BC.top.periodic || BC.bottom.periodic  # periodic boundary condition
     s[q] = 1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[i,Ny+1]
+    jj[q] = G[i,Ntheta+1]
     s[q] = -1.0
     q+=1
     ii[q] = G[i,j]
-    jj[q] = G[i,Ny+2]
+    jj[q] = G[i,Ntheta+2]
     s[q] = -1.0
     BCRHS[G[i,j]] = 0.0
   end
