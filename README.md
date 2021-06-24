@@ -75,10 +75,10 @@ Nx = 10
 Lx = 1.0
 m = createMesh1D(Nx, Lx)
 BC = createBC(m)
-BC.left.a[:]=BC.right.a[:]=0.0
-BC.left.b[:]=BC.right.b[:]=1.0
-BC.left.c[:]=1.0
-BC.right.c[:]=0.0
+BC.left.a[:].=BC.right.a[:].=0.0
+BC.left.b[:].=BC.right.b[:].=1.0
+BC.left.c[:].=1.0
+BC.right.c[:].=0.0
 c_init = 0.0 # initial value of the variable
 c_old = createCellVariable(m, 0.0, BC)
 D_val = 1.0 # value of the diffusion coefficient
@@ -95,9 +95,7 @@ for i =1:5
     RHS=RHS_bc+RHS_t # add all the RHS's together
     c_old = solveLinearPDE(m, M, RHS) # solve the PDE
 end
-figure(figsize=(5,6))
 visualizeCells(c_old)
-colorbar()
 ```
 Now change the 4th line to `m=createMesh2D(Nx, Nx, Lx, Lx)` and see this:
 ![diffusion 2D](2d_diff.png)
