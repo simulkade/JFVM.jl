@@ -8,7 +8,7 @@
 ] add https://github.com/simulkade/JFVM.jl
 ```
   + 3D visualization requires calling Mayavi via PyCall. It made too many problems recently, so I have decided to disable it until I find a better solution for 3D visualization. Suggestions/PRs are very welcome.
-  + I have decided to move the visualization to a new package [JFVMvis.jl](https://github.com/simulkade/JFVMvis.jl.git), that ypu need to install by:
+  + I have decided to move the visualization to a new package [JFVMvis.jl](https://github.com/simulkade/JFVMvis.jl.git), that you can install by:
   ```
   ] add https://github.com/simulkade/JFVMvis.jl
   ```
