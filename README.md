@@ -1,7 +1,5 @@
 # JFVM
 
-[![Build Status](https://travis-ci.org/simulkade/JFVM.jl.svg?branch=master)](https://travis-ci.org/simulkade/JFVM.jl)
-
 [![DOI](https://zenodo.org/badge/28677142.svg)](https://zenodo.org/badge/latestdoi/28677142)
 
 ## IMPORTANT NOTES
