@@ -327,7 +327,7 @@ matrix based on the mesh structure data; it is assumed that the phi
 includes the ghost cell data as well.
 """
 function reshapeCell(m, phi)
-  reshape(full(phi), tuple(m.dims+2...))
+  reshape(Matrix(phi), tuple(m.dims+2...))
 end
 
 """
@@ -336,7 +336,7 @@ matrix based on the mesh structure data; it is assumed that the phi
 does NOT include the ghost cell data.
 """
 function reshapeInternalCell(m, phi)
-  reshape(full(phi), tuple(m.dims...))
+  reshape(Matrix(phi), tuple(m.dims...))
 end
 
 """
