@@ -178,7 +178,7 @@ function permfieldlogrndg(Nx,k_avrg,V_dp,cl)
   # correlation of surface using convolution (faltung), inverse
   # Fourier transform and normalizing prefactors
   f = sqrt(2.0/sqrt(pi))*sqrt(Lx/Nx/cl)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real(f))
 end
 
 function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
@@ -197,7 +197,7 @@ function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
   # correlation of surface using convolution (faltung), inverse
   # Fourier transform and normalizing prefactors
   f = sqrt(2.0)*sqrt(Lx/Nx/cl)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real(f))
 end
 
 
@@ -220,7 +220,7 @@ function permfieldlogrndg(Nx,Ny,k_avrg,V_dp,clx,cly)
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0/sqrt(pi)*Lx/sqrt(Nx*Ny)/sqrt(clx)/sqrt(cly)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real(f))
 end
 
 function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
@@ -241,7 +241,7 @@ function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0*Lx/sqrt(Nx*Ny)/sqrt(clx*cly)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real.(f))
 end
 # <========================= 2D ================================
 
@@ -266,7 +266,7 @@ function permfieldlogrndg(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0/sqrt(pi)*Lx/(Nx*Ny*Nz)^(1/3)/(clx*cly*clz)^(1/3)*ifft(fft(z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real(f))
 end
 
 function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
@@ -288,7 +288,7 @@ function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0*Lx/(Nx*Ny*Nz)^(1/3)/(clx*cly*clz)^(1/3)*ifft(fft(z).*fft(F))
-  perm = exp.(mu+real(f))
+  perm = exp.(mu .+ real(f))
 end
 # <============================== 3D ==============================
 
