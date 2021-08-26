@@ -11,7 +11,7 @@ catch
   @info "MUMPS solver (optional) is not available."
 end
 
-using SparseArrays
+using SparseArrays, FFTW
 # using PyCall
 # I prefer not to use the following command for the issues that it has on windows machines
 # pygui_start(:wx)
