@@ -167,7 +167,7 @@ function permfieldlogrndg(Nx,k_avrg,V_dp,cl)
   # hdf: Gaussian
   # acf: Gaussian
   Lx=1.0
-  x = linspace(-Lx/2,Lx/2,Nx)
+  x = range(-Lx/2,Lx/2,length=Nx)
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2.0
   Z = s*randn(Nx)
@@ -186,7 +186,7 @@ function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
   # hdf: Gaussian
   # acf: Exponential
   Lx=1.0
-  x = linspace(-Lx/2,Lx/2,Nx)
+  x = range(-Lx/2,Lx/2,length=Nx)
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2.0
   Z = s*randn(Nx)
@@ -209,8 +209,8 @@ function permfieldlogrndg(Nx,Ny,k_avrg,V_dp,clx,cly)
 # The surface has a Gaussian height distribution function
 # and Gaussian autocovariance functions
   Lx=1.0
-  X = linspace(-Lx/2,Lx/2,Nx)
-  Y = linspace(-Lx/2,Lx/2,Ny)'
+  X = range(-Lx/2,Lx/2,length=Nx)
+  Y = range(-Lx/2,Lx/2,length=Ny)'
 
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2
@@ -230,8 +230,8 @@ function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
 # The surface has a Gaussian height distribution function
 # and Exponential autocovariance functions
   Lx=1.0
-  X = linspace(-Lx/2,Lx/2,Nx)
-  Y = linspace(-Lx/2,Lx/2,Ny)'
+  X = range(-Lx/2,Lx/2,length=Nx)
+  Y = range(-Lx/2,Lx/2,length=Ny)'
 
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2
@@ -254,10 +254,10 @@ function permfieldlogrndg(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
 # The surface has a Gaussian height distribution function
 # and Gaussian autocovariance functions
   Lx=1.0
-  X = linspace(-Lx/2,Lx/2,Nx)
-  Y = linspace(-Lx/2,Lx/2,Ny)'
+  X = range(-Lx/2,Lx/2,length=Nx)
+  Y = range(-Lx/2,Lx/2,length=Ny)'
   Z = zeros(1,1,Nz)
-  Z[:]=linspace(-Lx/2,Lx/2,Nz)
+  Z[:]=range(-Lx/2,Lx/2,length=Nz)
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2
   z = s*randn(Nx,Ny,Nz)
@@ -276,10 +276,10 @@ function permfieldlogrnde(Nx,Ny,Nz,k_avrg,V_dp,clx,cly,clz)
 # The surface has a Gaussian height distribution function
 # and Exponential autocovariance functions
   Lx=1.0
-  X = linspace(-Lx/2,Lx/2,Nx)
-  Y = linspace(-Lx/2,Lx/2,Ny)'
+  X = range(-Lx/2,Lx/2,length=Nx)
+  Y = range(-Lx/2,Lx/2,length=Ny)'
   Z = zeros(1,1,Nz)
-  Z[:]=linspace(-Lx/2,Lx/2,Nz)
+  Z[:]=range(-Lx/2,Lx/2,length=Nz)
   s = -log(1-V_dp)
   mu = log(k_avrg)-s^2/2
   z = s*randn(Nx,Ny,Nz)
