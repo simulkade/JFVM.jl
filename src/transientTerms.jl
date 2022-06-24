@@ -53,7 +53,7 @@ M = sparse(row_index, row_index, AP_diag, Nx+2, Nx+2)
 RHS = zeros(Nx+2)
 
 # assign the values of the RHS vector
-RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1]/dt,Nx)
+RHS[row_index] .= reshape(alfa.*phi_old.value[2:Nx+1]/dt,Nx)
 
 (M, RHS)
 
@@ -77,7 +77,7 @@ M = sparse(row_index, row_index, AP_diag, (Nx+2)*(Ny+2), (Nx+2)*(Ny+2))
 RHS = zeros((Nx+2)*(Ny+2))
 
 # assign the values of the RHS vector
-RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1]/dt,Nx*Ny)
+RHS[row_index] .= reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1]/dt,Nx*Ny)
 
 (M, RHS)
 
@@ -102,7 +102,7 @@ M = sparse(row_index, row_index, AP_diag, (Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(N
 RHS = zeros((Nx+2)*(Ny+2)*(Nz+2))
 
 # assign the values of the RHS vector
-RHS[row_index] = reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1,2:Nz+1]/dt,Nx*Ny*Nz)
+RHS[row_index] .= reshape(alfa.*phi_old.value[2:Nx+1,2:Ny+1,2:Nz+1]./dt,Nx*Ny*Nz)
 
 (M, RHS)
 

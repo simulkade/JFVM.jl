@@ -29,13 +29,13 @@ function fluxLimiter(flName::AbstractString)
 if flName=="CHARM"
   r->((r.>0.0).*r.*(3.0*r+1.0)./(((r+1.0).^2.0)+eps()*(r.==-1.0)))
 elseif flName=="HCUS"
-  r->(1.5*(r+abs(r))./(r+2.0))
+  r->(1.5*(r+abs.(r))./(r+2.0))
 elseif flName=="HQUICK"
-  r->(2.0*(r+abs(r))./((r+3.0)+eps()*(r.==-3.0)))
+  r->(2.0*(r+abs.(r))./((r+3.0)+eps()*(r.==-3.0)))
 elseif flName=="ospre"
-  r->((1.5*r.*(r+1.0))./(r.*(r+1.0)+1.0+eps()*((r.*(r+1.0)+1.0).==0.0)))
+  r->((1.5.*r.*(r+1.0))./(r.*(r+1.0)+1.0+eps()*((r.*(r+1.0)+1.0).==0.0)))
 elseif flName=="VanLeer"
-  r->((r+abs(r))./(1.0+abs(r)))
+  r->((r.+abs.(r))./(1.0+abs.(r)))
 elseif flName=="VanAlbada1"
   r->((r+r.*r)./(1.0+r.*r))
 elseif flName=="VanAlbada2"
@@ -197,7 +197,7 @@ function permfieldlogrnde(Nx,k_avrg,V_dp,cl)
   # correlation of surface using convolution (faltung), inverse
   # Fourier transform and normalizing prefactors
   f = sqrt(2.0)*sqrt(Lx/Nx/cl)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu .+ real(f))
+  perm = exp.(mu .+ real.(f))
 end
 
 
@@ -220,7 +220,7 @@ function permfieldlogrndg(Nx,Ny,k_avrg,V_dp,clx,cly)
   # correlated surface generation including convolution (faltning) and inverse
   # Fourier transform and normalizing prefactors
   f = 2.0/sqrt(pi)*Lx/sqrt(Nx*Ny)/sqrt(clx)/sqrt(cly)*ifft(fft(Z).*fft(F))
-  perm = exp.(mu .+ real(f))
+  perm = exp.(mu .+ real.(f))
 end
 
 function permfieldlogrnde(Nx,Ny,k_avrg,V_dp,clx,cly)
@@ -311,14 +311,14 @@ function cellVolume(m::MeshStructure)
     c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'
   elseif dim==3
     z = zeros(1,1,m.dims[3])
-    z[1,1,:] = m.cellsize.z[2:end-1]
+    z[1,1,:] .= m.cellsize.z[2:end-1]
     c=m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'.*z
   elseif dim==3.2
     z = zeros(1,1,m.dims[3])
-    z[1,1,:] = m.cellsize.z[2:end-1]
+    z[1,1,:] .= m.cellsize.z[2:end-1]
     c=m.cellcenters.x.*m.cellsize.x[2:end-1]*m.cellsize.y[2:end-1]'.*z
   end
-  cellvol= createCellVariable(m, c, BC)
+  return createCellVariable(m, c, BC)
 end
 
 """

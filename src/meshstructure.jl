@@ -77,10 +77,10 @@ Nx = length(facelocationX)-1
 # the boundaries
 MeshStructure(1,
 		[Nx],
-		CellSize([facelocationX[2]-facelocationX[1];
-		facelocationX[2:end]-facelocationX[1:end-1];
-		facelocationX[end]-facelocationX[end-1]], [0.0], [0.0]),
-		CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]),[0.0],[0.0]),
+		CellSize([facelocationX[2].-facelocationX[1];
+		facelocationX[2:end].-facelocationX[1:end-1];
+		facelocationX[end].-facelocationX[end-1]], [0.0], [0.0]),
+		CellLocation(0.5*(facelocationX[2:end] .+facelocationX[1:end-1]),[0.0],[0.0]),
 		FaceLocation(facelocationX,[0.0],[0.0]),
 		[1],
 		[1])
@@ -157,10 +157,10 @@ Nr = length(facelocationR)-1
 # the boundaries
 MeshStructure(1.5,
 		[Nr],
-		CellSize([facelocationR[2]-facelocationR[1];
-		facelocationR[2:end]-facelocationR[1:end-1];
-		facelocationR[end]-facelocationR[end-1]], [0.0], [0.0]),
-		CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]),[0.0],[0.0]),
+		CellSize([facelocationR[2].-facelocationR[1];
+		facelocationR[2:end].-facelocationR[1:end-1];
+		facelocationR[end].-facelocationR[end-1]], [0.0], [0.0]),
+		CellLocation(0.5*(facelocationR[2:end] .+facelocationR[1:end-1]),[0.0],[0.0]),
 		FaceLocation(facelocationR,[0.0],[0.0]),
 		[1],
 		[1])
@@ -219,10 +219,10 @@ Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 MeshStructure(2,
 	[Nx, Ny],
-	CellSize([facelocationX[2]-facelocationX[1]; facelocationX[2:end]-facelocationX[1:end-1]; facelocationX[end]-facelocationX[end-1]],
-	[facelocationY[2]-facelocationY[1]; facelocationY[2:end]-facelocationY[1:end-1]; facelocationY[end]-facelocationY[end-1]],
+	CellSize([facelocationX[2].-facelocationX[1]; facelocationX[2:end].-facelocationX[1:end-1]; facelocationX[end].-facelocationX[end-1]],
+	[facelocationY[2].-facelocationY[1]; facelocationY[2:end].-facelocationY[1:end-1]; facelocationY[end].-facelocationY[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]),
+	CellLocation(0.5*(facelocationX[2:end] .+facelocationX[1:end-1]), 0.5*(facelocationY[2:end] .+facelocationY[1:end-1]), [0.0]),
 	FaceLocation(facelocationX, facelocationY, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -267,10 +267,10 @@ Ny = length(facelocationTheta)-1
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 MeshStructure(2.8,
 	[Nx, Ny],
-	CellSize([facelocationR[2]-facelocationR[1]; facelocationR[2:end]-facelocationR[1:end-1]; facelocationR[end]-facelocationR[end-1]],
-	[facelocationTheta[2]-facelocationTheta[1]; facelocationTheta[2:end]-facelocationTheta[1:end-1]; facelocationTheta[end]-facelocationTheta[end-1]],
+	CellSize([facelocationR[2].-facelocationR[1]; facelocationR[2:end].-facelocationR[1:end-1]; facelocationR[end].-facelocationR[end-1]],
+	[facelocationTheta[2].-facelocationTheta[1]; facelocationTheta[2:end].-facelocationTheta[1:end-1]; facelocationTheta[end].-facelocationTheta[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]), [0.0]),
+	CellLocation(0.5*(facelocationR[2:end] .+facelocationR[1:end-1]), 0.5*(facelocationTheta[2:end] .+facelocationTheta[1:end-1]), [0.0]),
 	FaceLocation(facelocationR, facelocationTheta, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -306,10 +306,10 @@ Ny = length(facelocationY)-1
 G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
 MeshStructure(2.5,
 	[Nx, Ny],
-	CellSize([facelocationR[2]-facelocationR[1]; facelocationR[2:end]-facelocationR[1:end-1]; facelocationR[end]-facelocationR[end-1]],
-	[facelocationY[2]-facelocationY[1]; facelocationY[2:end]-facelocationY[1:end-1]; facelocationY[end]-facelocationY[end-1]],
+	CellSize([facelocationR[2].-facelocationR[1]; facelocationR[2:end].-facelocationR[1:end-1]; facelocationR[end].-facelocationR[end-1]],
+	[facelocationY[2].-facelocationY[1]; facelocationY[2:end].-facelocationY[1:end-1]; facelocationY[end].-facelocationY[end-1]],
 	[0.0]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]), 0.5*(facelocationY[2:end]+facelocationY[1:end-1]), [0.0]),
+	CellLocation(0.5*(facelocationR[2:end] .+facelocationR[1:end-1]), 0.5*(facelocationY[2:end] .+facelocationY[1:end-1]), [0.0]),
 	FaceLocation(facelocationR, facelocationY, [0.0]),
 	G[[1,end],[1,end]][:],
 	[1])
@@ -351,12 +351,12 @@ Nz = length(facelocationZ)-1
 G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 MeshStructure(3,
 	[Nx, Ny, Nz],
-	CellSize([facelocationX[2]-facelocationX[1]; facelocationX[2:end]-facelocationX[1:end-1]; facelocationX[end]-facelocationX[end-1]],
-	  [facelocationY[2]-facelocationY[1]; facelocationY[2:end]-facelocationY[1:end-1]; facelocationY[end]-facelocationY[end-1]],
-	  [facelocationZ[2]-facelocationZ[1]; facelocationZ[2:end]-facelocationZ[1:end-1]; facelocationZ[end]-facelocationZ[end-1]]),
-	CellLocation(0.5*(facelocationX[2:end]+facelocationX[1:end-1]),
-	  0.5*(facelocationY[2:end]+facelocationY[1:end-1]),
-	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])),
+	CellSize([facelocationX[2].-facelocationX[1]; facelocationX[2:end].-facelocationX[1:end-1]; facelocationX[end].-facelocationX[end-1]],
+	  [facelocationY[2].-facelocationY[1]; facelocationY[2:end].-facelocationY[1:end-1]; facelocationY[end].-facelocationY[end-1]],
+	  [facelocationZ[2].-facelocationZ[1]; facelocationZ[2:end].-facelocationZ[1:end-1]; facelocationZ[end].-facelocationZ[end-1]]),
+	CellLocation(0.5*(facelocationX[2:end] .+facelocationX[1:end-1]),
+	  0.5*(facelocationY[2:end] .+facelocationY[1:end-1]),
+	  0.5*(facelocationZ[2:end] .+facelocationZ[1:end-1])),
 	FaceLocation(facelocationX, facelocationY, facelocationZ),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];
@@ -409,12 +409,12 @@ Nz = length(facelocationZ)-1
 G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
 MeshStructure(3.2,
 	[Nx, Ny, Nz],
-	CellSize([facelocationR[2]-facelocationR[1]; facelocationR[2:end]-facelocationR[1:end-1]; facelocationR[end]-facelocationR[end-1]],
-	  [facelocationTheta[2]-facelocationTheta[1]; facelocationTheta[2:end]-facelocationTheta[1:end-1]; facelocationTheta[end]-facelocationTheta[end-1]],
-	  [facelocationZ[2]-facelocationZ[1]; facelocationZ[2:end]-facelocationZ[1:end-1]; facelocationZ[end]-facelocationZ[end-1]]),
-	CellLocation(0.5*(facelocationR[2:end]+facelocationR[1:end-1]),
-	  0.5*(facelocationTheta[2:end]+facelocationTheta[1:end-1]),
-	  0.5*(facelocationZ[2:end]+facelocationZ[1:end-1])),
+	CellSize([facelocationR[2].-facelocationR[1]; facelocationR[2:end].-facelocationR[1:end-1]; facelocationR[end].-facelocationR[end-1]],
+	  [facelocationTheta[2].-facelocationTheta[1]; facelocationTheta[2:end].-facelocationTheta[1:end-1]; facelocationTheta[end].-facelocationTheta[end-1]],
+	  [facelocationZ[2].-facelocationZ[1]; facelocationZ[2:end].-facelocationZ[1:end-1]; facelocationZ[end].-facelocationZ[end-1]]),
+	CellLocation(0.5*(facelocationR[2:end] .+facelocationR[1:end-1]),
+	  0.5*(facelocationTheta[2:end] .+facelocationTheta[1:end-1]),
+	  0.5*(facelocationZ[2:end] .+facelocationZ[1:end-1])),
 	FaceLocation(facelocationR, facelocationTheta, facelocationZ),
 	G[[1,end],[1,end],[1,end]][:],
 	[G[[1, end], [1, end], 2:Nz+1][:];

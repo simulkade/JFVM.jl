@@ -82,14 +82,14 @@ if (d ==1) || (d==1.5)
   G = [1:Nx+2;]
   row_index = reshape(G[2:Nx+1],Nx)  # main diagonal (only internal cells)
   RHS = zeros(Nx+2)
-  RHS[row_index] = reshape(phi0.value[2:end-1],Nx)
+  RHS[row_index] .= reshape(phi0.value[2:end-1],Nx)
 elseif (d == 2) || (d == 2.5) || (d==2.8)
   Nx = m.dims[1]
   Ny = m.dims[2]
   G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
   row_index = reshape(G[2:Nx+1,2:Ny+1],Nx*Ny)  # main diagonal (only internal cells)
   RHS = zeros((Nx+2)*(Ny+2))
-  RHS[row_index] = reshape(phi0.value[2:end-1,2:end-1],Nx*Ny)
+  RHS[row_index] .= reshape(phi0.value[2:end-1,2:end-1],Nx*Ny)
 elseif (d == 3) || (d==3.2)
   Nx = m.dims[1]
   Ny = m.dims[2]
@@ -97,7 +97,7 @@ elseif (d == 3) || (d==3.2)
   G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
   row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz)  # main diagonal (only internal cells)
   RHS = zeros((Nx+2)*(Ny+2)*(Nz+2))
-  RHS[row_index] = reshape(phi0.value[2:end-1,2:end-1,2:end-1],Nx*Ny*Nz)
+  RHS[row_index] .= reshape(phi0.value[2:end-1,2:end-1,2:end-1],Nx*Ny*Nz)
 end
 RHS
 end
@@ -115,14 +115,14 @@ if (d ==1) || (d==1.5)
   G = [1:Nx+2;]
   row_index = reshape(G[2:Nx+1],Nx)  # main diagonal (only internal cells)
   RHS = zeros(Nx+2)
-  RHS[row_index] = reshape(phi0,Nx)
+  RHS[row_index] .= reshape(phi0,Nx)
 elseif (d == 2) || (d == 2.5) || (d==2.8)
   Nx = m.dims[1]
   Ny = m.dims[2]
   G=reshape([1:(Nx+2)*(Ny+2);], Nx+2, Ny+2)
   row_index = reshape(G[2:Nx+1,2:Ny+1],Nx*Ny)  # main diagonal (only internal cells)
   RHS = zeros((Nx+2)*(Ny+2))
-  RHS[row_index] = reshape(phi0,Nx*Ny)
+  RHS[row_index] .= reshape(phi0,Nx*Ny)
 elseif (d == 3) || (d==3.2)
   Nx = m.dims[1]
   Ny = m.dims[2]
@@ -130,7 +130,7 @@ elseif (d == 3) || (d==3.2)
   G=reshape([1:(Nx+2)*(Ny+2)*(Nz+2);], Nx+2, Ny+2, Nz+2)
   row_index = reshape(G[2:Nx+1,2:Ny+1,2:Nz+1],Nx*Ny*Nz)  # main diagonal (only internal cells)
   RHS = zeros((Nx+2)*(Ny+2)*(Nz+2))
-  RHS[row_index] = reshape(phi0,Nx*Ny*Nz)
+  RHS[row_index] .= reshape(phi0,Nx*Ny*Nz)
 end
 RHS
 end

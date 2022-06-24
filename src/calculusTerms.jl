@@ -48,7 +48,7 @@ DX = F.domain.cellsize.x[2:end-1]
 row_index = reshape(G[2:Nx+1],Nx) # main diagonal
 
 # compute the divergence
-div_x = (F.xvalue[2:Nx+1]-F.xvalue[1:Nx])./DX
+div_x = (F.xvalue[2:Nx+1].-F.xvalue[1:Nx])./DX
 
 # define the RHS Vector
 RHSdiv = zeros(Nx+2)
@@ -339,55 +339,55 @@ function gradientTerm(phi)
   # the output is a face variable
   d=phi.domain.dimension
   if d==1 || d==1.5
-    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1].+phi.domain.cellsize.x[2:end])
     FaceValue(phi.domain,
-      (phi.value[2:end]-phi.value[1:end-1])./dx,
+      (phi.value[2:end].-phi.value[1:end-1])./dx,
       [1.0],
       [1.0])
   elseif d==2 || d==2.5
-    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1].+phi.domain.cellsize.x[2:end])
     Ny = phi.domain.dims[2]
     dy = zeros( 1, Ny+1)
-    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1].+phi.domain.cellsize.y[2:end])
     FaceValue(phi.domain,
-      (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
-      (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./dy,
+      (phi.value[2:end,2:end-1].-phi.value[1:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end].-phi.value[2:end-1,1:end-1])./dy,
       [1.0])
   elseif d==2.8
-    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1].+phi.domain.cellsize.x[2:end])
     Ntheta = phi.domain.dims[2]
     dtheta = zeros( 1, Ntheta+1)
-    dtheta[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dtheta[:] = 0.5*(phi.domain.cellsize.y[1:end-1].+phi.domain.cellsize.y[2:end])
     rp = phi.domain.cellcenters.x
     FaceValue(phi.domain,
-      (phi.value[2:end,2:end-1]-phi.value[1:end-1,2:end-1])./dx,
-      (phi.value[2:end-1,2:end]-phi.value[2:end-1,1:end-1])./(dtheta.*rp),
+      (phi.value[2:end,2:end-1].-phi.value[1:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end].-phi.value[2:end-1,1:end-1])./(dtheta.*rp),
       [1.0])
   elseif d==3
     Ny = phi.domain.dims[2]
     Nz = phi.domain.dims[3]
-    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1].+phi.domain.cellsize.x[2:end])
     dy= zeros( 1, Ny+1)
-    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1].+phi.domain.cellsize.y[2:end])
     dz= zeros( 1, 1, Nz+1)
-    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
+    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1].+phi.domain.cellsize.z[2:end])
     FaceValue(phi.domain,
-      (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
-      (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./dy,
-      (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
+      (phi.value[2:end,2:end-1,2:end-1].-phi.value[1:end-1,2:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end,2:end-1].-phi.value[2:end-1,1:end-1,2:end-1])./dy,
+      (phi.value[2:end-1,2:end-1,2:end].-phi.value[2:end-1,2:end-1,1:end-1])./dz)
   elseif d==3.2
     Ntheta = phi.domain.dims[2]
     Nz = phi.domain.dims[3]
-    dx = 0.5*(phi.domain.cellsize.x[1:end-1]+phi.domain.cellsize.x[2:end])
+    dx = 0.5*(phi.domain.cellsize.x[1:end-1].+phi.domain.cellsize.x[2:end])
     dy= zeros( 1, Ntheta+1)
-    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1]+phi.domain.cellsize.y[2:end])
+    dy[:] = 0.5*(phi.domain.cellsize.y[1:end-1].+phi.domain.cellsize.y[2:end])
     dz= zeros( 1, 1, Nz+1)
-    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1]+phi.domain.cellsize.z[2:end])
+    dz[:] = 0.5*(phi.domain.cellsize.z[1:end-1].+phi.domain.cellsize.z[2:end])
     rp = phi.domain.cellcenters.x
     FaceValue(phi.domain,
-      (phi.value[2:end,2:end-1,2:end-1]-phi.value[1:end-1,2:end-1,2:end-1])./dx,
-      (phi.value[2:end-1,2:end,2:end-1]-phi.value[2:end-1,1:end-1,2:end-1])./(dy.*rp),
-      (phi.value[2:end-1,2:end-1,2:end]-phi.value[2:end-1,2:end-1,1:end-1])./dz)
+      (phi.value[2:end,2:end-1,2:end-1].-phi.value[1:end-1,2:end-1,2:end-1])./dx,
+      (phi.value[2:end-1,2:end,2:end-1].-phi.value[2:end-1,1:end-1,2:end-1])./(dy.*rp),
+      (phi.value[2:end-1,2:end-1,2:end].-phi.value[2:end-1,2:end-1,1:end-1])./dz)
 
   end
 end

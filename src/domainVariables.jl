@@ -35,11 +35,11 @@ elseif prod(m.dims)==length(phi0)
   phival = zeros(tuple(m.dims.+2...))
   BC = createBC(m) # Neumann boundaries
   if d==1 || d==1.5
-    phival[2:end-1] = phi0
+    phival[2:end-1] .= phi0
   elseif d==2 d==2 || d==2.5 || d==2.8
-    phival[2:end-1, 2:end-1] = phi0
+    phival[2:end-1, 2:end-1] .= phi0
   elseif d==3 || d==3.2
-    phival[2:end-1,2:end-1,2:end-1] = phi0
+    phival[2:end-1,2:end-1,2:end-1] .= phi0
   end
   phi = CellValue(m, phival)
   cellBoundary!(phi, BC)
@@ -57,11 +57,11 @@ elseif prod(m.dims)==length(phi0)
   d=m.dimension
   phival = zeros(tuple(m.dims.+2...))
   if d==1 || d==1.5
-    phival[2:end-1] = phi0
+    phival[2:end-1] .= phi0
   elseif d==2 || d==2.5 || d==2.8
-    phival[2:end-1, 2:end-1] = phi0
+    phival[2:end-1, 2:end-1] .= phi0
   elseif d==3 || d==3.2
-    phival[2:end-1,2:end-1,2:end-1] = phi0
+    phival[2:end-1,2:end-1,2:end-1] .= phi0
   end
   phi = CellValue(m, phival)
   cellBoundary!(phi, BC)
@@ -86,19 +86,19 @@ function createFaceVariable(m::MeshStructure, phi0::Array{T,1}) where T<:Real
 d=m.dimension
   if d==1 || d==1.5
     FaceValue(m,
-	      ones(m.dims[1]+1)*phi0[1],
+	      ones(m.dims[1]+1).*phi0[1],
 	      [1.0],
 	      [1.0])
   elseif d==2 || d==2.5 || d==2.8
     FaceValue(m,
-	      ones(m.dims[1]+1, m.dims[2])*phi0[1],
-	      ones(m.dims[1], m.dims[2]+1)*phi0[2],
+	      ones(m.dims[1]+1, m.dims[2]).*phi0[1],
+	      ones(m.dims[1], m.dims[2]+1).*phi0[2],
 	      [1.0])
   elseif d==3 || d==3.2
     FaceValue(m,
-	      ones(m.dims[1]+1, m.dims[2], m.dims[3])*phi0[1],
-	      ones(m.dims[1], m.dims[2]+1, m.dims[3])*phi0[2],
-	      ones(m.dims[1], m.dims[2], m.dims[3]+1)*phi0[3])
+	      ones(m.dims[1]+1, m.dims[2], m.dims[3]).*phi0[1],
+	      ones(m.dims[1], m.dims[2]+1, m.dims[3]).*phi0[2],
+	      ones(m.dims[1], m.dims[2], m.dims[3]+1).*phi0[3])
   end
 end
 
@@ -107,19 +107,19 @@ function createFaceVariable(m::MeshStructure, phi0::Real)
 d=m.dimension
   if d==1 || d==1.5
     FaceValue(m,
-	      ones(m.dims[1]+1)*phi0,
+	      ones(m.dims[1]+1).*phi0,
 	      [1.0],
 	      [1.0])
   elseif d==2 || d==2.5 || d==2.8
     FaceValue(m,
-	      ones(m.dims[1]+1, m.dims[2])*phi0,
-	      ones(m.dims[1], m.dims[2]+1)*phi0,
+	      ones(m.dims[1]+1, m.dims[2]).*phi0,
+	      ones(m.dims[1], m.dims[2]+1).*phi0,
 	      [1.0])
   elseif d==3 || d==3.2
     FaceValue(m,
-	      ones(m.dims[1]+1, m.dims[2], m.dims[3])*phi0,
-	      ones(m.dims[1], m.dims[2]+1, m.dims[3])*phi0,
-	      ones(m.dims[1], m.dims[2], m.dims[3]+1)*phi0)
+	      ones(m.dims[1]+1, m.dims[2], m.dims[3]).*phi0,
+	      ones(m.dims[1], m.dims[2]+1, m.dims[3]).*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3]+1).*phi0)
   end
 end
 
@@ -130,19 +130,19 @@ function createCellVector(m::MeshStructure, phi0::Array{T,1}) where T<:Real
 d=m.dimension
   if d==1 || d==1.5
     CellVector(m,
-	      ones(m.dims[1])*phi0[1],
+	      ones(m.dims[1]).*phi0[1],
 	      [1.0],
 	      [1.0])
   elseif d==2 || d==2.5 || d==2.8
     CellVector(m,
-	      ones(m.dims[1], m.dims[2])*phi0[1],
-	      ones(m.dims[1], m.dims[2])*phi0[2],
+	      ones(m.dims[1], m.dims[2]).*phi0[1],
+	      ones(m.dims[1], m.dims[2]).*phi0[2],
 	      [1.0])
   elseif d==3 || d==3.2
     CellVector(m,
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[1],
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[2],
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0[3])
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0[1],
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0[2],
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0[3])
   end
 end
 
@@ -151,19 +151,19 @@ function createCellVector(m::MeshStructure, phi0::Real)
 d=m.dimension
   if d==1 || d==1.5
     CellVector(m,
-	      ones(m.dims[1])*phi0,
+	      ones(m.dims[1]).*phi0,
 	      [1.0],
 	      [1.0])
   elseif d==2 || d==2.5 || d==2.8
     CellVector(m,
-	      ones(m.dims[1], m.dims[2])*phi0,
-	      ones(m.dims[1], m.dims[2])*phi0,
+	      ones(m.dims[1], m.dims[2]).*phi0,
+	      ones(m.dims[1], m.dims[2]).*phi0,
 	      [1.0])
   elseif d==3 || d==3.2
     CellVector(m,
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0,
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0,
-	      ones(m.dims[1], m.dims[2], m.dims[3])*phi0)
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0,
+	      ones(m.dims[1], m.dims[2], m.dims[3]).*phi0)
   end
 end
 
