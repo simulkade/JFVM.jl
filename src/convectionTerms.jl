@@ -1894,8 +1894,8 @@ re = rf[2:Nr+1,:]
 rw = rf[1:Nr,:]
 
 # reassign the east, west for code readability
-ue = re.*u.xvalue[2:Nr+1,:]./(DRp+DRe)
-uw = rw.*u.xvalue[1:Nr,:]./(DRp+DRw)
+ue = re.*u.xvalue[2:Nr+1,:]./(rp.*(DRp+DRe))
+uw = rw.*u.xvalue[1:Nr,:]./(rp.*(DRp+DRw))
 vn = u.yvalue[:,2:Ntheta+1]./(rp.*(DTHETAp+DTHETAn))
 vs = u.yvalue[:,1:Ntheta]./(rp.*(DTHETAp+DTHETAs))
 
